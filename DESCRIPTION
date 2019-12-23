@@ -1,0 +1,17 @@
+Package: TREX
+Title: Homogenise, Process and Analyse Thermal Dissipation Sap Flow Data 
+Version: 0.0.0.9000
+Authors@R: c(
+            person('Richard', 'Peters', email = 'Richard.Peters@UGent.be', role = c('cre', 'aut'), comment=c(ORCID = '0000-0002-7441-1297')),
+            person('Christoforos', 'Pappas', role = c('cre', 'aut'), comment=c(ORCID = '0000-0001-5721-557X')),
+            person('Alexander', 'Hurley', role = c('cre', 'aut'), comment=c(ORCID = '0000-0002-9641-2805')),
+            person('Rafael', 'Poyatos', role = c('cre', 'aut')),
+            person('Victor', 'Flo', role = c('cre', 'aut')),
+            person('Roman', 'Zweifel', role = c('cre', 'aut')),
+            person('Kathy', 'Steppe', role = c('cre', 'aut'))
+Description: Abstract here.
+License: MIT + file LICENSE
+LazyData: true
+URL: http://this
+BugReports: http://that
+Encoding: UTF-8
