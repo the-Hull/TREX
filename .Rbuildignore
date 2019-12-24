@@ -3,3 +3,6 @@
 ^data-raw$
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$
+^\.travis\.yml$
+^_setup\.R$
+^pre_work$

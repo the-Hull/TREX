@@ -3,6 +3,7 @@
 
 <!-- badges: start -->
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Travis build status](https://travis-ci.org/the-Hull/TREX.svg?branch=master)](https://travis-ci.org/the-Hull/TREX)
 <!-- badges: end -->
 
 The goal of TREX is to ...

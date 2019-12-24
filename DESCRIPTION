@@ -1,17 +1,44 @@
 Package: TREX
-Title: Homogenise, Process and Analyse Thermal Dissipation Sap Flow Data 
+Title: Homogenise, Process and Analyse Thermal Dissipation Sap Flow Data: TRee sapflow EXtractor
 Version: 0.0.0.9000
 Authors@R: c(
-            person('Richard', 'Peters', email = 'Richard.Peters@UGent.be', role = c('cre', 'aut'), comment=c(ORCID = '0000-0002-7441-1297')),
-            person('Christoforos', 'Pappas', role = c('cre', 'aut'), comment=c(ORCID = '0000-0001-5721-557X')),
-            person('Alexander', 'Hurley', role = c('cre', 'aut'), comment=c(ORCID = '0000-0002-9641-2805')),
-            person('Rafael', 'Poyatos', role = c('cre', 'aut')),
-            person('Victor', 'Flo', role = c('cre', 'aut')),
-            person('Roman', 'Zweifel', role = c('cre', 'aut')),
-            person('Kathy', 'Steppe', role = c('cre', 'aut'))
-Description: Abstract here.
-License: MIT + file LICENSE
+            person(
+                'Richard',
+                'Peters',
+                email = 'richardlouispeters3@hotmail.com',
+                role = c('cre', 'aut', 'cph'),
+                comment=c(ORCID = '0000-0002-7441-1297')),
+            person(
+                'Christoforos',
+                'Pappas',
+                role = c('aut', 'ctr'),
+                comment=c(ORCID = '0000-0001-5721-557X')),
+            person(
+                'Alexander',
+                'Hurley',
+                role = c('aut', 'ctr'),
+                comment=c(ORCID = '0000-0002-9641-2805')),
+            person(
+                'Rafael',
+                'Poyatos',
+                role = c('ctr')),
+            person(
+                'Victor',
+                'Flo',
+                role = c('ctr')),
+            person(
+                'Roman',
+                'Zweifel',
+                role = c('ctr')),
+            person(
+                'Kathy',
+                'Steppe',
+                role = c('ths', 'etr', 'fnd'))
+            )
+Description: Performs data homogenisation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM). The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties, generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply common data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere (Peters et al. 2018 <doi: 10.1111/nph.15241>).
+License: {{ License }}
 LazyData: true
-URL: http://this
-BugReports: http://that
+URL: https://github.com/the-Hull/TREX
+BugReports: https://github.com/the-Hull/TREX/issues
 Encoding: UTF-8
+RoxygenNote: 6.1.1
