@@ -46,6 +46,7 @@ example.data <- function(type = "timestamp", species = "PCAB") {
 
   #p= processing
   #p1= data is loaded
+  # proc.1 <- TREX:::tdm.input.txt
   proc.1 <- tdm.input.txt
     # read.table("tdm.input.txt", header = TRUE, sep = "\t") #p1 data is loaded {CHANGE}
 

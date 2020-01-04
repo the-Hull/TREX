@@ -2,7 +2,7 @@
 % Please edit documentation in R/cal.data.R
 \name{cal.data}
 \alias{cal.data}
-\title{TDM Calibration Measurements}
+\title{Calibration Measurements}
 \usage{
 cal.data
 }
