@@ -50,16 +50,16 @@ To prevent errors occurring in the other reported functions, it is advised to ru
  \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{OlsonNames()}.
  The format of the timestamp has to be provided according to \url{https://www.stat.berkeley.edu/~s133/dates.html}.
  For the method behind the solar time conversion, see the solar package (\url{https://cran.r-project.org/web/packages/solaR/}).
- The longitude has to be provided in positive decimals degrees for study sites east from the Greenwich meridian and negative for sites to the west.
+ The longitude has to be provided in positive decimal degrees for study sites east from the Greenwich meridian and negative for sites to the west.
 }
 \examples{
-\dontrun{
 #validating and structuring example data
 raw   <- example.data(type="doy", species="PCAB")
-input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",
+    solar.time=TRUE,long.deg=7.7459,
+    ref.add=FALSE,df=FALSE)
 head(raw)
 str(input)
 head(input)
 plot(input)
-}
 }

@@ -37,21 +37,21 @@
 #'  \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{OlsonNames()}.
 #'  The format of the timestamp has to be provided according to \url{https://www.stat.berkeley.edu/~s133/dates.html}.
 #'  For the method behind the solar time conversion, see the solar package (\url{https://cran.r-project.org/web/packages/solaR/}).
-#'  The longitude has to be provided in positive decimals degrees for study sites east from the Greenwich meridian and negative for sites to the west.
+#'  The longitude has to be provided in positive decimal degrees for study sites east from the Greenwich meridian and negative for sites to the west.
 #'
 #' @return A zoo object or data.frame in the appropriate format for other functionalities.
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' #validating and structuring example data
 #' raw   <- example.data(type="doy", species="PCAB")
-#' input <- is.trex(raw,tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+#' input <- is.trex(raw,tz="GMT",time.format="%H:%M",
+#'     solar.time=TRUE,long.deg=7.7459,
+#'     ref.add=FALSE,df=FALSE)
 #' head(raw)
 #' str(input)
 #' head(input)
 #' plot(input)
-#' }
 is.trex <-
   function(data,
            tz = "UTC",
@@ -60,6 +60,17 @@ is.trex <-
            long.deg = 7.7459,
            ref.add = FALSE,
            df = FALSE) {
+
+
+    # helpers
+    left <-  function(string, char){
+      substr(string, 1,char)}
+
+    right <-  function (string, char){
+      substr(string,nchar(string)-(char-1),nchar(string))
+    }
+
+
     #t= test
     #data= example.data(type="timestamp", species="PCAB")
     #tz= "GMT"
@@ -227,13 +238,13 @@ is.trex <-
     } else{
       agg <-
         stats::aggregate(output.data, by = format(timestamp, "%Y-%m-%d %H:%M"), mean)
-      output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(index(agg)))
+      output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(zoo::index(agg)))
     }
 
     #o= output
     if (df == T) {
       output.data <-
-        data.frame(timestamp = as.character(index(output.data)),
+        data.frame(timestamp = as.character(zoo::index(output.data)),
                    value = as.numeric(as.character(output.data)))
       output.data$timestamp <- as.character(output.data$timestamp)
       output.data$value <- as.numeric(output.data$value)
