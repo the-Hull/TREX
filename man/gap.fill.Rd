@@ -43,19 +43,18 @@ input <-
     solar.time = TRUE,
     long.deg = 7.7459,
     ref.add = FALSE,
-    df = FALSE
-  )
+    df = FALSE)
+
+# create gaps in data
 input[which(input < 0.4 | input > 0.82)] <- NA
 fill_120 <- gap.fill(
   input = input,
   max.gap = 120,
   decimals = 10,
-  df = FALSE
-)
+  df = FALSE)
 fill_15 <- gap.fill(
   input = input,
   max.gap = 15,
   decimals = 10,
-  df = FALSE
-)
+  df = FALSE)
 }

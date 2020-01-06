@@ -1,8 +1,30 @@
 #' Calculate zero-flow conditions
 #'
+#' @description Determine zero flow conditions (\eqn{\Delta T_{max}}{\Delta Tmax}; or \eqn{\Delta V_{max}}{\Delta Vmax})
+#' according to four methods; namely,
+#'  i) predawn (\code{pd}),
+#'  ii) moving-window (\code{mw}),
+#'  iii) double regression (\code{dr}),
+#'  and iv) environmental dependent (\code{ed}) as applied in Peters et al. 2018.
+#'  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
+#'  All outputs are provided in a list where users can review the provided output and used input data.
+#'
+#' @usage dt.max(input, methods = c("pd","mw","dr"),
+#' zero.end = 8*60,
+#' zero.start =  1*60,
+#' interpolate = FALSE, det.pd = TRUE,
+#' max.days = 7,
+#' ed.window = 2*60,
+#' vpd.input,
+#' sr.input,
+#' sel.max,
+#' criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
+#' df = FALSE)
+
+#'
 #' @param input An \code{is.trex}-compliant object of \eqn{K} values containing
 #'  a timestamp and a value column.
-#' @param methods Character vector of the requested \eqn{\Delta T_{max}} methods.
+#' @param methods Character vector of the requested \eqn{\Delta T_{max}}{\Delta Tmax} methods.
 #' Options include “pd” (predawn), “mw” (moving window), “dr” (double regression),
 #' and “ed” (environmental dependent; default= c(“pd”, “mw”, “dr”)).
 #' @param zero.end Numeric, optionally defines the end of the predawn period.
@@ -11,53 +33,146 @@
 #' of the data and define the day length.
 #' @param zero.start Numeric, optionally defines the beginning of the predawn period.
 #' Values should be in minutes (e.g., 01:00 = 1*60).
-#' @param interpolate Logical: if \code{TRUE}, detected \eqn{\delta T_{max}} values are linearly
-#' interpolated. If \code{FALSE}, constant \eqn{\delta T_{max}} values will be selected daily
+#' @param interpolate Logical: if \code{TRUE}, detected \eqn{\Delta T_{max}}{\Delta Tmax} values are linearly
+#' interpolated. If \code{FALSE}, constant \eqn{\Delta T_{max}}{\Delta Tmax} values will be selected daily
 #' (default = FALSE).
 #' @param det.pd Logical; if \code{TRUE} and no zero.end and zero.start values are provided,
-#'  predawn \eqn{\delta T_{max}} will be determined based on cyclic behaviour of the entire
+#'  predawn \eqn{\Delta T_{max}}{\Delta Tmax} will be determined based on cyclic behaviour of the entire
 #'  time-series (default = \code{TRUE}).
 #' @param max.days Numeric, defines the number of days which the \code{mw} and \code{dr}
 #' methods will consider for their moving-windows.
 #' @param ed.window Numeric, defines the length of the period considered for assessing the
-#'  environmental conditions and stable \eqn{\delta T_{max}} values.
+#'  environmental conditions and stable \eqn{\Delta T_{max}}{\Delta Tmax} values.
 #' @param vpd.input An \code{is.trex}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
 #'  with the same temporal extent and time steps as the input data.
 #' @param sr.input An \code{is.trex}-compliant object (\code{zoo} time-series or \code{data.frame})
-#'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or PAR)
-#' @param sel.max Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\delta T_{max}.
-#'  This is included to change predawn \eqn{\delta T_{max} values selected with the \code{ed} method.
+#'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})
+#' @param sel.max Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\Delta T_{max}}{\Delta Tmax}.
+#'  This is included to change predawn \eqn{\Delta T_{max}}{\Delta Tmax} values selected with the \code{ed} method.
 #' @param criteria Numeric vector, thresholds for the \code{ed} method.
 #' Thresholds should be provided for all environmental data included in the function
 #' (e.g. \emph{sr} = 30; \emph{vpd} = 0.1; coefficient of variation, \emph{cv} = 0.5)
 #' @param df Logical; if \code{TRUE}, output is provided in a \code{data.frame}
 #' format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
-#' If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).
+#' If \code{FALSE}, output is provided as a \code{zoo} object (default = \code{FALSE}).
 #'
 #' @return A named \code{list} of \code{zoo} time series or \code{data.frame}
 #' objects in the appropriate format for further processing.
 #' List items include:
-#'  \item{max.pd}{\eqn{\delta T_{max} time series as determined by the \code{pd} method.}
-#'  \item{max.mw}{\eqn{\delta T_{max} time series as determined by the \code{mw} method.}
-#'  \item{max.dr}{\eqn{\delta T_{max} time series as determined by the \code{dr} method.}
-#'  \item{max.ed}{\eqn{\delta T_{max} time series as determined by the \code{ed} method.}
-#'  \item{daily_max.pd}{daily predawn \eqn{\delta T_{max} as determined by \code{pd}.}
-#'  \item{daily_max.mw}{daily predawn \eqn{\delta T_{max} as determined by \code{mw}.}
-#'  \item{daily_max.dr}{daily predawn \eqn{\delta T_{max} as determined by \code{dr}.}
-#'  \item{daily_max.ed}{daily predawn \eqn{\delta T_{max} as determined by \code{ed}.}
-#'  \item{all.pd}{exact predawn \eqn{\delta T_{max} values detected with \code{pd}.}
-#'  \item{all.pd}{exact predawn \eqn{\delta T_{max} values detected with \code{ed}.}
-#'  \item{input}{\eqn{\delta T} input data.}
+#' \describe{
+#'  \item{max.pd}{\eqn{\Delta T_{max}}{\Delta Tmax} time series as determined by the \code{pd} method.}
+#'  \item{max.mw}{\eqn{\Delta T_{max}}{\Delta Tmax} time series as determined by the \code{mw} method.}
+#'  \item{max.dr}{\eqn{\Delta T_{max}}{\Delta Tmax} time series as determined by the \code{dr} method.}
+#'  \item{max.ed}{\eqn{\Delta T_{max}}{\Delta Tmax} time series as determined by the \code{ed} method.}
+#'  \item{daily_max.pd}{daily predawn \eqn{\Delta T_{max}}{\Delta Tmax} as determined by \code{pd}.}
+#'  \item{daily_max.mw}{daily predawn \eqn{\Delta T_{max}}{\Delta Tmax} as determined by \code{mw}.}
+#'  \item{daily_max.dr}{daily predawn \eqn{\Delta T_{max}}{\Delta Tmax} as determined by \code{dr}.}
+#'  \item{daily_max.ed}{daily predawn \eqn{\Delta T_{max}}{\Delta Tmax} as determined by \code{ed}.}
+#'  \item{all.pd}{exact predawn \eqn{\Delta T_{max}}{\Delta Tmax} values detected with \code{pd}.}
+#'  \item{all.pd}{exact predawn \eqn{\Delta T_{max}}{\Delta Tmax} values detected with \code{ed}.}
+#'  \item{input}{\eqn{\Delta T} input data.}
 #'  \item{ed.criteria}{\code{data.frame} of the applied environmental and variability criteria used within \code{ed}.}
-#'  \item{methods}{\code{data.frame} of applied methods to detect \eqn{\delta T_{max}.}
-#'  \item{k.pd}{\eqn{K} values calculated by using the pd method.}
-#'  \item{k.mw}{\eqn{K} values calculated by using the mw method.}
-#'  \item{k.dr}{\eqn{K} values calculated by using the dr method.}
-#'  \item{k.ed}{\eqn{K} values calculated by using the ed method.}
+#'  \item{methods}{\code{data.frame} of applied methods to detect \eqn{\Delta T_{max}}{\Delta Tmax}.}
+#'  \item{k.pd}{\eqn{K} values calculated by using the \code{pd} method.}
+#'  \item{k.mw}{\eqn{K} values calculated by using the \code{mw} method.}
+#'  \item{k.dr}{\eqn{K} values calculated by using the \code{dr} method.}
+#'  \item{k.ed}{\eqn{K} values calculated by using the \code{ed} method.}
+#'  }
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' #perform Delta T maximum calculations
+#' raw   <-
+#'   TREX::is.trex(
+#'     example.data(type = "doy", species = "PCAB"),
+#'     tz = "GMT",
+#'     time.format = "%H:%M",
+#'     solar.time = TRUE,
+#'     long.deg = 7.7459,
+#'     ref.add = FALSE
+#'   )
+#' input   <-
+#'   TREX::time_step(
+#'     input = raw,
+#'     start = "2014-05-08 00:00",
+#'     end = "2014-07-25 00:50",
+#'     time.int = 15,
+#'     max.gap = 60,
+#'     decimals = 6,
+#'     df = F
+#'   )
+#' input[which(input < 0.2)] <- NA
+#'
+#' vpd_raw   <-
+#'   is.trex(
+#'     vpd,
+#'     tz = "GMT",
+#'     time.format = "(%m/%d/%y %H:%M:%S)",
+#'     solar.time = TRUE,
+#'     long.deg = 7.7459,
+#'     ref.add = FALSE
+#'   )
+#' vpd.input <-
+#'   time_step(
+#'     input = vpd_raw,
+#'     start = "2014-05-08 00:00",
+#'     end = "2014-07-25 00:50",
+#'     time.int = 15,
+#'     max.gap = 60,
+#'     decimals = 6,
+#'     df = F
+#'   )
+#' sr_raw   <-
+#'   is.trex(
+#'     sr,
+#'     tz = "GMT",
+#'     time.format = "(%m/%d/%y %H:%M:%S)",
+#'     solar.time = TRUE,
+#'     long.deg = 7.7459,
+#'     ref.add = FALSE
+#'   )
+#' sr.input <-
+#'   time_step(
+#'     input = sr_raw,
+#'     start = "2014-05-08 00:00",
+#'     end = "2014-07-25 00:50",
+#'     time.int = 15,
+#'     max.gap = 60,
+#'     decimals = 6,
+#'     df = F
+#'   )
+#'
+#' output.max <-
+#'   dt.max(
+#'     input,
+#'     methods = c("pd", "mw", "dr", "ed"),
+#'     det.pd = TRUE,
+#'     interpolate = FALSE,
+#'     max.days = 10,
+#'     sr.input = sr.input,
+#'     vpd.input = vpd.input,
+#'     ed.window = 2 * 60,
+#'     criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
+#'     df = FALSE
+#'   )
+#'
+#' str(output.max)
+#'
+#' plot(output.max$input, ylab = expression(Delta * italic("V")))
+#' lines(output.max$max.pd, col = "green")
+#' lines(output.max$max.mw, col = "blue")
+#' lines(output.max$max.dr, col = "orange")
+#' lines(output.max$max.ed, col = "purple")
+#' points(output.max$all.pd, col = "green", pch = 16)
+#' points(output.max$all.ed, col = "purple", pch = 16)
+#' legend(
+#'   "bottomright",
+#'   c("raw", "max.pd", "max.mw", "max.dr", "max.ed"),
+#'   lty = 1,
+#'   col = c("black", "green", "blue", "orange", "purple"))
+#' }
 dt.max <-
   function(input,
            methods = c("pd", "mw", "dr"),
@@ -96,7 +211,7 @@ dt.max <-
     #interpolate= FALSE #interpolating within day values
     #det.pd=TRUE #automatic detection of pd max, no start or end time required
     #max.days=7 #days for rm and dr
-    #ed.stats::window= 2*60 #number of hours before zero flow values where environmental conditions should be considered
+    #ed.window= 2*60 #number of hours before zero flow values where environmental conditions should be considered
     #criteria<-c(sr=30,vpd=0.1,cv=0.5) #criteria for thesholds
     #df<-F
     #sel.max<-sel.max
@@ -131,8 +246,8 @@ dt.max <-
     if (missing(max.days)) {
       max.days = 7
     }
-    if (missing(ed.stats::window)) {
-      ed.stats::window = 2
+    if (missing(ed.window)) {
+      ed.window = 2
     }
     if (missing(df)) {
       df = F
@@ -231,7 +346,7 @@ dt.max <-
       }
       proc.2 <- zoo::zoo(proc.1, order.by = shift)
       daily_max.pd <-
-        suppressWarnings(aggregate(
+        suppressWarnings(stats::aggregate(
           zoo::zoo(proc.2),
           by = list(as.Date(zoo::index(proc.2))),
           max,
@@ -282,7 +397,7 @@ dt.max <-
       hour.cycle <-
         difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units = c("hours"))
       segment <-
-        round(median(as.numeric(hour.cycle[which(hour.cycle < 24 |
+        round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
                                                    hour.cycle > 3)])))
       k <- round(((60 * segment) / step.min), 0)
       if ((as.integer(k) %% 2) == 0) {
@@ -305,11 +420,11 @@ dt.max <-
       proc.6 <- proc.6[which(proc.6$proc.5 == proc.6$test), ]
       max.pd <- cbind(input, proc.6)[, 2]
       pd.hour <-
-        median(as.numeric(left(right(
+        stats::median(as.numeric(left(right(
           as.character(zoo::index(stats::na.omit(max.pd))), 8
         ), 2)))
       pd.min <-
-        median(as.numeric(left(right(
+        stats::median(as.numeric(left(right(
           as.character(zoo::index(stats::na.omit(max.pd))), 5
         ), 2)))
       if (nchar(as.character(pd.hour)) == 1) {
@@ -324,7 +439,7 @@ dt.max <-
       }
 
       daily_max.pd <-
-        suppressWarnings(aggregate(
+        suppressWarnings(stats::aggregate(
           zoo::zoo(max.pd, order.by = zoo::index(max.pd) + (segment * 60 * 60)),
           by = list(as.Date(zoo::index(max.pd) + (segment * 60 * 60))),
           max,
@@ -333,7 +448,7 @@ dt.max <-
       daily_max.pd[which(daily_max.pd == "-Inf")] <- NA
       daily_max.pd[which(daily_max.pd == "Inf")] <- NA
       max.add <-
-        suppressWarnings(aggregate(
+        suppressWarnings(stats::aggregate(
           zoo::zoo(max.pd, order.by = zoo::index(max.pd)),
           by = list(as.Date(zoo::index(max.pd))),
           max,
@@ -364,7 +479,7 @@ dt.max <-
                    ))
         for (i in c(1:length(which(daily_max.pd == "-Inf")))) {
           add.sel <-
-            stats::stats::window(
+            stats::window(
               input,
               start = base::as.POSIXct(
                 paste0(as.character(zoo::index(
@@ -390,7 +505,7 @@ dt.max <-
                                                                         TRUE)))])]
         }
         daily_max.pd <-
-          suppressWarnings(aggregate(
+          suppressWarnings(stats::aggregate(
             zoo::zoo(max.pd, order.by = zoo::index(max.pd) + ((segment) * 1 * 60 * 60)),
             by = list(as.Date(zoo::index(max.pd) + ((segment) * 1 * 60 * 60
             ))),
@@ -412,7 +527,7 @@ dt.max <-
 
     #p
     gap <-
-      suppressWarnings(aggregate(input, by = list(as.Date(zoo::index(
+      suppressWarnings(stats::aggregate(input, by = list(as.Date(zoo::index(
         input
       ))), max, na.rm = TRUE))
     gap[which(gap == "-Inf")] <- NA
@@ -485,7 +600,7 @@ dt.max <-
         base::difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units =
                          c("hours"))
       segment <-
-        round(median(as.numeric(hour.cycle[which(hour.cycle < 24 |
+        round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
                                                    hour.cycle > 3)])))
       rmean <-
         zoo::zoo(NA, order.by = seq(
@@ -519,7 +634,7 @@ dt.max <-
         proc.g <- stats::window(proc.1, start = st.g, end = st.e)
         max.g <-
           zoo::na.locf(zoo::na.locf(
-            rollmax(
+            zoo::rollmax(
               proc.g$daily_max.pd,
               max.days,
               align = c("center"),
@@ -608,7 +723,7 @@ dt.max <-
         base::difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units =
                          c("hours"))
       segment <-
-        round(median(as.numeric(hour.cycle[which(hour.cycle < 24 |
+        round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
                                                    hour.cycle > 3)])))
       dmean <-
         zoo::zoo(NA, order.by = seq(
@@ -640,7 +755,7 @@ dt.max <-
         proc.g <- stats::window(proc.1, start = st.g, end = st.e)
         mean.g <-
           zoo::na.locf(zoo::na.locf(
-            rollmean(
+            zoo::rollmean(
               proc.g$daily_max.pd,
               max.days,
               align = c("center"),
@@ -667,7 +782,7 @@ dt.max <-
         proc.g <- stats::window(proc.1, start = st.g, end = st.e)
         mean.g <-
           zoo::na.locf(zoo::na.locf(
-            rollmean(
+            zoo::rollmean(
               proc.g$daily_max.pd,
               max.days,
               align = c("center"),
@@ -763,11 +878,11 @@ dt.max <-
           stop("Invalid input data, no sr.input nor vpd.input provided.")
 
         #e
-        if (is.numeric(ed.stats::window) == F)
-          stop("Invalid input data, ed.stats::window is not numeric.")
-        if (ed.stats::window < 1 * 60 |
-            ed.stats::window > 12 * 60)
-          stop("Invalid input data, ed.stats::window has to fall between 1-12 hours.")
+        if (is.numeric(ed.window) == F)
+          stop("Invalid input data, ed.window is not numeric.")
+        if (ed.window < 1 * 60 |
+            ed.window > 12 * 60)
+          stop("Invalid input data, ed.window has to fall between 1-12 hours.")
         if (attributes(vpd.input)$class == "data.frame") {
           #e
           if (is.numeric(vpd.input$value) == F)
@@ -791,7 +906,7 @@ dt.max <-
               is.na(zoo::index(vpd.input)[1]) == T)
             stop("No timestamp present, time.format is likely incorrect for vpd.input.")
         }
-        if (is.zoo(vpd.input) == FALSE)
+        if (zoo::is.zoo(vpd.input) == FALSE)
           stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
 
         if (attributes(sr.input)$class == "data.frame") {
@@ -814,7 +929,7 @@ dt.max <-
               is.na(zoo::index(sr.input)[1]) == T)
             stop("No timestamp present, time.format is likely incorrect for sr.input.")
         }
-        if (is.zoo(sr.input) == FALSE)
+        if (zoo::is.zoo(sr.input) == FALSE)
           stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
 
         #p
@@ -854,18 +969,18 @@ dt.max <-
           base::difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units =
                            c("hours"))
         segment <-
-          round(median(as.numeric(hour.cycle[which(hour.cycle < 24 |
+          round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
                                                      hour.cycle > 3)])))
 
-        k <- round(ed.stats::window / step.min)
+        k <- round(ed.window / step.min)
         #w
-        if (nchar(as.character(round(ed.stats::window / step.min))) != nchar(as.character(ed.stats::window /
+        if (nchar(as.character(round(ed.window / step.min))) != nchar(as.character(ed.window /
                                                                                    step.min))) {
           warning(
             paste0(
-              "Value selected for ed.stats::window does not allow for the selection of full timesteps (minimum time step= ",
+              "Value selected for ed.window does not allow for the selection of full timesteps (minimum time step= ",
               step.min,
-              "minutes), k value for rollmean was rounded."
+              "minutes), k value for zoo::rollmean was rounded."
             )
           )
         }
@@ -909,11 +1024,11 @@ dt.max <-
             zoo::rollapply(
               proc.1$input,
               width = k,
-              FUN = sd,
+              FUN = stats::sd,
               align = "right",
               na.rm = TRUE,
               fill = NA
-            ) / rollapply(
+            ) / zoo::rollapply(
               proc.1$input,
               width = k,
               FUN = mean,
@@ -947,7 +1062,7 @@ dt.max <-
 
         all.ed <- proc.2$all.pd
         daily_max.ed <-
-          suppressWarnings(aggregate(
+          suppressWarnings(stats::aggregate(
             zoo::zoo(all.ed, order.by = zoo::index(all.ed) + (segment * 60 * 60)),
             by = list(as.Date(zoo::index(all.ed) + (
               segment * 60 * 60
@@ -967,7 +1082,7 @@ dt.max <-
                                        "UTC") - 1)
           daily.max.g <- stats::window(daily_max.ed, start = st.g, end = st.e)
           stats::window(daily_max.ed, start = st.g, end = st.e) <-
-            zoo::na.locf(zoo::na.locf(na.approx(daily.max.g, na.rm = F), na.rm = F), fromLast =
+            zoo::na.locf(zoo::na.locf(zoo::na.approx(daily.max.g, na.rm = F), na.rm = F), fromLast =
                            T)
         }
 
@@ -1026,7 +1141,7 @@ dt.max <-
               is.na(zoo::index(max.pd)[1]) == T)
             stop("No timestamp present, time.format is likely incorrect for max.pd.")
         }
-        if (is.zoo(max.pd) == FALSE)
+        if (zoo::is.zoo(max.pd) == FALSE)
           stop("Invalid input data, max.pd must be a zoo file (use is.trex).")
         step.min <-
           as.numeric(min(difftime(
@@ -1053,11 +1168,11 @@ dt.max <-
         hour.cycle <-
           difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units = c("hours"))
         segment <-
-          round(median(as.numeric(hour.cycle[which(hour.cycle < 24 |
+          round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
                                                      hour.cycle > 3)])))
 
         daily_max.ed <-
-          suppressWarnings(aggregate(
+          suppressWarnings(stats::aggregate(
             zoo::zoo(max.pd, order.by = zoo::index(max.pd) + (segment * 60 * 60)),
             by = list(as.Date(zoo::index(max.pd) + (
               segment * 60 * 60
@@ -1089,7 +1204,7 @@ dt.max <-
                                        "UTC") - 1)
           daily.max.g <- stats::window(daily_max.ed, start = st.g, end = st.e)
           stats::window(daily_max.ed, start = st.g, end = st.e) <-
-            zoo::na.locf(zoo::na.locf(na.approx(daily.max.g, na.rm = F), na.rm = F), fromLast =
+            zoo::na.locf(zoo::na.locf(zoo::na.approx(daily.max.g, na.rm = F), na.rm = F), fromLast =
                            T)
         }
 
@@ -1264,455 +1379,3 @@ dt.max <-
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#adopt function
-raw   <- example.data(type = "doy", species = "PCAB")
-input <-
-  is.trex(
-    raw,
-    tz = "GMT",
-    time.format = "%H:%M",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE,
-    df = FALSE
-  )
-
-#cleaning
-stats::window(
-  input,
-  start = as.POSIXct(
-    as.character("(01/01/12 00:00:00)"),
-    format = "(%m/%d/%y %H:%M:%S)",
-    tz = "GMT"
-  ),
-  end = as.POSIXct(
-    as.character("(01/01/13 00:00:00)"),
-    format = "(%m/%d/%y %H:%M:%S)",
-    tz = "GMT"
-  )
-)[which(stats::window(
-  input,
-  start = as.POSIXct(
-    as.character("(01/01/12 00:00:00)"),
-    format = "(%m/%d/%y %H:%M:%S)",
-    tz = "GMT"
-  ),
-  end = as.POSIXct(
-    as.character("(01/01/13 00:00:00)"),
-    format = "(%m/%d/%y %H:%M:%S)",
-    tz = "GMT"
-  )
-) < 0.5)] <- NA
-stats::window(
-  input,
-  start = as.POSIXct(
-    as.character("(01/01/13 00:00:00)"),
-    format = "(%m/%d/%y %H:%M:%S)",
-    tz = "GMT"
-  ),
-  end = as.POSIXct(
-    as.character("(01/01/16 00:00:00)"),
-    format = "(%m/%d/%y %H:%M:%S)",
-    tz = "GMT"
-  )
-)[which(
-  stats::window(
-    input,
-    start = as.POSIXct(
-      as.character("(01/01/13 00:00:00)"),
-      format = "(%m/%d/%y %H:%M:%S)",
-      tz = "GMT"
-    ),
-    end = as.POSIXct(
-      as.character("(01/01/16 00:00:00)"),
-      format = "(%m/%d/%y %H:%M:%S)",
-      tz = "GMT"
-    )
-  ) < 0.64 |
-    stats::window(
-      input,
-      start = as.POSIXct(
-        as.character("(01/01/13 00:00:00)"),
-        format = "(%m/%d/%y %H:%M:%S)",
-        tz = "GMT"
-      ),
-      end = as.POSIXct(
-        as.character("(01/01/16 00:00:00)"),
-        format = "(%m/%d/%y %H:%M:%S)",
-        tz = "GMT"
-      )
-    ) > 0.81
-)] <- NA
-input <- time.step(input,
-                   time.int = 15,
-                   max.gap = 180,
-                   decimals = 10)
-
-test <- dt.max(input, methods = c("dr"), max.days = 7)
-lines(test$max.dr, col = "orange")
-plot(test$k.dr)
-str(test)
-
-#perform delta T maximum calculations
-raw   <-
-  is.trex(
-    example.data(type = "doy", species = "PCAB"),
-    tz = "GMT",
-    time.format = "%H:%M",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-input   <-
-  time.step(
-    input = raw,
-    start = "2014-05-08 00:00",
-    end = "2014-07-25 00:50",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 6,
-    df = F
-  )
-input[which(input < 0.2)] <- NA
-
-vpd <-
-  read.table(
-    "D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",
-    header = TRUE,
-    sep = "\t"
-  )
-sr <-
-  read.table(
-    "D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",
-    header = TRUE,
-    sep = "\t"
-  )
-vpd <- vpd[, c("Date", "N13")]
-colnames(vpd) <- c("timestamp", "value")
-sr <- sr[, c("Timestamp", "N13")]
-colnames(sr) <- c("timestamp", "value")
-vpd_raw   <-
-  is.trex(
-    vpd,
-    tz = "GMT",
-    time.format = "(%m/%d/%y %H:%M:%S)",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-vpd.input <-
-  time.step(
-    input = vpd_raw,
-    start = "2014-05-08 00:00",
-    end = "2014-07-25 00:50",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 6,
-    df = F
-  )
-sr_raw   <-
-  is.trex(
-    sr,
-    tz = "GMT",
-    time.format = "(%m/%d/%y %H:%M:%S)",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-sr.input <-
-  time.step(
-    input = sr_raw,
-    start = "2014-05-08 00:00",
-    end = "2014-07-25 00:50",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 6,
-    df = F
-  )
-
-output.max <-
-  dt.max(
-    input,
-    methods = c("pd", "mw", "dr", "ed"),
-    det.pd = TRUE,
-    interpolate = FALSE,
-    max.days = 10,
-    sr.input = sr.input,
-    vpd.input = vpd.input,
-    ed.stats::window = 2 * 60,
-    criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
-    df = FALSE
-  )
-
-str(output.max)
-
-plot(output.max$input, ylab = expression(Delta * italic("V")))
-lines(output.max$max.pd, col = "green")
-lines(output.max$max.mw, col = "blue")
-lines(output.max$max.dr, col = "orange")
-lines(output.max$max.ed, col = "purple")
-points(output.max$all.pd, col = "green", pch = 16)
-points(output.max$all.ed, col = "purple", pch = 16)
-legend(
-  "bottomright",
-  c("raw", "max.pd", "max.mw", "max.dr", "max.ed"),
-  lty = 1,
-  col = c("black", "green", "blue", "orange", "purple")
-)
-
-#adding a point (BUGS)
-steps <-
-  zoo(c(1:length(output.max$all.pd)), order.by = zoo::index(output.max$all.pd))
-View(cbind(output.max$all.ed, output.max$all.pd, steps))
-sel.max <- output.max$all.ed
-sel.max[c(5185)] <- output.max$all.pd[c(5185)]
-sel.max[c(2697:2710)] <- NA
-
-output.max2 <-
-  dt.max(
-    input,
-    methods = c("pd", "mw", "dr", "ed"),
-    det.pd = TRUE,
-    interpolate = FALSE,
-    max.days = 10,
-    sr.input = sr.input,
-    vpd.input = vpd.input,
-    ed.stats::window = 2 * 60,
-    criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
-    df = FALSE,
-    sel.max = sel.max
-  )
-
-plot(output.max2$input, ylab = expression(Delta * italic("V")))
-lines(output.max2$max.pd, col = "green")
-lines(output.max2$max.mw, col = "blue")
-lines(output.max2$max.dr, col = "orange")
-lines(output.max2$max.ed, col = "purple")
-points(output.max2$all.pd, col = "green", pch = 16)
-points(output.max2$all.ed, col = "red", pch = 16)
-points(output.max2$all.ed, col = "black", pch = 1)
-points(output.max$all.ed,
-       col = "purple",
-       pch = 16,
-       cex = 1)
-legend(
-  "bottomright",
-  c("raw", "max.pd", "max.mw", "max.dr", "max.ed"),
-  lty = 1,
-  col = c("black", "green", "blue", "orange", "purple")
-)
-
-
-#FIGURE 4
-#perform delta T maximum calculations
-raw   <-
-  is.trex(
-    example.data(type = "doy", species = "PCAB"),
-    tz = "GMT",
-    time.format = "%H:%M",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-input   <-
-  time.step(
-    input = raw,
-    start = "2014-05-01 00:00",
-    end = "2014-06-01 00:00",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 15,
-    df = FALSE
-  )
-
-vpd <-
-  read.table(
-    "D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",
-    header = TRUE,
-    sep = "\t"
-  )
-sr <-
-  read.table(
-    "D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",
-    header = TRUE,
-    sep = "\t"
-  )
-vpd <- vpd[, c("Date", "N13")]
-colnames(vpd) <- c("timestamp", "value")
-sr <- sr[, c("Timestamp", "N13")]
-colnames(sr) <- c("timestamp", "value")
-vpd_raw   <-
-  is.trex(
-    vpd,
-    tz = "GMT",
-    time.format = "(%m/%d/%y %H:%M:%S)",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-vpd.input <-
-  time.step(
-    input = vpd_raw,
-    start = "2014-05-01 00:00",
-    end = "2014-06-01 00:00",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 15,
-    df = F
-  )
-sr_raw   <-
-  is.trex(
-    sr,
-    tz = "GMT",
-    time.format = "(%m/%d/%y %H:%M:%S)",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-sr.input <-
-  time.step(
-    input = sr_raw,
-    start = "2014-05-01 00:00",
-    end = "2014-06-01 00:00",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 15,
-    df = F
-  )
-
-output.max <-
-  dt.max(
-    input,
-    methods = c("pd", "mw", "dr", "ed"),
-    det.pd = TRUE,
-    interpolate = FALSE,
-    max.days = 10,
-    sr.input = sr.input,
-    vpd.input = vpd.input,
-    ed.stats::window = 2 * 60,
-    criteria = c(sr = 30, vpd = 0.1, cv = 0.05),
-    df = FALSE
-  )
-
-pdf(
-  "D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/Figure 4.pdf",
-  height = 6,
-  width = 8
-)
-Sys.setlocale("LC_ALL", "English")
-layout(matrix(c(1, 1, 1, 2,
-                1, 1, 1, 2),
-              nc = 4, byrow = TRUE))
-par(mar = c(7, 7, 7, 0))
-plot(
-  input,
-  yaxt = "n",
-  xlab = "",
-  ylab = "",
-  cex.axis = 1.5
-)
-mtext(side = 1,
-      "Year = 2014",
-      padj = 3.5,
-      cex = 1.2)
-mtext(
-  side = 2,
-  expression(Delta * italic("V") * " (mV)"),
-  padj = -3.5,
-  cex = 1.2
-)
-axis(side = 2,
-     las = 2,
-     cex.axis = 1.5)
-polygon(
-  c(as.numeric(zoo::index(output.max$input)), rev(as.numeric(
-    zoo::index(output.max$max.mw)
-  ))),
-  c(as.numeric(output.max$input), as.numeric(rev(output.max$max.mw))),
-  col = "darkgrey",
-  border = FALSE
-)
-polygon(
-  c(as.numeric(zoo::index(output.max$input)), rev(as.numeric(
-    zoo::index(output.max$max.pd)
-  ))),
-  c(as.numeric(output.max$input), as.numeric(rev(output.max$max.pd))),
-  col = "lightgrey",
-  border = FALSE
-)
-lines(output.max$input, lwd = 1.5, lty = 2)
-lines(output.max$max.pd, col = "black", lwd = 3)
-lines(output.max$max.pd, col = "orange")
-lines(output.max$max.mw, col = "black", lwd = 3)
-lines(output.max$max.mw, col = "purple")
-lines(output.max$max.dr, col = "black", lwd = 3)
-lines(output.max$max.dr, col = "cyan")
-points(output.max$all.ed,
-       col = "black",
-       pch = 16,
-       cex = 2)
-points(output.max$all.ed,
-       col = "blue",
-       pch = 16,
-       cex = 1.5)
-
-par(mar = c(7, 0, 7, 0))
-plot(
-  1,
-  1,
-  xaxt = "n",
-  yaxt = "n",
-  ylab = "",
-  xlab = "",
-  bty = "n",
-  col = "white"
-)
-legend(
-  "topleft",
-  c(
-    expression("Raw "),
-    expression("PD   "),
-    expression("MW "),
-    expression("DR   "),
-    expression("ED   ")
-  ),
-  col = c("black", "orange", "purple", "cyan", "blue"),
-  lty = c(2, 1, 1, 1, NA),
-  lwd = c(2, 3, 3, 3, NA),
-  pch = c(NA, NA, NA, NA, 16),
-  pt.cex = c(NA, NA, NA, NA, 2)
-  ,
-  cex = 1.8,
-  bty = "n",
-  border = FALSE
-)
-dev.off()

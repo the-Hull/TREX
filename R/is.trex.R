@@ -7,10 +7,10 @@
 #' @param data data.frame in either timestamp format or doy format.
 #' @param tz Character string indicating the time zone in which the measurements have been recorded.
 #' @param time.format Character string indicating the format of the timestamp.
-#' @param solar.time Logical flag. If TRUE, time is converted to solar time, depending upon the location where the measurements have been taken. If FALSE, the output is provided in “UTC” (default = FALSE).
-#' @param long.deg Numeric value (longitude in decimal degrees E) to perform the solar time conversion. Only required when solar.time= TRUE.
-#' @param ref.add Logical flag. If TRUE, additional probes provided within data are considered. The ∆T values are then corrected by subtracting the ∆T measured between the reference probes from the ∆T measured between the heated and unheated probe (default = FALSE).
-#' @param df Logical flag. If TRUE, output is provided in a data.frame format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column. If FALSE, output is provided as a zoo vector object (default = FALSE).
+#' @param solar.time Logical flag. If \code{TRUE}, time is converted to solar time, depending upon the location where the measurements have been taken. If \code{FALSE}, the output is provided in "UTC" (default = \code{FALSE}).
+#' @param long.deg Numeric value (longitude in decimal degrees E) to perform the solar time conversion. Only required when \code{solar.time=TRUE}.
+#' @param ref.add Logical flag. If \code{TRUE}, additional probes provided within data are considered. The \eqn{\Delta T} values are then corrected by subtracting the \eqn{\Delta T} measured between the reference probes from the ∆T measured between the heated and unheated probe (default = \code{FALSE}).
+#' @param df Logical flag. If \code{TRUE}, output is provided in a data.frame format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column. If \code{FALSE}, output is provided as a zoo vector object (default = \code{FALSE}).
 #'
 #'
 #' @description Testing if the structure of the input matches the requirements of the TREX functions
@@ -23,12 +23,12 @@
 #'  used with only a reference and heating probe, or when including addition reference probes (see ref.add).
 #'  These reference probe measurements can be added to the doy or timestamp format in \eqn{\Delta}V (or \eqn{\Delta}T) \emph{as.numeric}
 #'  labelled ref1, ref2, etc. (depending on the number of reference probes). For this function the following
-#'  column names have to be present within the data.frame: “timestamp” or “year” & “doy” & “hour” = indicators
-#'  of time and “value” = TDM measurements (option “ref1”, “ref2, …, refn = reference probes).
+#'  column names have to be present within the data.frame: "timestamp” or "year” & "doy” & "hour” = indicators
+#'  of time and "value” = TDM measurements (option "ref1”, "ref2, …, refn = reference probes).
 #'  After specifying the time zone (tz), one can select whether to standardize the temporal series to solar
 #'  time (see solar.time) by providing the longitude in decimal degrees at which the measurements were
-#'  obtained (in long.deg). All timestamps within the function are rounded to minute resolution and output can
-#'  be either provided in a zoo format (df = FALSE) or data.frame (df = TRUE; default is FALSE).
+#'  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
+#'  be either provided in a zoo format (df = \code{FALSE}) or data.frame (df = \code{TRUE}; default is \code{FALSE}).
 #'
 #'
 #'
