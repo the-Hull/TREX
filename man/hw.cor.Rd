@@ -43,7 +43,7 @@ The function applied the correction provided by Clearwater et al. 1999.
  proportion of the probe that was inserted into the nonconductive heartwood
  (\eqn{\gamma} in mm mm-1). Together with\eqn{\Delta T_{max}}{\Delta Tmax}, \eqn{\Delta T} was corrected
  according to the following equation:
- \deqn{\Delta T_{sw} = (\Delta T – (1 – \gamma)  \Delta T_{max}) / gamma}{\Delta Tsw = (\Delta T – (1 – \gamma)  \Delta Tmax) / gamma}.
+ \deqn{\Delta T_{sw} = (\Delta T – (1 – \gamma)  \Delta T_{max}) / \gamma}{\Delta Tsw = (\Delta T – (1 – \gamma)  \Delta Tmax) / \gamma}
  \eqn{\Delta T_{sw}}{\Delta Tsw} together with \eqn{\Delta T_{max}}{\Delta Tmax} was then recalculated to \eqn{K}.
 }
 \examples{
@@ -52,7 +52,7 @@ The function applied the correction provided by Clearwater et al. 1999.
 raw   <-is.trex(example.data(type="doy", species="PCAB"),
           tz="GMT",time.format="\%H:\%M",solar.time=TRUE,
           long.deg=7.7459,ref.add=FALSE)
-input <-time.step(input=raw,
+input <-time_step(input=raw,
                    start="2014-05-08 00:00",
                    end="2014-07-25 00:50",
                   time.int=15,max.gap=60,decimals=6,df=F)
@@ -63,7 +63,11 @@ output.data<-hw.cor(input,probe.length=20,
                    sapwood.thickness=18,df=FALSE)
 plot(output.data$k.dr,col="orange")
 lines(input$k.dr)
-output.data$hw.cor
 }
 
+}
+\references{
+Clearwater MJ, Meinzer FC, Andrade JL, Goldstein G, Holbrook NM. 1999.
+Potential errors in measurement of nonuniform sap flow using heat dissipation probes.
+Tree Physiology 19:681–687 <doi: 10.1093/treephys/19.10.681>
 }

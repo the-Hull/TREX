@@ -47,7 +47,7 @@
 #'  with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
 #'  with the same temporal extent and time steps as the input data.
 #' @param sr.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
-#'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})
+#'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR}).
 #' @param sel.max Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\Delta T_{max}}{\Delta Tmax}.
 #'  This is included to change predawn \eqn{\Delta T_{max}}{\Delta Tmax} values selected with the \code{ed} method.
 #' @param criteria Numeric vector, thresholds for the \code{ed} method.

@@ -85,3 +85,17 @@
 #' @name sr
 "sr"
 
+
+
+#' Daily precipitation (raw)
+#'
+#'
+#'
+#' @description Returns raw precipitation measurements in mm day-1, collected at ORIGIN
+#'
+#'
+#' @usage preci
+#'
+#'
+#' @name preci
+"preci"

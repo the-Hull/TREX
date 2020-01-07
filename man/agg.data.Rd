@@ -53,15 +53,22 @@ Additionally, the user can define the start and end time of the series and selec
 the mean of aggregating the data.
 }
 \examples{
+\dontrun{
 #aggregate SFD values to mean hourly and daily sums
+
 raw   <- example.data(type="doy", species="PCAB")
+
 input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",
                   solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+
 input[which(input<0.4)]<-NA
+
 k.input<-dt.max(time_step(input,time.int=15,
                max.gap=180,decimals=10),methods=c("mw"))
+
 sfd.input<-cal.sfd(k.input,make.plot=FALSE,
                   df=FALSE,wood="Coniferous")$sfd.mw$sfd
+
 # means
 output.1hmean <- agg.data(sfd.input,
                        time.agg=60,
@@ -91,5 +98,5 @@ output.dsum<-agg.data(sfd.input,
                       df=FALSE)
 plot(output.dsum)
 points(output.dsum,pch=16)
-
+}
 }
