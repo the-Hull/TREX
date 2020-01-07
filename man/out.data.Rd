@@ -4,10 +4,9 @@
 \alias{out.data}
 \title{FILL - saves output data}
 \usage{
-out.data(input, vpd.input = vpd, sr.input = sr, prec.input = prec,
-  peak.hours = c(10:14), low.sr = 0.15, peak.sr = 0.75,
-  vpd.cutoff = 0.5, prec.lim = 1, method = "env.filt",
-  make.plot = TRUE)
+out.data(input, vpd.input, sr.input, prec.input, peak.hours = c(10:14),
+  low.sr = 0.15, peak.sr = 0.75, vpd.cutoff = 0.5, prec.lim = 1,
+  method = "env.filt", make.plot = TRUE)
 }
 \arguments{
 \item{input}{An \code{\link{is.trex}}-compliant time series from \code{cal.sfd} outputs
@@ -15,7 +14,7 @@ out.data(input, vpd.input = vpd, sr.input = sr, prec.input = prec,
 
 \item{vpd.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
-with the same temporal extent and time steps as the input data.}
+with the same temporal extent and time_steps as the input data.}
 
 \item{sr.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})}
@@ -56,7 +55,7 @@ raw   <-
     ref.add = FALSE
   )
 input <-
-  time.step(
+  time_step(
     input = raw,
     start = "2013-05-01 00:00",
     end = "2013-11-01 00:00",
@@ -92,7 +91,7 @@ vpd_raw   <-
     ref.add = FALSE
   )
 vpd.input <-
-  time.step(
+  time_step(
     input = vpd_raw,
     start = "2013-05-01 00:00",
     end = "2013-11-01 00:00",
@@ -111,7 +110,7 @@ sr_raw   <-
     ref.add = FALSE
   )
 sr.input <-
-  time.step(
+  time_step(
     input = sr_raw,
     start = "2013-05-01 00:00",
     end = "2013-11-01 00:00",
@@ -127,9 +126,9 @@ input <- (output.data$sfd.dr$sfd)
 prec.in <- is.trex(preci, time.format = "\%d/\%m/\%y", tz = "UTC")
 prec.input <- window(
   prec.in,
-  start = as.POSIXct(as.character(index(input)[1]), format =
+  start = as.POSIXct(as.character(zoo::index(input)[1]), format =
                        "\%Y-\%m-\%d", tz = "UTC"),
-  end = as.POSIXct(as.character(index(input)[length(input)]), format =
+  end = as.POSIXct(as.character(zoo::index(input)[length(input)]), format =
                      "\%Y-\%m-\%d", tz = "UTC")
 )
 

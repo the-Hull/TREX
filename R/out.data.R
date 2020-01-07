@@ -6,7 +6,7 @@
 #' (e.g., \code{X$sfd.mw$sfd})
 #' @param vpd.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
-#'  with the same temporal extent and time steps as the input data.
+#'  with the same temporal extent and time_steps as the input data.
 #' @param sr.input  An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})
 #' @param prec.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
@@ -35,7 +35,7 @@
 #'     ref.add = FALSE
 #'   )
 #' input <-
-#'   time.step(
+#'   time_step(
 #'     input = raw,
 #'     start = "2013-05-01 00:00",
 #'     end = "2013-11-01 00:00",
@@ -71,7 +71,7 @@
 #'     ref.add = FALSE
 #'   )
 #' vpd.input <-
-#'   time.step(
+#'   time_step(
 #'     input = vpd_raw,
 #'     start = "2013-05-01 00:00",
 #'     end = "2013-11-01 00:00",
@@ -90,7 +90,7 @@
 #'     ref.add = FALSE
 #'   )
 #' sr.input <-
-#'   time.step(
+#'   time_step(
 #'     input = sr_raw,
 #'     start = "2013-05-01 00:00",
 #'     end = "2013-11-01 00:00",
@@ -106,9 +106,9 @@
 #' prec.in <- is.trex(preci, time.format = "%d/%m/%y", tz = "UTC")
 #' prec.input <- window(
 #'   prec.in,
-#'   start = as.POSIXct(as.character(index(input)[1]), format =
+#'   start = as.POSIXct(as.character(zoo::index(input)[1]), format =
 #'                        "%Y-%m-%d", tz = "UTC"),
-#'   end = as.POSIXct(as.character(index(input)[length(input)]), format =
+#'   end = as.POSIXct(as.character(zoo::index(input)[length(input)]), format =
 #'                      "%Y-%m-%d", tz = "UTC")
 #' )
 #'
@@ -127,9 +127,9 @@
 #'
 out.data <-
   function(input,
-           vpd.input = vpd,
-           sr.input = sr,
-           prec.input = prec,
+           vpd.input,
+           sr.input,
+           prec.input,
            peak.hours = c(10:14),
            low.sr = 0.15,
            peak.sr = 0.75,
@@ -141,7 +141,7 @@ out.data <-
     #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction")
     #calib<-read.table("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction/cal.data.txt",header=TRUE,sep="\t")
     #raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #input <-time.step(input=raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
+    #input <-time_step(input=raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
     #                  time.int=15,max.gap=60,decimals=10,df=FALSE)
     #input[which(input<0.2)]<-NA
     #input <-dt.max(input, methods=c("dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
@@ -154,10 +154,10 @@ out.data <-
     #sr<-sr[,c("Timestamp","N13")]
     #colnames(sr)<-c("timestamp","value")
     #vpd_raw   <-is.trex(vpd,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #vpd.input <-time.step(input=vpd_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
+    #vpd.input <-time_step(input=vpd_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
     #                      time.int=15,max.gap=60,decimals=10,df=FALSE)
     #sr_raw   <-is.trex(sr,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #sr.input <-time.step(input=sr_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
+    #sr.input <-time_step(input=sr_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
     #                     time.int=15,max.gap=60,decimals=10,df=FALSE)
     #
     #input<-(output.data$sfd.dr$sfd)
@@ -165,8 +165,8 @@ out.data <-
     #colnames(prec_raw)<-c("timestamp","value")
     #prec.in<-is.trex(prec_raw,time.format="%d/%m/%y",tz="UTC")
     #prec.input<-window(prec.in,
-    #  start=as.POSIXct(as.character(index(input)[1]),format="%Y-%m-%d",tz="UTC"),
-    #  end=as.POSIXct(as.character(index(input)[length(input)]),format="%Y-%m-%d",tz="UTC"))
+    #  start=as.POSIXct(as.character(zoo::index(input)[1]),format="%Y-%m-%d",tz="UTC"),
+    #  end=as.POSIXct(as.character(zoo::index(input)[length(input)]),format="%Y-%m-%d",tz="UTC"))
     #
     #method = 'env.filt'
     #peak.hours = c(10:14) # hours that are considered as 'peak of the day'
@@ -214,7 +214,7 @@ out.data <-
       sr.input[] <- NA
     }
     if (missing(prec.input)) {
-      prec.input <- aggregate(input[], mean, na.rm = T, by = as.Date(index(input)))
+      prec.input <- stats::aggregate(input[], mean, na.rm = T, by = as.Date(zoo::index(input)))
       prec.input[] <- 0
       prec.lim <- 100
     }
@@ -252,8 +252,8 @@ out.data <-
         )
 
       #e
-      if (as.character(index(input)[1]) == "(NA NA)" |
-          is.na(index(input)[1]) == T)
+      if (as.character(zoo::index(input)[1]) == "(NA NA)" |
+          is.na(zoo::index(input)[1]) == T)
         stop("No timestamp present, time.format is likely incorrect.")
     }
 
@@ -266,7 +266,7 @@ out.data <-
       stop("Invalid input data, values within the vector are not numeric.")
 
     #w= warnings
-    if (difftime(index(input[length(input)]), index(input[1]), units = c("days")) <
+    if (difftime(zoo::index(input[length(input)]), zoo::index(input[1]), units = c("days")) <
         30) {
       warning("Selected input has a temporal extend of <30 days.")
     }
@@ -275,7 +275,7 @@ out.data <-
       stop("No vpd.input data included.")
     if (missing(sr.input)) {
       warning(paste0("No sr.input data included."))
-      sr.input <- zoo::zoo(0, order.by = index(input))
+      sr.input <- zoo::zoo(0, order.by = zoo::index(input))
     }
 
     #e
@@ -295,11 +295,11 @@ out.data <-
         )
 
       #e
-      if (as.character(index(vpd.input)[1]) == "(NA NA)" |
-          is.na(index(vpd.input)[1]) == T)
+      if (as.character(zoo::index(vpd.input)[1]) == "(NA NA)" |
+          is.na(zoo::index(vpd.input)[1]) == T)
         stop("No timestamp present, time.format is likely incorrect for vpd.input.")
     }
-    if (is.zoo(vpd.input) == FALSE)
+    if (zoo::is.zoo(vpd.input) == FALSE)
       stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
 
     if (attributes(sr.input)$class == "data.frame") {
@@ -318,11 +318,11 @@ out.data <-
         )
 
       #e
-      if (as.character(index(sr.input)[1]) == "(NA NA)" |
-          is.na(index(sr.input)[1]) == T)
+      if (as.character(zoo::index(sr.input)[1]) == "(NA NA)" |
+          is.na(zoo::index(sr.input)[1]) == T)
         stop("No timestamp present, time.format is likely incorrect for sr.input.")
     }
-    if (is.zoo(sr.input) == FALSE)
+    if (zoo::is.zoo(sr.input) == FALSE)
       stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
 
     if (attributes(prec.input)$class == "data.frame") {
@@ -341,32 +341,32 @@ out.data <-
         )
 
       #e
-      if (as.character(index(prec.input)[1]) == "(NA NA)" |
-          is.na(index(prec.input)[1]) == T)
+      if (as.character(zoo::index(prec.input)[1]) == "(NA NA)" |
+          is.na(zoo::index(prec.input)[1]) == T)
         stop("No timestamp present, time.format is likely incorrect for vpd.input.")
     }
-    if (is.zoo(prec.input) == FALSE)
+    if (zoo::is.zoo(prec.input) == FALSE)
       stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
 
     #p
     step.min <-
       as.numeric(min(difftime(
-        index(input)[-1], index(input)[-length(input)], units = c("mins")
+        zoo::index(input)[-1], zoo::index(input)[-length(input)], units = c("mins")
       ), na.rm = TRUE))
     step.sr <-
       as.numeric(min(difftime(
-        index(sr.input)[-1], index(sr.input)[-length(sr.input)], units = c("mins")
+        zoo::index(sr.input)[-1], zoo::index(sr.input)[-length(sr.input)], units = c("mins")
       ), na.rm = TRUE))
     step.vpd <-
       as.numeric(min(difftime(
-        index(vpd.input)[-1], index(vpd.input)[-length(vpd.input)], units = c("mins")
+        zoo::index(vpd.input)[-1], zoo::index(vpd.input)[-length(vpd.input)], units = c("mins")
       ), na.rm = TRUE))
 
     #w
     if (step.min != step.sr | step.min != step.vpd) {
       warning(
         paste0(
-          "time steps between input and vpd.input/sr.input differ, results might not be correctly aggregated."
+          "time_steps between input and vpd.input/sr.input differ, results might not be correctly aggregated."
         )
       )
     }
@@ -374,11 +374,11 @@ out.data <-
     #p
     sfd <-
       ((input * 10000 / 3600) / 18.01528) * 1000 #cm3 cm-2 h-1 to cm3 m-2 s-1 to mmol m-2 s-1
-    doy <- zoo::zoo(lubridate::yday(index(input)), order.by = index(input))
-    h  <- zoo::zoo(lubridate::hour(index(input)), order.by = index(input))
-    y  <- zoo::zoo(lubridate::year(index(input)), order.by = index(input))
+    doy <- zoo::zoo(lubridate::yday(zoo::index(input)), order.by = zoo::index(input))
+    h  <- zoo::zoo(lubridate::hour(zoo::index(input)), order.by = zoo::index(input))
+    y  <- zoo::zoo(lubridate::year(zoo::index(input)), order.by = zoo::index(input))
     doy_y <-
-      zoo::zoo(as.numeric(paste(doy, y, sep = "")), order.by = index(input))
+      zoo::zoo(as.numeric(paste(doy, y, sep = "")), order.by = zoo::index(input))
 
     if (method == "stat") {
       sfd_df <- cbind(sfd, vpd.input, sr.input, doy, h, y, doy_y)
@@ -386,12 +386,12 @@ out.data <-
 
       ##non-rainy days (P_daily < 1 mm)
       prec_df = as.data.frame(prec.input)
-      prec_df$doy = lubridate::yday(index(prec.input))
-      prec_df$y = lubridate::year(index(prec.input))
+      prec_df$doy = lubridate::yday(zoo::index(prec.input))
+      prec_df$y = lubridate::year(zoo::index(prec.input))
       prec_df$doy_y = as.numeric(paste(prec_df$doy, prec_df$y, sep = ""))
       add <-
         data.frame(
-          timestamp = as.character(index(sfd_df)),
+          timestamp = as.character(zoo::index(sfd_df)),
           sfd = as.numeric(sfd_df$sfd),
           doy_y = as.numeric(sfd_df$doy_y)
         )
@@ -415,7 +415,7 @@ out.data <-
       sfd_df[which(sfd_df$h %in% peak.hours == F), "vpd_filt"] <- NA
 
       ##4. aggregate to daily values
-      sfd_df_peak_daily = aggregate(sfd_df[, ],
+      sfd_df_peak_daily <- stats::aggregate(sfd_df[, ],
                                     mean,
                                     na.rm = T,
                                     by = list(doy_y = sfd_df$doy_y))
@@ -432,12 +432,12 @@ out.data <-
 
       ## 1. non-rainy days (P_daily < 1 mm)
       prec_df = as.data.frame(prec.input)
-      prec_df$doy = lubridate::yday(index(prec.input))
-      prec_df$y = lubridate::year(index(prec.input))
+      prec_df$doy = lubridate::yday(zoo::index(prec.input))
+      prec_df$y = lubridate::year(zoo::index(prec.input))
       prec_df$doy_y = as.numeric(paste(prec_df$doy, prec_df$y, sep = ""))
       add <-
         data.frame(
-          timestamp = as.character(index(sfd_df)),
+          timestamp = as.character(zoo::index(sfd_df)),
           sfd = as.numeric(sfd_df$sfd),
           doy_y = as.numeric(sfd_df$doy_y)
         )
@@ -454,10 +454,10 @@ out.data <-
 
       ## 2. non-cloudy days (SW > q25) #(PAR_daily > 300 umol/m2/s)
       sr_df = as.data.frame(sr.input)
-      sr_df$doy = lubridate::yday(index(sr.input))
-      sr_df$y = lubridate::year(index(sr.input))
+      sr_df$doy = lubridate::yday(zoo::index(sr.input))
+      sr_df$y = lubridate::year(zoo::index(sr.input))
       sr_df$doy_y = as.numeric(paste(sr_df$doy, sr_df$y, sep = ""))
-      sr_df_daily = aggregate(sr_df$sr.input,
+      sr_df_daily = stats::aggregate(sr_df$sr.input,
                               mean,
                               na.rm = T,
                               by = list(doy_y = sr_df$doy_y))
@@ -471,7 +471,7 @@ out.data <-
           order.by = base::as.POSIXct(adding$timestamp, format = "%Y-%m-%d %H:%M:%S", tz =
                                         "UTC")
         )
-      sr_limit <- quantile(sr_df_daily$x, probs = low.sr)
+      sr_limit <- stats::quantile(sr_df_daily$x, probs = low.sr)
 
       ##3. merge all data together and select the criteria
       sfd_df$sr_day <- sr_day
@@ -485,14 +485,14 @@ out.data <-
         NA
       sfd_df[which(sfd_df$sr_day < as.numeric(sr_limit)), "vpd_filt"] <-
         NA
-      sfd_df[which(sfd_df$sr.input < quantile(sfd_df$sr.input, probs = peak.sr, na.rm =
+      sfd_df[which(sfd_df$sr.input < stats::quantile(sfd_df$sr.input, probs = peak.sr, na.rm =
                                                 T)), "gc_filt"] <- NA
-      sfd_df[which(sfd_df$sr.input < quantile(sfd_df$sr.input, probs = peak.sr, na.rm =
+      sfd_df[which(sfd_df$sr.input < stats::quantile(sfd_df$sr.input, probs = peak.sr, na.rm =
                                                 T)), "vpd_filt"] <- NA
 
       ##4. aggregate to daily values
-      sfd_df_peak_daily = aggregate(sfd_df[, ],
-                                    mean,
+      sfd_df_peak_daily = stats::aggregate(sfd_df[, ],
+                                           mean,
                                     na.rm = T,
                                     by = list(doy_y = sfd_df$doy_y))
     }
@@ -513,17 +513,17 @@ out.data <-
     df_n = data.frame(x = sfd_df_4gcfit$vpd_filt, y = sfd_df_4gcfit$gc_norm)
 
     #model fitting
-    mod <- nls(y ~ a + d * x ^ (-0.5), start = list(a = 1, d = 1), data = df)
+    mod <- stats::nls(y ~ a + d * x ^ (-0.5), start = list(a = 1, d = 1), data = df)
     mod_n <-
-      nls(y ~ a + d * x ^ (-0.5), start = list(a = 1, d = 1), data = df_n)
+      stats::nls(y ~ a + d * x ^ (-0.5), start = list(a = 1, d = 1), data = df_n)
     Alpha <- round(summary(mod)$coef[1, 1], 3)
     Beta <- round(summary(mod)$coef[2, 1], 3)
 
     #plotting output
     if (make.plot == T) {
-      par(oma = c(1, 1, 1, 1))
-      par(mfrow = c(1, 1))
-      plot(
+      graphics::par(oma = c(1, 1, 1, 1))
+      graphics::par(mfrow = c(1, 1))
+      graphics::plot(
         df$x,
         df$y,
         pch = 16,
@@ -534,18 +534,18 @@ out.data <-
         xlab = "",
         ylim = c(0, max(df$y))
       )
-      axis(side = 2, las = 2)
-      points(df$x,
+      graphics::axis(side = 2, las = 2)
+      graphics::points(df$x,
              df$y,
              col = "grey",
              pch = 16,
              cex = 1.8)
-      points(df$x,
+      graphics::points(df$x,
              df$y,
              col = "white",
              pch = 1,
              cex = 1.8)
-      points(df$x,
+      graphics::points(df$x,
              df$y,
              col = "grey",
              pch = 16,
@@ -554,23 +554,23 @@ out.data <-
         data.frame(x = seq(round((min(
           df$x
         )), 2), round(max(df$x), 2), 0.1))
-      lines(
+      graphics::lines(
         seq(round((min(
           df$x
         )), 2), round(max(df$x), 2), 0.1),
-        predict(mod, newdata = newdat),
+        stats::predict(mod, newdata = newdat),
         col = "black",
         lwd = 7
       )
-      lines(
+      graphics::lines(
         seq(round((min(
           df$x
         )), 2), round(max(df$x), 2), 0.1),
-        predict(mod, newdata = newdat),
+        stats::predict(mod, newdata = newdat),
         col = "orange",
         lwd = 5
       )
-      legend("top", c(
+      graphics::legend("top", c(
         expression(
           italic("G")[c] * " = " * italic(alpha) * " + " * italic(beta) * " VPD" ^
             0.5
@@ -593,13 +593,13 @@ out.data <-
         substitute(paste(italic(beta), " = ", Beta, " ", kPa ^ -0.5), list(Beta =
                                                                              (Beta)))
       ), bty = "n")
-      mtext(
+      graphics::mtext(
         side = 2,
         expression(italic(G)[c] * " (" * "mmol " * m ^ -2 * " " * s ^ -1 * " " *
                      kPa ^ -1 * ")"),
         padj = -2.5
       )
-      mtext(side = 1,
+      graphics::mtext(side = 1,
             expression(VPD * " (kPa)"),
             padj = 3)
     }

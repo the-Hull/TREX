@@ -61,75 +61,75 @@
 #' }
 #'
 hw.cor<-function(input,dt.max,probe.length=20,sapwood.thickness=18,df=F){
-#t= test
-#raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-#input   <-time_step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
-#                    time.int=15,max.gap=60,decimals=6,df=F)
-#output.max<-dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,
-#                   ed.window=2*60,criteria=c(sr=30,vpd=0.1,cv=0.5),df=FALSE)
-#probe.length<-20
-#sapwood.thickness<-11.51
-#input<-output.max
-#dt.max<-output.max$max.pd
-#df=T
-#input<-input
-#dt.max<-max.pd
+  #t= test
+  #raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
+  #input   <-time_step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
+  #                    time.int=15,max.gap=60,decimals=6,df=F)
+  #output.max<-dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,
+  #                   ed.window=2*60,criteria=c(sr=30,vpd=0.1,cv=0.5),df=FALSE)
+  #probe.length<-20
+  #sapwood.thickness<-11.51
+  #input<-output.max
+  #dt.max<-output.max$max.pd
+  #df=T
+  #input<-input
+  #dt.max<-max.pd
 
-#d= default conditions
-if(missing(probe.length)){probe.length=20}
-if(missing(dt.max)){dt.max=NA}
-if(missing(df)){df=F}
+  #d= default conditions
+  if(missing(probe.length)){probe.length=20}
+  if(missing(dt.max)){dt.max=NA}
+  if(missing(df)){df=F}
 
-#e= error
-if(is.numeric(probe.length)==FALSE)stop("Unused argument, probe.length is not numeric.")
-if(is.numeric(sapwood.thickness)==FALSE)stop("Unused argument, sapwood.thickness is not numeric.")
-if(df!=T&df!=F)stop("Unused argument, df needs to be TRUE|FALSE.")
+  #e= error
+  if(is.numeric(probe.length)==FALSE)stop("Unused argument, probe.length is not numeric.")
+  if(is.numeric(sapwood.thickness)==FALSE)stop("Unused argument, sapwood.thickness is not numeric.")
+  if(df!=T&df!=F)stop("Unused argument, df needs to be TRUE|FALSE.")
 
-#p= process
-a<- sapwood.thickness/probe.length #probe fraction
-if(a=="Inf")stop("Unused argument, invalid probe.length or sapwood.thickness.")
-b<- 1-a
+  #p= process
+  a<- sapwood.thickness/probe.length #probe fraction
+  if(a=="Inf")stop("Unused argument, invalid probe.length or sapwood.thickness.")
+  b<- 1-a
 
-#e
-if(is.na(dt.max[1])==TRUE){
-if(length(which(names(input)%in%c("max.pd","max.mw","max.dr","max.ed","daily_max.pd","daily_max.mw","daily_max.dr","daily_max.ed","all.pd","all.ed",
-"input","ed.criteria","methods","k.pd","k.mw","k.dr","k.ed")))!=17)stop("Invalid input data, data not originating from dt.max().")
+  #e
+  if(is.na(dt.max[1])==TRUE){
+    if(length(which(names(input)%in%c("max.pd","max.mw","max.dr","max.ed","daily_max.pd","daily_max.mw","daily_max.dr","daily_max.ed","all.pd","all.ed",
+                                      "input","ed.criteria","methods","k.pd","k.mw","k.dr","k.ed")))!=17)stop("Invalid input data, data not originating from dt.max().")
 
-  #p
-  dt<-input$input
-  if(attributes(input$input)$class=="data.frame"){dt<-zoo::zoo(dt,order.by=base::as.POSIXct(dt$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))}
+    #p
+    dt<-input$input
+    if(attributes(input$input)$class=="data.frame"){dt<-zoo::zoo(dt,order.by=base::as.POSIXct(dt$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))}
 
-  for(i in c(1:length(input$methods))){
-  dt.max<-input[[paste0("max.",input$methods[i])]]
-  if(attributes(dt.max)$class=="data.frame"){dt.max<-zoo::zoo(dt.max,order.by=base::as.POSIXct(dt$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))}
-  proc.1<-cbind(dt,dt.max)
-  if(a<1){
-    dtsw               <-((proc.1$dt-b*proc.1$dt.max)/a)#here is clearwater correction applied
-  }else{
-    dtsw               <-proc.1$dt
-    warning("No heartwood correction performed, the sapwood.thickness>probe.length.")
-  }
-  k.value                 <-((proc.1$dt.max-dtsw)/dtsw) #here the k values are calculated
-  k.value[which(k.value<0)]<-0
-  base::assign(paste0("k.",input$methods[i]),k.value)
-  base::assign(paste0("dtsw.",input$methods[i]),dtsw)
-}
+    for(i in c(1:length(input$methods))){
+      dt.max<-input[[paste0("max.",input$methods[i])]]
+      if(attributes(dt.max)$class=="data.frame"){dt.max<-zoo::zoo(dt.max,order.by=base::as.POSIXct(dt$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))}
+      proc.1<-cbind(dt,dt.max)
+      if(a<1){
+        dtsw               <-((proc.1$dt-b*proc.1$dt.max)/a)#here is clearwater correction applied
+      }else{
+        dtsw               <-proc.1$dt
+        warning("No heartwood correction performed, the sapwood.thickness>probe.length.")
+      }
+      k.value                 <-((proc.1$dt.max-dtsw)/dtsw) #here the k values are calculated
+      k.value[which(k.value<0)]<-0
+      base::assign(paste0("k.",input$methods[i]),k.value)
+      base::assign(paste0("dtsw.",input$methods[i]),dtsw)
+    }
 
-  if(length(which("pd"%in%input$methods))!=1){
-    k.pd<-NA
-    dtsw.pd<-NA}
-  if(length(which("mw"%in%input$methods))!=1){
-    k.mw<-NA
-    dtsw.mw<-NA}
-  if(length(which("dr"%in%input$methods))!=1){
-    k.dr<-NA
-    dtsw.dr<-NA}
-  if(length(which("ed"%in%input$methods))!=1){
-    k.ed<-NA
-    dtsw.ed<-NA}
+    if(length(which("pd"%in%input$methods))!=1){
+      k.pd<-NA
+      dtsw.pd<-NA}
+    if(length(which("mw"%in%input$methods))!=1){
+      k.mw<-NA
+      dtsw.mw<-NA}
+    if(length(which("dr"%in%input$methods))!=1){
+      k.dr<-NA
+      dtsw.dr<-NA}
+    if(length(which("ed"%in%input$methods))!=1){
+      k.ed<-NA
+      dtsw.ed<-NA}
 
-  #o= output
-  if(df==F){
+    #o= output
+    if(df==F){
   output.data<-list(input$max.pd,      input$max.mw,      input$max.dr,      input$max.ed,
                       input$daily_max.pd,input$daily_max.mw,input$daily_max.dr,input$daily_max.ed,
                       input$all.pd,input$all.ed,input$input,input$criteria,input$methods,#data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness),

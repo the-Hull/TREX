@@ -41,11 +41,12 @@ LazyData: true
 URL: https://github.com/the-Hull/TREX
 BugReports: https://github.com/the-Hull/TREX/issues
 Encoding: UTF-8
-Depends: R (>= 2.1.0)
+Depends: R (>= 2.10)
 Imports: 
     chron,
     zoo,
     solaR,
     stats,
-    graphics
+    graphics,
+    lubridate
 RoxygenNote: 6.1.1

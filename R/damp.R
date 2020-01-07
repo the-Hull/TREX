@@ -57,7 +57,7 @@
 #'     ref.add = FALSE
 #'   )
 #' input <-
-#'   time.step(
+#'   time_step(
 #'     input = raw,
 #'     time.int = 15,
 #'     max.gap = 60,
@@ -95,7 +95,7 @@ damp <- function(input,
   #raw       <-is.trex(test,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
   #raw       <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
   #raw       <-is.trex(raw,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #input     <-time.step(input=raw,time.int=15,max.gap=60,decimals=6,df=F)
+  #input     <-time_step(input=raw,time.int=15,max.gap=60,decimals=6,df=F)
   #input<-dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,
   #                   ed.window=2*60,criteria=c(sr=30,vpd=0.1,cv=0.5),df=FALSE)
   #make.plot<-TRUE

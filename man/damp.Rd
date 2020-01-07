@@ -57,7 +57,7 @@ raw   <-
     ref.add = FALSE
   )
 input <-
-  time.step(
+  time_step(
     input = raw,
     time.int = 15,
     max.gap = 60,
