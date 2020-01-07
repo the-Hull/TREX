@@ -17,7 +17,7 @@ criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
 df = FALSE)
 }
 \arguments{
-\item{input}{An \code{is.trex}-compliant object of \eqn{K} values containing
+\item{input}{An \code{\link{is.trex}}-compliant object of \eqn{K} values containing
 a timestamp and a value column.}
 
 \item{methods}{Character vector of the requested \eqn{\Delta T_{max}}{\Delta Tmax} methods.
@@ -46,11 +46,11 @@ methods will consider for their moving-windows.}
 \item{ed.window}{Numeric, defines the length of the period considered for assessing the
 environmental conditions and stable \eqn{\Delta T_{max}}{\Delta Tmax} values.}
 
-\item{vpd.input}{An \code{is.trex}-compliant object (\code{zoo} time-series or \code{data.frame})
+\item{vpd.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
 with the same temporal extent and time steps as the input data.}
 
-\item{sr.input}{An \code{is.trex}-compliant object (\code{zoo} time-series or \code{data.frame})
+\item{sr.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})}
 
 \item{sel.max}{Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\Delta T_{max}}{\Delta Tmax}.

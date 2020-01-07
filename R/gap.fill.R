@@ -8,7 +8,7 @@
 #'
 #' @usage gap.fill(input, max.gap = 60, decimals = 10, df = FALSE, time.int = 10)
 #'
-#' @param input an \code{is.trex}-compliant object.
+#' @param input an \code{\link{is.trex}}-compliant object.
 #' @param max.gap Numeric value providing the maximum size of a gap in minutes,
 #' which can be filled by performing a linear interpolation.
 #' @param decimals Integer value defining the number of decimals of the output (default = 10).

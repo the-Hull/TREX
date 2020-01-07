@@ -13,7 +13,7 @@
 #'   end = '2012-06-28 00:00', time.int = 10, max.gap = 60,
 #'   decimals = 10, df = FALSE)
 #'
-#' @param input an \code{is.trex}-compliant (output) object
+#' @param input An \code{\link{is.trex}}-compliant (output) object
 #' @param start Character string providing the start time for the series.
 #' Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
 #' Year-Month-Day Hour:Minute). Starting time should not be earlier

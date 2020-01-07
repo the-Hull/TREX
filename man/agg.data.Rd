@@ -4,18 +4,18 @@
 \alias{agg.data}
 \title{Aggregation of time-series data}
 \usage{
-(input,
+agg.data(input,
  time.agg = 60*24,
  start = "2012-07-28 00:00",
  end = "2012-10-29 00:00",
- FUN = "sum",
+ FUN = "mean",
  unit = 60,
  na.rm = TRUE,
  df = FALSE)
 }
 \arguments{
-\item{input}{An \code[is.trex]-compliant time series from \code{cal.sfd} outputs
-(e.g., \code(X$sfd.mw$sfd)).}
+\item{input}{An \code{\link{is.trex}}-compliant time series from \code{cal.sfd} outputs
+(e.g., \code{X$sfd.mw$sfd}).}
 
 \item{time.agg}{Numeric, the aggregation time in minutes (default = 60).}
 
@@ -30,7 +30,7 @@ Starting time should be earlier than the end time and the end time should not ex
 length of the series.  If not provided the entire series is considered.}
 
 \item{FUN}{Quoted function name to compute the summary statistics which can be
-applied to all data subsets (see aggregate; including “sum", "mean",
+applied to all data subsets (see aggregate; including "sum", "mean",
  "median", "sd", "se", "min", "max").}
 
 \item{unit}{Numeric, the minutes in which a velocity unity is provided
@@ -48,7 +48,28 @@ A zoo object or data.frame in the appropriate format for other functionalities.
 \description{
 Aggregation of time-series data and start/end time selection.
 This function provides the option to select the temporal step size
-for aggregation of a single time series origination from an \code{is.trex}-compliant object.
+for aggregation of a single time series origination from an \code{\link{is.trex}}-compliant object.
 Additionally, the user can define the start and end time of the series and select
 the mean of aggregating the data.
+}
+\examples{
+#aggregate SFD values to mean hourly and daily sums
+raw   <- example.data(type="doy", species="PCAB")
+input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+input[which(input<0.4)]<-NA
+k.input<-dt.max(time_step(input,time.int=15,max.gap=180,decimals=10),methods=c("mw"))
+sfd.input<-cal.sfd(k.input,make.plot=FALSE,df=FALSE,wood="Coniferous")$sfd.mw$sfd
+# means
+output.1hmean<-agg.data(sfd.input,time.agg=60,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
+output.3hmean<-agg.data(sfd.input,time.agg=60*3,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
+output.6hmean<-agg.data(sfd.input,time.agg=60*6,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
+plot(output.1hmean,col="cyan")
+lines(output.3hmean,col="orange")
+lines(output.6hmean,col="black")
+
+# daily sums
+output.dsum<-agg.data(sfd.input,time.agg=60*24,start="2012-07-28 00:00",end="2012-10-29 00:00",FUN="sum",unit=60,na.rm=TRUE,df=FALSE)
+plot(output.dsum)
+points(output.dsum,pch=16)
+
 }

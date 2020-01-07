@@ -9,7 +9,7 @@ time_step(input, start = '2012-05-28 00:00',
   decimals = 10, df = FALSE)
 }
 \arguments{
-\item{input}{an \code{is.trex}-compliant (output) object}
+\item{input}{An \code{\link{is.trex}}-compliant (output) object}
 
 \item{start}{Character string providing the start time for the series.
 Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or

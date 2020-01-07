@@ -32,7 +32,17 @@
 #'
 #' @return A \code{zoo} object or \code{data.frame} in the appropriate
 #'  format for other functionalities. See \code{\link{dt.max}} output specifications. All K values for each method have been provided when an is.trex files was provided.
+#'
+#' @references Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V,
+#' Prendin AL, Schneider L, Baltzer JL, Baron-Gafford GA, Dietrich L, Heinrich I,
+#' Minor RL, Sonnentag O, Matheny AM, Wightman MG, Steppe K. 2018.
+#' Quantification of uncertainties in conifer sap flow measured with the thermal
+#' dissipation method. New Phytologist 219:1283-1299 <doi: 10.1111/nph.15241>
+#'
+#'
+#'
 #' @export
+#'
 #'
 #' @examples
 #' \dontrun{
@@ -202,20 +212,20 @@ damp <- function(input,
       for (y in c(1:length(unique(proc.1$year)))) {
         scaled    <-
           proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"] / stats::quantile(proc.1[which(proc.1$year ==
-                                                                                                    unique(proc.1$year)[y]), "day.max"], probs = c(0.95), na.rm = TRUE)
+                                                                                                           unique(proc.1$year)[y]), "day.max"], probs = c(0.95), na.rm = TRUE)
         max.origin <-
           stats::quantile(proc.1[which(proc.1$year == unique(proc.1$year)[1]), "day.max"], probs =
-                     c(0.95), na.rm = TRUE)
+                            c(0.95), na.rm = TRUE)
         min.scaled <- min(scaled, na.rm = TRUE)
         scaled <-
           (proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"] - (min(proc.1[which(proc.1$year ==
                                                                                                  unique(proc.1$year)[y]), "day.max"], na.rm = TRUE))) /
           (stats::quantile(proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"], probs =
-                      c(0.95), na.rm = TRUE) - (min(proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"], na.rm =
-                                                      TRUE)))
+                             c(0.95), na.rm = TRUE) - (min(proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"], na.rm =
+                                                             TRUE)))
         proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max.cor"] <-
           scaled * (stats::quantile(proc.1[which(proc.1$year == unique(proc.1$year)[1]), "day.max"], probs =
-                               c(0.95), na.rm = TRUE) -
+                                      c(0.95), na.rm = TRUE) -
                       min(proc.1[which(proc.1$year ==
                                          unique(proc.1$year)[y]), "day.max"], na.rm = TRUE)) + min(proc.1[which(proc.1$year ==
                                                                                                                   unique(proc.1$year)[y]), "day.max"], na.rm = TRUE)
@@ -289,7 +299,7 @@ damp <- function(input,
       proc.2 <-
         ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * c(1:length.date)) / (
           1 + stats::coef(model_nls)[3] * c(1:length.date) + stats::coef(model_nls)[4] * (c(1:length.date) ^
-                                                                              2)
+                                                                                            2)
         ))
       proc.2 <- zoo::zoo(proc.2, order.by = zoo.date)
 
@@ -355,7 +365,7 @@ damp <- function(input,
       proc.orig <-
         ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * proc.1$run) / (
           1 + stats::coef(model_nls)[3] * proc.1$run + stats::coef(model_nls)[4] * (proc.1$run ^
-                                                                        2)
+                                                                                      2)
         ))
       center <-
         as.numeric(stats::lm(proc.1$day.max ~ 1 + stats::offset(proc.orig))$coefficients)
@@ -466,12 +476,12 @@ damp <- function(input,
           data.frame(
             timestamp = as.character(zoo::index(input[["ed.criteria"]])),
             value = as.numeric(as.character(input[["ed.criteria"]]))
-            ),
+          ),
 
           data.frame(
             timestamp = as.character(zoo::index(input[["methods"]])),
             value = as.numeric(as.character(input[["methods"]]))
-            ),
+          ),
 
 
 
@@ -593,20 +603,20 @@ damp <- function(input,
     for (y in c(1:length(unique(proc.1$year)))) {
       scaled    <-
         proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"] / stats::quantile(proc.1[which(proc.1$year ==
-                                                                                                  unique(proc.1$year)[y]), "day.max"], probs = c(0.95), na.rm = TRUE)
+                                                                                                         unique(proc.1$year)[y]), "day.max"], probs = c(0.95), na.rm = TRUE)
       max.origin <-
         stats::quantile(proc.1[which(proc.1$year == unique(proc.1$year)[1]), "day.max"], probs =
-                   c(0.95), na.rm = TRUE)
+                          c(0.95), na.rm = TRUE)
       min.scaled <- min(scaled, na.rm = TRUE)
       scaled <-
         (proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"] - (min(proc.1[which(proc.1$year ==
                                                                                                unique(proc.1$year)[y]), "day.max"], na.rm = TRUE))) /
         (stats::quantile(proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"], probs =
-                    c(0.95), na.rm = TRUE) - (min(proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"], na.rm =
-                                                    TRUE)))
+                           c(0.95), na.rm = TRUE) - (min(proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"], na.rm =
+                                                           TRUE)))
       proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max.cor"] <-
         scaled * (stats::quantile(proc.1[which(proc.1$year == unique(proc.1$year)[1]), "day.max"], probs =
-                             c(0.95), na.rm = TRUE) -
+                                    c(0.95), na.rm = TRUE) -
                     min(proc.1[which(proc.1$year ==
                                        unique(proc.1$year)[y]), "day.max"], na.rm = TRUE)) + min(proc.1[which(proc.1$year ==
                                                                                                                 unique(proc.1$year)[y]), "day.max"], na.rm = TRUE)
@@ -680,7 +690,7 @@ damp <- function(input,
     proc.2 <-
       ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * c(1:length.date)) / (
         1 + stats::coef(model_nls)[3] * c(1:length.date) + stats::coef(model_nls)[4] * (c(1:length.date) ^
-                                                                            2)
+                                                                                          2)
       ))
     proc.2 <- zoo::zoo(proc.2, order.by = zoo.date)
 
@@ -745,7 +755,7 @@ damp <- function(input,
     proc.orig <-
       ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * proc.1$run) / (
         1 + stats::coef(model_nls)[3] * proc.1$run + stats::coef(model_nls)[4] * (proc.1$run ^
-                                                                      2)
+                                                                                    2)
       ))
     center <-
       as.numeric(stats::lm(proc.1$day.max ~ 1 + stats::offset(proc.orig))$coefficients)

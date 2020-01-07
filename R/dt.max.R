@@ -22,7 +22,7 @@
 #' df = FALSE)
 
 #'
-#' @param input An \code{is.trex}-compliant object of \eqn{K} values containing
+#' @param input An \code{\link{is.trex}}-compliant object of \eqn{K} values containing
 #'  a timestamp and a value column.
 #' @param methods Character vector of the requested \eqn{\Delta T_{max}}{\Delta Tmax} methods.
 #' Options include “pd” (predawn), “mw” (moving window), “dr” (double regression),
@@ -43,10 +43,10 @@
 #' methods will consider for their moving-windows.
 #' @param ed.window Numeric, defines the length of the period considered for assessing the
 #'  environmental conditions and stable \eqn{\Delta T_{max}}{\Delta Tmax} values.
-#' @param vpd.input An \code{is.trex}-compliant object (\code{zoo} time-series or \code{data.frame})
+#' @param vpd.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
 #'  with the same temporal extent and time steps as the input data.
-#' @param sr.input An \code{is.trex}-compliant object (\code{zoo} time-series or \code{data.frame})
+#' @param sr.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})
 #' @param sel.max Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\Delta T_{max}}{\Delta Tmax}.
 #'  This is included to change predawn \eqn{\Delta T_{max}}{\Delta Tmax} values selected with the \code{ed} method.
@@ -189,7 +189,7 @@ dt.max <-
            df = FALSE) {
     #t= test
     #raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #input   <-time.step(input=raw,start="2014-05-08 00:00",end="2015-06-25 00:50",
+    #input   <-time_step(input=raw,start="2014-05-08 00:00",end="2015-06-25 00:50",
     #                   time.int=15,max.gap=60,decimals=6,df=F)
     #input[which(input<0.4)]<-NA
     #vpd<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",header=TRUE,sep="\t")
@@ -199,10 +199,10 @@ dt.max <-
     #sr<-sr[,c("Timestamp","N13")]
     #colnames(sr)<-c("timestamp","value")
     #vpd_raw   <-is.trex(vpd,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #vpd.input <-time.step(input=vpd_raw,start="2014-05-08 00:00",end="2015-06-25 00:50",
+    #vpd.input <-time_step(input=vpd_raw,start="2014-05-08 00:00",end="2015-06-25 00:50",
     #                      time.int=15,max.gap=60,decimals=6,df=F)
     #sr_raw   <-is.trex(sr,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #sr.input <-time.step(input=sr_raw,start="2014-05-08 00:00",end="2015-06-25 00:50",
+    #sr.input <-time_step(input=sr_raw,start="2014-05-08 00:00",end="2015-06-25 00:50",
     #                     time.int=15,max.gap=60,decimals=6,df=F)
     #methods=c("pd","mw","dr","ed")
     #methods=c("dr")
