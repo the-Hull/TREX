@@ -8,7 +8,7 @@ hw.cor(input, dt.max, probe.length = 20, sapwood.thickness = 18,
   df = F)
 }
 \arguments{
-\item{input}{\code{\link{is.trex}}-compliant object of eqn{\Delta T }(or \eqn{\Delta V}) values containing
+\item{input}{\code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
 a timestamp and a value column.}
 
 \item{dt.max}{Optional \code{zoo} object or \code{data.frame} (columns = “timestamp” or “value”)
@@ -49,12 +49,18 @@ The function applied the correction provided by Clearwater et al. 1999.
 \examples{
 \dontrun{
 #correct for probes being inserted into the heartwood
-raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="\%H:\%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-input <-time.step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
+raw   <-is.trex(example.data(type="doy", species="PCAB"),
+          tz="GMT",time.format="\%H:\%M",solar.time=TRUE,
+          long.deg=7.7459,ref.add=FALSE)
+input <-time.step(input=raw,
+                   start="2014-05-08 00:00",
+                   end="2014-07-25 00:50",
                   time.int=15,max.gap=60,decimals=6,df=F)
 input[which(input<0.2)]<-NA
-input <-dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
-output.data<-hw.cor(input,probe.length=20,sapwood.thickness=18,df=FALSE)
+input <-dt.max(input, methods=c("pd","mw","dr"),
+                 det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+output.data<-hw.cor(input,probe.length=20,
+                   sapwood.thickness=18,df=FALSE)
 plot(output.data$k.dr,col="orange")
 lines(input$k.dr)
 output.data$hw.cor

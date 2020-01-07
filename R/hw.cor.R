@@ -8,7 +8,7 @@
 #' is recalculated accordingly. When an \code{\link{is.trex}}-compliant object is
 #' applied, the \eqn{K} values provided for each method are provided.
 #'
-#' @param input \code{\link{is.trex}}-compliant object of eqn{\Delta T }(or \eqn{\Delta V}) values containing
+#' @param input \code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
 #'  a timestamp and a value column.
 #' @param dt.max Optional \code{zoo} object or \code{data.frame} (columns = “timestamp” or “value”)
 #' containing the \eqn{\Delta T_{max}}{\Delta Tmax} when no \code{\link{is.trex}}-compliant object is provided.
@@ -40,12 +40,18 @@
 #' @examples
 #' \dontrun{
 #' #correct for probes being inserted into the heartwood
-#' raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-#' input <-time.step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
+#' raw   <-is.trex(example.data(type="doy", species="PCAB"),
+#'           tz="GMT",time.format="%H:%M",solar.time=TRUE,
+#'           long.deg=7.7459,ref.add=FALSE)
+#' input <-time.step(input=raw,
+#'                    start="2014-05-08 00:00",
+#'                    end="2014-07-25 00:50",
 #'                   time.int=15,max.gap=60,decimals=6,df=F)
 #' input[which(input<0.2)]<-NA
-#' input <-dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
-#' output.data<-hw.cor(input,probe.length=20,sapwood.thickness=18,df=FALSE)
+#' input <-dt.max(input, methods=c("pd","mw","dr"),
+#'                  det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+#' output.data<-hw.cor(input,probe.length=20,
+#'                    sapwood.thickness=18,df=FALSE)
 #' plot(output.data$k.dr,col="orange")
 #' lines(input$k.dr)
 #' output.data$hw.cor
@@ -128,25 +134,25 @@ if(length(which(names(input)%in%c("max.pd","max.mw","max.dr","max.ed","daily_max
                       k.pd,k.mw,k.dr,k.ed)
   }else{
 
-    output.data<-list(data.frame(timestamp=as.character(index(input$max.pd)),value=as.numeric(as.character(input$max.pd))),
-         data.frame(timestamp=as.character(index(input$max.mw)),value=as.numeric(as.character(input$max.mw))),
-         data.frame(timestamp=as.character(index(input$max.dr)),value=as.numeric(as.character(input$max.dr))),
-         data.frame(timestamp=as.character(index(input$max.ed)),value=as.numeric(as.character(input$max.ed))),
-         data.frame(timestamp=as.character(index(input$daily_max.pd)),value=as.numeric(as.character(input$daily_max.pd))),
-         data.frame(timestamp=as.character(index(input$daily_max.mw)),value=as.numeric(as.character(input$daily_max.mw))),
-         data.frame(timestamp=as.character(index(input$daily_max.dr)),value=as.numeric(as.character(input$daily_max.dr))),
-         data.frame(timestamp=as.character(index(input$daily_max.ed)),value=as.numeric(as.character(input$daily_max.ed))),
-         data.frame(timestamp=as.character(index(input$all.pd)),value=as.numeric(as.character(input$all.pd))),
-         data.frame(timestamp=as.character(index(input$all.ed)),value=as.numeric(as.character(input$all.ed))),
-         data.frame(timestamp=as.character(index(input$input)),value=as.numeric(as.character(input$input))),input$criteria,input$methods,#data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness),
-         #data.frame(timestamp=as.character(index(dtsw.pd)),value=as.numeric(as.character(dtsw.pd))),
-         #data.frame(timestamp=as.character(index(dtsw.mw)),value=as.numeric(as.character(dtsw.mw))),
-         #data.frame(timestamp=as.character(index(dtsw.dr)),value=as.numeric(as.character(dtsw.dr))),
-         #data.frame(timestamp=as.character(index(dtsw.ed)),value=as.numeric(as.character(dtsw.ed))),
-         data.frame(timestamp=as.character(index(k.pd)),value=as.numeric(as.character(k.pd))),
-         data.frame(timestamp=as.character(index(k.mw)),value=as.numeric(as.character(k.mw))),
-         data.frame(timestamp=as.character(index(k.dr)),value=as.numeric(as.character(k.dr))),
-         data.frame(timestamp=as.character(index(k.ed)),value=as.numeric(as.character(k.ed)))
+    output.data<-list(data.frame(timestamp=as.character(zoo::index(input$max.pd)),value=as.numeric(as.character(input$max.pd))),
+         data.frame(timestamp=as.character(zoo::index(input$max.mw)),value=as.numeric(as.character(input$max.mw))),
+         data.frame(timestamp=as.character(zoo::index(input$max.dr)),value=as.numeric(as.character(input$max.dr))),
+         data.frame(timestamp=as.character(zoo::index(input$max.ed)),value=as.numeric(as.character(input$max.ed))),
+         data.frame(timestamp=as.character(zoo::index(input$daily_max.pd)),value=as.numeric(as.character(input$daily_max.pd))),
+         data.frame(timestamp=as.character(zoo::index(input$daily_max.mw)),value=as.numeric(as.character(input$daily_max.mw))),
+         data.frame(timestamp=as.character(zoo::index(input$daily_max.dr)),value=as.numeric(as.character(input$daily_max.dr))),
+         data.frame(timestamp=as.character(zoo::index(input$daily_max.ed)),value=as.numeric(as.character(input$daily_max.ed))),
+         data.frame(timestamp=as.character(zoo::index(input$all.pd)),value=as.numeric(as.character(input$all.pd))),
+         data.frame(timestamp=as.character(zoo::index(input$all.ed)),value=as.numeric(as.character(input$all.ed))),
+         data.frame(timestamp=as.character(zoo::index(input$input)),value=as.numeric(as.character(input$input))),input$criteria,input$methods,#data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness),
+         #data.frame(timestamp=as.character(zoo::index(dtsw.pd)),value=as.numeric(as.character(dtsw.pd))),
+         #data.frame(timestamp=as.character(zoo::index(dtsw.mw)),value=as.numeric(as.character(dtsw.mw))),
+         #data.frame(timestamp=as.character(zoo::index(dtsw.dr)),value=as.numeric(as.character(dtsw.dr))),
+         #data.frame(timestamp=as.character(zoo::index(dtsw.ed)),value=as.numeric(as.character(dtsw.ed))),
+         data.frame(timestamp=as.character(zoo::index(k.pd)),value=as.numeric(as.character(k.pd))),
+         data.frame(timestamp=as.character(zoo::index(k.mw)),value=as.numeric(as.character(k.mw))),
+         data.frame(timestamp=as.character(zoo::index(k.dr)),value=as.numeric(as.character(k.dr))),
+         data.frame(timestamp=as.character(zoo::index(k.ed)),value=as.numeric(as.character(k.ed)))
     )}
 
     names(output.data)<-c("max.pd","max.mw","max.dr","max.ed",
@@ -165,7 +171,7 @@ if(length(which(names(input)%in%c("max.pd","max.mw","max.dr","max.ed","daily_max
     #p
     input<-zoo::zoo(input$value,order.by=base::as.POSIXct(input$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))
     #e
-    if(as.character(index(input)[1])=="(NA NA)"|is.na(index(input)[1])==T)stop("No timestamp present, time.format is likely incorrect.")}
+    if(as.character(zoo::index(input)[1])=="(NA NA)"|is.na(zoo::index(input)[1])==T)stop("No timestamp present, time.format is likely incorrect.")}
 
     if(attributes(dt.max)$class=="data.frame"){#e
     if(is.numeric(dt.max$value)==F)stop("Invalid dt.max data, values within the data.frame are not numeric.")
@@ -173,10 +179,10 @@ if(length(which(names(input)%in%c("max.pd","max.mw","max.dr","max.ed","daily_max
     #p
     dt.max<-zoo::zoo(dt.max$value,order.by=base::as.POSIXct(dt.max$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))
     #e
-    if(as.character(index(dt.max)[1])=="(NA NA)"|is.na(index(dt.max)[1])==T)stop("No timestamp present, time.format is likely incorrect.")}
+    if(as.character(zoo::index(dt.max)[1])=="(NA NA)"|is.na(zoo::index(dt.max)[1])==T)stop("No timestamp present, time.format is likely incorrect.")}
     if(is.numeric(input)==F)stop("Invalid input data, values within the data.frame are not numeric.")
     if(is.numeric(dt.max)==F)stop("Invalid dt.max data, values within the data.frame are not numeric.")
-    if(nrow(na.omit(cbind(input,dt.max)))<length(input)*1/2)stop("Invalid input and dt.max data, less than half of the data matches timestamps.")
+    if(nrow(stats::na.omit(cbind(input,dt.max)))<length(input)*1/2)stop("Invalid input and dt.max data, less than half of the data matches timestamps.")
 
     if(a<1){
       dtsw               <-((input-b*dt.max)/a)#here is clearwater correction applied
@@ -192,10 +198,10 @@ if(length(which(names(input)%in%c("max.pd","max.mw","max.dr","max.ed","daily_max
       output.data<-list(input,dt.max,dtsw,k.value,data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness))
     }
     if(df==T){
-      output.data<-list(data.frame(timestamp=as.character(index(input)),value=as.numeric(as.character(input))),
-                        data.frame(timestamp=as.character(index(dt.max)),value=as.numeric(as.character(dt.max))),
-                        data.frame(timestamp=as.character(index(dtsw)),value=as.numeric(as.character(dtsw))),
-                        data.frame(timestamp=as.character(index(k.value)),value=as.numeric(as.character(k.value))),
+      output.data<-list(data.frame(timestamp=as.character(zoo::index(input)),value=as.numeric(as.character(input))),
+                        data.frame(timestamp=as.character(zoo::index(dt.max)),value=as.numeric(as.character(dt.max))),
+                        data.frame(timestamp=as.character(zoo::index(dtsw)),value=as.numeric(as.character(dtsw))),
+                        data.frame(timestamp=as.character(zoo::index(k.value)),value=as.numeric(as.character(k.value))),
                         data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness)
                         )
     }

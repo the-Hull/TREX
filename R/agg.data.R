@@ -41,26 +41,53 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' #aggregate SFD values to mean hourly and daily sums
+#'
 #' raw   <- example.data(type="doy", species="PCAB")
-#' input <- is.trex(raw,tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+#'
+#' input <- is.trex(raw,tz="GMT",time.format="%H:%M",
+#'                   solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+#'
 #' input[which(input<0.4)]<-NA
-#' k.input<-dt.max(time_step(input,time.int=15,max.gap=180,decimals=10),methods=c("mw"))
-#' sfd.input<-cal.sfd(k.input,make.plot=FALSE,df=FALSE,wood="Coniferous")$sfd.mw$sfd
+#'
+#' k.input<-dt.max(time_step(input,time.int=15,
+#'                max.gap=180,decimals=10),methods=c("mw"))
+#'
+#' sfd.input<-cal.sfd(k.input,make.plot=FALSE,
+#'                   df=FALSE,wood="Coniferous")$sfd.mw$sfd
+#'
 #' # means
-#' output.1hmean<-agg.data(sfd.input,time.agg=60,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
-#' output.3hmean<-agg.data(sfd.input,time.agg=60*3,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
-#' output.6hmean<-agg.data(sfd.input,time.agg=60*6,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
+#' output.1hmean <- agg.data(sfd.input,
+#'                        time.agg=60,
+#'                        start="2012-07-28 00:00",
+#'                        end="2012-08-29 00:00",
+#'                        FUN="mean",
+#'                        na.rm=TRUE,
+#'                        df=FALSE)
+#' output.6hmean <- agg.data(sfd.input,
+#'                          time.agg=60*6,
+#'                          start="2012-07-28 00:00",
+#'                          end="2012-08-29 00:00",
+#'                          FUN="mean",
+#'                          na.rm=TRUE,
+#'                          df=FALSE)
 
 #' plot(output.1hmean,col="cyan")
-#' lines(output.3hmean,col="orange")
 #' lines(output.6hmean,col="black")
 #'
 #' # daily sums
-#' output.dsum<-agg.data(sfd.input,time.agg=60*24,start="2012-07-28 00:00",end="2012-10-29 00:00",FUN="sum",unit=60,na.rm=TRUE,df=FALSE)
+#' output.dsum<-agg.data(sfd.input,
+#'                       time.agg=60*24,
+#'                       start="2012-07-28 00:00",
+#'                       end="2012-10-29 00:00",
+#'                       FUN="sum",
+#'                       unit=60,
+#'                       na.rm=TRUE,
+#'                       df=FALSE)
 #' plot(output.dsum)
 #' points(output.dsum,pch=16)
-#'
+#' }
 agg.data <-
   function(input,
            time.agg = 60 * 24,
