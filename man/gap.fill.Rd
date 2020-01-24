@@ -4,7 +4,7 @@
 \alias{gap.fill}
 \title{Gap filling by linear interpolation}
 \usage{
-gap.fill(input, max.gap = 60, decimals = 10, df = FALSE, time.int = 10)
+gap.fill(input, max.gap = 60, decimals = 10, df = FALSE)
 }
 \arguments{
 \item{input}{an \code{\link{is.trex}}-compliant object.}
@@ -17,12 +17,6 @@ which can be filled by performing a linear interpolation.}
 \item{df}{Logical; if \code{TRUE}, output is provided in a \code{data.frame}
 format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
 If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).}
-
-\item{time.int}{Numeric value providing the number of minutes for the
-minimum time step. When time.int is smaller then the minimum time step
-of the series, a linear interpolation is applied. If \code{time.int} is
-larger than the minimum time step of the series values are average
-(after performing a linear interpolation to obtain a minute resolution).}
 }
 \value{
 A \code{zoo} object or data.frame in the appropriate format for further processing.

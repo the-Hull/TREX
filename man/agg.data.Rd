@@ -14,7 +14,7 @@ agg.data(input,
  df = FALSE)
 }
 \arguments{
-\item{input}{An \code{\link{is.trex}}-compliant time series from \code{cal.sfd} outputs
+\item{input}{An \code{\link{is.trex}}-compliant time series from \code{tdm_cal.sfd} outputs
 (e.g., \code{X$sfd.mw$sfd}).}
 
 \item{time.agg}{Numeric, the aggregation time in minutes (default = 60).}
@@ -56,17 +56,17 @@ the mean of aggregating the data.
 \dontrun{
 #aggregate SFD values to mean hourly and daily sums
 
-raw   <- example.data(type="doy", species="PCAB")
+raw   <- example.data(type="doy")
 
 input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",
                   solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
 
 input[which(input<0.4)]<-NA
 
-k.input<-dt.max(time_step(input,time.int=15,
+k.input<-tdm_dt.max(dt.steps(input,time.int=15,
                max.gap=180,decimals=10),methods=c("mw"))
 
-sfd.input<-cal.sfd(k.input,make.plot=FALSE,
+sfd.input<-tdm_cal.sfd(k.input,make.plot=FALSE,
                   df=FALSE,wood="Coniferous")$sfd.mw$sfd
 
 # means

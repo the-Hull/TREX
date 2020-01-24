@@ -54,7 +54,7 @@ To prevent errors occurring in the other reported functions, it is advised to ru
 }
 \examples{
 #validating and structuring example data
-raw   <- example.data(type="doy", species="PCAB")
+raw   <- example.data(type="doy")
 input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",
     solar.time=TRUE,long.deg=7.7459,
     ref.add=FALSE,df=FALSE)

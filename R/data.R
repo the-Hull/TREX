@@ -1,3 +1,21 @@
+#' Sap flow measurements
+#'
+#'
+#'
+#' @description Returns an example thermal dissipation probe (TDM)
+#'  datasets of either two types measurement formats (either “timestamp” or “doy” format).
+#'   TDM \eqn{\Delta V} measurements are provide at a 15-minute resolution from 2012-2015 from
+#'    a Norway spruce (\emph{Picea abies} (L.) Karts.) growing at 1300 m a.s.l.
+#'    in the Swiss Alps (Loetschental, Switzerland; see Peters et al. 2019).
+#'    The presented data is open for public use.
+#'
+#'
+#' @usage tdm.data
+#'
+#'
+#' @name tdm.data
+"tdm.data"
+
 
 
 #' Calibration Measurements
@@ -7,7 +25,7 @@
 #' @description Returns raw calibration experiment data obtained from literature,
 #'  with K values combined with gravimetrically determined sap flux density.
 #'  The data.frame contains 22 studies with 37 different species. The data is used
-#'  within the \code{cal.sfd()} function to calculate sap flux density. The data
+#'  within the \code{\link{tdm_cal.sfd()}} function to calculate sap flux density. The data
 #'  originates from the manuscript by Flo \emph{et al.} 2019 and provides a
 #'  description on the genus, species, calibration material, wood porosity and diameter
 #'  of the stem. The presented data is open for public use.
@@ -16,32 +34,48 @@
 #'
 #' @usage cal.data
 #'
-#' @details Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{cal.sfd}} (argument "study"):
+#' @details Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{tdm_cal.sfd()}} (argument "study"):
 #'
 #' \itemize{
-#' item{Braun and Schmid 1999}
-#; item{Cabibel et al. 1991}
-#; item{Cain 2009}
-#; item{Chan 2015}
-#; item{Fuchs et al. 2017}
-#; item{Granier 1985}
-#; item{Gutierrez & Santiago 2005}
-#; item{Herbst et al. 2007}
-#; item{Liu et al. 2008}
-#; item{Lu 2002}
-#; item{Lu and Chacko 1998}
-#; item{Oliveira et al. 2006}
-#; item{Paudel et al. 2013}
-#; item{Rubilar et al. 2016}
-#; item{Schmidt-walter et al. 2014}
-#; item{Sperling et al. 2012}
-#; item{Sugiura et al. 2009}
-#; item{Sun et al. 2012}
-#; item{Vellame et al. 2009}
-#; item{Hubbard et al. 2010}
-#; item{Peters et al. 2017}
-#; item{Steppe et al. 2010}
+#'     \item{Braun and Schmid 1999}
+#'     \item{Cabibel et al. 1991}
+#'     \item{Cain 2009}
+#'     \item{Chan 2015}
+#'     \item{Fuchs et al. 2017}
+#'     \item{Granier 1985}
+#'     \item{Gutierrez & Santiago 2005}
+#'     \item{Herbst et al. 2007}
+#'     \item{Liu et al. 2008}
+#'     \item{Lu 2002}
+#'     \item{Lu and Chacko 1998}
+#'     \item{Oliveira et al. 2006}
+#'     \item{Paudel et al. 2013}
+#'     \item{Rubilar et al. 2016}
+#'     \item{Schmidt-walter et al. 2014}
+#'     \item{Sperling et al. 2012}
+#'     \item{Sugiura et al. 2009}
+#'     \item{Sun et al. 2012}
+#'     \item{Vellame et al. 2009}
+#'     \item{Hubbard et al. 2010}
+#'     \item{Peters et al. 2017}
+#'     \item{Steppe et al. 2010}
 #'
+#' }
+#'
+#' @format Provides a data.frame with 4024 rows and 10 columns.
+#' \describe{
+#'   \item{Study}{Study from which the data originates (see Flo et al. 2019) (\code{character})}
+#'   \item{Genus}{Monitored genus (\code{character})}
+#'   \item{Species}{Monitored species (\code{character})}
+#'   \item{Calibration.material}{Description on the calibration method that was used,
+#'         including stem segment, whole plant and whole plant without roots (\code{character})}
+#'   \item{Wood.porosity}{Wood structure type of the examined species, including coniferous, diffuse-porous, ring-porous and monocots (\code{character})}
+#'   \item{Diameter}{Diameter at breast height of the calibration subject (in cm) (\code{numeric})}
+#'   \item{k}{Proportional difference between \eqn{\Delta T} and \eqn{\Delta T_{max}}{\Delta Tmax} measured
+#'          by the thermal dissipation probes (unitless; -) (\code{numeric})}
+#'   \item{SFD}{Sap flux density measured gravimetrically (in \eqn{cm^3}{cm3} cm-2 h-1) (\code{numeric})}
+#'   \item{Granier}{Sap flux density calculated according to Granier et al. 1985 using k
+#'        (in \eqn{cm^{3}}{cm3} cm-2 h-1; using \eqn{43.84 k^{1.231}{k^1.231}}) (\code{numeric})}
 #' }
 #'
 #'

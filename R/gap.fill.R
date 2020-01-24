@@ -6,7 +6,7 @@
 #' This function provides the option to define the minimum size under which gaps should
 #' be filled, using linear interpolation.
 #'
-#' @usage gap.fill(input, max.gap = 60, decimals = 10, df = FALSE, time.int = 10)
+#' @usage gap.fill(input, max.gap = 60, decimals = 10, df = FALSE)
 #'
 #' @param input an \code{\link{is.trex}}-compliant object.
 #' @param max.gap Numeric value providing the maximum size of a gap in minutes,
@@ -15,11 +15,6 @@
 #' @param df Logical; if \code{TRUE}, output is provided in a \code{data.frame}
 #' format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
 #' If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).
-#' @param time.int Numeric value providing the number of minutes for the
-#' minimum time step. When time.int is smaller then the minimum time step
-#' of the series, a linear interpolation is applied. If \code{time.int} is
-#' larger than the minimum time step of the series values are average
-#' (after performing a linear interpolation to obtain a minute resolution).
 #'
 #' @return A \code{zoo} object or data.frame in the appropriate format for further processing.
 #' @export
@@ -53,25 +48,10 @@
 gap.fill <- function(input,
                      max.gap = 60,
                      decimals = 10,
-                     df = FALSE,
-                     time.int = 10) {
+                     df = FALSE) {
   #t= test
 
-  # raw   <- example.data(type = "doy", species = "PCAB")
-  # input <-
-  #   is.trex(
-  #     raw,
-  #     tz = "GMT",
-  #     time.format = "%H:%M",
-  #     solar.time = TRUE,
-  #     long.deg = 7.7459,
-  #     ref.add = FALSE,
-  #     df = FALSE
-  #   )
-  # input[which(input < 0.4 | input > 0.82)] <- NA
-  # max.gap = 120
-  # decimals = 10
-  # df = FALSE
+
 
   #p= process
   if (attributes(input)$class == "data.frame") {
@@ -179,6 +159,7 @@ gap.fill <- function(input,
   proc.1$value <- round(proc.1$value, decimals)
 
   #o= output
+  time.int <- stats::median(raw.gap)
   output.data <- proc.1[which(as.character(zoo::index(proc.1)) %in% as.character(seq(
     from = ts.start + 1,
     to = ts.end - 1,

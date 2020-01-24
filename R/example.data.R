@@ -25,7 +25,6 @@
 example.data <- function(type = "timestamp", species = "PCAB") {
   #t= test
   #type="timestamp"
-  #species="PCAB"
 
 
   #d= default conditions
@@ -71,7 +70,7 @@ example.data <- function(type = "timestamp", species = "PCAB") {
 
 # #loading example data
 # setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction")
-# input<-example.data(type="timestamp", species="PCAB")
+# input<-example.data(type="timestamp")
 # head(input)
 # str(input)
 

@@ -6,7 +6,7 @@ tdm.data<-function(type="timestamp"){
   }else{return(read.table("tdm.input.txt",header=TRUE,sep="\t")[,c(2,3,4,5)])}}
 
 #example
-#viewing TDM data 
+#viewing TDM data
 tdm.data(type="timestamp")
 
 

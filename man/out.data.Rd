@@ -9,12 +9,12 @@ out.data(input, vpd.input, sr.input, prec.input, peak.hours = c(10:14),
   method = "env.filt", make.plot = TRUE)
 }
 \arguments{
-\item{input}{An \code{\link{is.trex}}-compliant time series from \code{cal.sfd} outputs
+\item{input}{An \code{\link{is.trex}}-compliant time series from \code{tdm_cal.sfd} outputs
 (e.g., \code{X$sfd.mw$sfd})}
 
 \item{vpd.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
-with the same temporal extent and time_steps as the input data.}
+with the same temporal extent and time steps as the input data.}
 
 \item{sr.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})}
@@ -55,7 +55,7 @@ raw   <-
     ref.add = FALSE
   )
 input <-
-  time_step(
+  dt.steps(
     input = raw,
     start = "2013-05-01 00:00",
     end = "2013-11-01 00:00",
@@ -66,7 +66,7 @@ input <-
   )
 input[which(input < 0.2)] <- NA
 input <-
-  dt.max(
+  tdm_dt.max(
     input,
     methods = c("dr"),
     det.pd = TRUE,
@@ -75,7 +75,7 @@ input <-
     df = FALSE
   )
 output.data <-
-  cal.sfd(input,
+  tdm_cal.sfd(input,
           make.plot = TRUE,
           df = FALSE,
           wood = "Coniferous")
@@ -91,7 +91,7 @@ vpd_raw   <-
     ref.add = FALSE
   )
 vpd.input <-
-  time_step(
+  dt.steps(
     input = vpd_raw,
     start = "2013-05-01 00:00",
     end = "2013-11-01 00:00",
@@ -110,7 +110,7 @@ sr_raw   <-
     ref.add = FALSE
   )
 sr.input <-
-  time_step(
+  dt.steps(
     input = sr_raw,
     start = "2013-05-01 00:00",
     end = "2013-11-01 00:00",

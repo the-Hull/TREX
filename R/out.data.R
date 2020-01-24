@@ -2,11 +2,11 @@
 #'
 #' @description FILL this function allow saving plots and making cool data.
 #'
-#' @param input An \code{\link{is.trex}}-compliant time series from \code{cal.sfd} outputs
+#' @param input An \code{\link{is.trex}}-compliant time series from \code{tdm_cal.sfd} outputs
 #' (e.g., \code{X$sfd.mw$sfd})
 #' @param vpd.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
-#'  with the same temporal extent and time_steps as the input data.
+#'  with the same temporal extent and time steps as the input data.
 #' @param sr.input  An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
 #'  with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR})
 #' @param prec.input An \code{\link{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
@@ -35,7 +35,7 @@
 #'     ref.add = FALSE
 #'   )
 #' input <-
-#'   time_step(
+#'   dt.steps(
 #'     input = raw,
 #'     start = "2013-05-01 00:00",
 #'     end = "2013-11-01 00:00",
@@ -46,7 +46,7 @@
 #'   )
 #' input[which(input < 0.2)] <- NA
 #' input <-
-#'   dt.max(
+#'   tdm_dt.max(
 #'     input,
 #'     methods = c("dr"),
 #'     det.pd = TRUE,
@@ -55,7 +55,7 @@
 #'     df = FALSE
 #'   )
 #' output.data <-
-#'   cal.sfd(input,
+#'   tdm_cal.sfd(input,
 #'           make.plot = TRUE,
 #'           df = FALSE,
 #'           wood = "Coniferous")
@@ -71,7 +71,7 @@
 #'     ref.add = FALSE
 #'   )
 #' vpd.input <-
-#'   time_step(
+#'   dt.steps(
 #'     input = vpd_raw,
 #'     start = "2013-05-01 00:00",
 #'     end = "2013-11-01 00:00",
@@ -90,7 +90,7 @@
 #'     ref.add = FALSE
 #'   )
 #' sr.input <-
-#'   time_step(
+#'   dt.steps(
 #'     input = sr_raw,
 #'     start = "2013-05-01 00:00",
 #'     end = "2013-11-01 00:00",
@@ -140,12 +140,12 @@ out.data <-
     #t= test
     #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction")
     #calib<-read.table("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction/cal.data.txt",header=TRUE,sep="\t")
-    #raw   <-is.trex(example.data(type="doy", species="PCAB"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #input <-time_step(input=raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
+    #raw   <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
+    #input <-dt.steps(input=raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
     #                  time.int=15,max.gap=60,decimals=10,df=FALSE)
     #input[which(input<0.2)]<-NA
-    #input <-dt.max(input, methods=c("dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
-    #output.data<-cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+    #input <-tdm_dt.max(input, methods=c("dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+    #output.data<-tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
     #
     #vpd<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",header=TRUE,sep="\t")
     #sr<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",header=TRUE,sep="\t")
@@ -154,10 +154,10 @@ out.data <-
     #sr<-sr[,c("Timestamp","N13")]
     #colnames(sr)<-c("timestamp","value")
     #vpd_raw   <-is.trex(vpd,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #vpd.input <-time_step(input=vpd_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
+    #vpd.input <-dt.steps(input=vpd_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
     #                      time.int=15,max.gap=60,decimals=10,df=FALSE)
     #sr_raw   <-is.trex(sr,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #sr.input <-time_step(input=sr_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
+    #sr.input <-dt.steps(input=sr_raw,start="2013-05-01 00:00",end="2013-11-01 00:00",
     #                     time.int=15,max.gap=60,decimals=10,df=FALSE)
     #
     #input<-(output.data$sfd.dr$sfd)
@@ -366,7 +366,7 @@ out.data <-
     if (step.min != step.sr | step.min != step.vpd) {
       warning(
         paste0(
-          "time_steps between input and vpd.input/sr.input differ, results might not be correctly aggregated."
+          "dt.steps between input and vpd.input/sr.input differ, results might not be correctly aggregated."
         )
       )
     }

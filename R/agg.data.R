@@ -15,7 +15,7 @@
 #'  na.rm = TRUE,
 #'  df = FALSE)
 #'
-#' @param input An \code{\link{is.trex}}-compliant time series from \code{cal.sfd} outputs
+#' @param input An \code{\link{is.trex}}-compliant time series from \code{tdm_cal.sfd} outputs
 #' (e.g., \code{X$sfd.mw$sfd}).
 #' @param time.agg Numeric, the aggregation time in minutes (default = 60).
 #' @param start Character string, the start time for the series. Format has
@@ -44,17 +44,17 @@
 #' \dontrun{
 #' #aggregate SFD values to mean hourly and daily sums
 #'
-#' raw   <- example.data(type="doy", species="PCAB")
+#' raw   <- example.data(type="doy")
 #'
 #' input <- is.trex(raw,tz="GMT",time.format="%H:%M",
 #'                   solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
 #'
 #' input[which(input<0.4)]<-NA
 #'
-#' k.input<-dt.max(time_step(input,time.int=15,
+#' k.input<-tdm_dt.max(dt.steps(input,time.int=15,
 #'                max.gap=180,decimals=10),methods=c("mw"))
 #'
-#' sfd.input<-cal.sfd(k.input,make.plot=FALSE,
+#' sfd.input<-tdm_cal.sfd(k.input,make.plot=FALSE,
 #'                   df=FALSE,wood="Coniferous")$sfd.mw$sfd
 #'
 #' # means
@@ -98,12 +98,12 @@ agg.data <-
            na.rm = TRUE,
            df = FALSE){
     #t= test
-    #raw   <- example.data(type="doy", species="PCAB")
+    #raw   <- example.data(type="doy")
     #input <- is.trex(raw,tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
     #input[which(input<0.4)]<-NA
-    #input<-time_step(input,time.int=15,max.gap=180,decimals=10)
-    #k.input<-dt.max(input,methods=c("mw"))
-    #output.data<-cal.sfd(k.input,make.plot=FALSE,df=FALSE,wood="Coniferous")$sfd.mw$sfd
+    #input<-dt.steps(input,time.int=15,max.gap=180,decimals=10)
+    #k.input<-tdm_dt.max(input,methods=c("mw"))
+    #output.data<-tdm_cal.sfd(k.input,make.plot=FALSE,df=FALSE,wood="Coniferous")$sfd.mw$sfd
     #input<-output.data
     #na.rm=TRUE
     #time.agg=60*24 # in minutes
@@ -268,11 +268,11 @@ agg.data <-
 }
 
 #aggregate SFD values to mean hourly and daily sums
-# raw   <- example.data(type="doy", species="PCAB")
+# raw   <- example.data(type="doy")
 # input <- is.trex(raw,tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
 # input[which(input<0.4)]<-NA
-# k.input<-dt.max(time_step(input,time.int=15,max.gap=180,decimals=10),methods=c("mw"))
-# sfd.input<-cal.sfd(k.input,make.plot=FALSE,df=FALSE,wood="Coniferous")$sfd.mw$sfd
+# k.input<-tdm_dt.max(dt.steps(input,time.int=15,max.gap=180,decimals=10),methods=c("mw"))
+# sfd.input<-tdm_cal.sfd(k.input,make.plot=FALSE,df=FALSE,wood="Coniferous")$sfd.mw$sfd
 #
 # output.1hmean<-agg.data(sfd.input,time.agg=60,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
 # output.3hmean<-agg.data(sfd.input,time.agg=60*3,start="2012-07-28 00:00",end="2012-08-29 00:00",FUN="mean",na.rm=TRUE,df=FALSE)
