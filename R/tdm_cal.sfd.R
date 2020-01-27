@@ -18,8 +18,9 @@
 #' @param genus Optional, character vector specifying genus-specific calibration
 #' data that should be used (e.g., \code{c("Picea", "Larix")}). See \code{\link{cal.data}}
 #' for the specific labels (default = Use all).
-#' @param species Optional, character vector of study specific species.
-#' @param study optional character vector of study specific calibration data that
+#' @param species Optional, character vector of study specific species,
+#'   e.g. \code{c("Peters et al. 2018")}. See \code{\link{cal.data}} for the specific labels (default= Use all).
+#' @param study Optional character vector of study specific calibration data that
 #' should be used (e.g., \code{c("Peters et al. 2018"}) ). See \code{\link{cal.data}}
 #' for the specific labels (default= Use all).
 #' @param wood Optional, character vector of wood type specific calibration
@@ -46,7 +47,17 @@
 #'  \code{\link{is.trex}}-compliant object (e.g., [["sfd.pd"]], [["sfd.mw"]])
 #'  if this format was provided as an input, and,
 #'  finally, a \code{data.frame} is provided with the mean and 95% confidence
-#'  interval of the applied calibration functions (see [["model.ens"]])
+#'  interval of the applied calibration functions (see [["model.ens"]]).
+#'  If an individual time series is provided for input with \eqn{K} values an alternative output is provided:
+#'
+#'  \describe{
+#'
+#'    \item{input}{= \eqn{K} values provided as input.}
+#'    \item{sfd.input}{\eqn{sfd} values calculated for the input according to the mean of the calibration function.}
+#'    \item{model.ens}{A \code{data.frame} providing the mean and 95% confidence interval of the applied calibration function.}
+#'    \item{out.param}{A \code{data.frame} with the coefficients of calibration function.}
+#'
+#'  }
 #'
 #' @references
 #'  Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V, Prendin AL, Schneider L, Baltzer JL,
@@ -67,7 +78,7 @@
 #' raw   <-is.trex(example.data(type="doy"),
 #'     tz="GMT",time.format="%H:%M",
 #'     solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-#' input <-time.step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
+#' input <-dt.steps(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
 #'      time.int=15,max.gap=60,decimals=10,df=FALSE)
 #' input[which(input<0.2)]<-NA
 #' input <-tdm_dt.max(input, methods=c("pd","mw","dr"),

@@ -54,7 +54,8 @@ example.data <- function(type = "timestamp") {
   #p1= data is loaded
   # proc.1 <- TREX:::tdm.input.txt
     # read.table("tdm.input.txt", header = TRUE, sep = "\t") #p1 data is loaded {CHANGE}
-  proc.1 <- TREX::tdm.data
+  # proc.1 <- TREX::tdm.data
+  proc.1 <- getExportedValue('TREX', 'tdm.data')
 
   #p2= isolating of data according to criteria
   if (as.character(type) == "timestamp") {

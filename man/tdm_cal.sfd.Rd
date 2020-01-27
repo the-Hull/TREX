@@ -15,9 +15,10 @@ tdm_cal.sfd(input, genus, species, study, wood, calib, a, b, decimals,
 data that should be used (e.g., \code{c("Picea", "Larix")}). See \code{\link{cal.data}}
 for the specific labels (default = Use all).}
 
-\item{species}{Optional, character vector of study specific species.}
+\item{species}{Optional, character vector of study specific species,
+e.g. \code{c("Peters et al. 2018")}. See \code{\link{cal.data}} for the specific labels (default= Use all).}
 
-\item{study}{optional character vector of study specific calibration data that
+\item{study}{Optional character vector of study specific calibration data that
 should be used (e.g., \code{c("Peters et al. 2018"}) ). See \code{\link{cal.data}}
 for the specific labels (default= Use all).}
 
@@ -45,15 +46,6 @@ the calibration curve with \eqn{K vs sap flux density} (cm3 cm-2 h-1).}
 with a timestamp and a value column. If \code{FALSE}, output
 is provided as a \code{zoo} vector object (default = FALSE).}
 }
-\value{
-A list containing either a \code{zoo} object or \code{data.frame} in the appropriate format
- for other functionalities (see \code{\link{tdm_dt.max}} output specifications), as well as
- all \eqn{SFD} values for each method are provided and added to the
- \code{\link{is.trex}}-compliant object (e.g., [["sfd.pd"]], [["sfd.mw"]])
- if this format was provided as an input, and,
- finally, a \code{data.frame} is provided with the mean and 95% confidence
- interval of the applied calibration functions (see [["model.ens"]])
-}
 \description{
 The acquired \eqn{K} values are calculated to sap flux density
  (SFD in cm3 cm-2 h-1). As many calibration curves exist
@@ -74,7 +66,7 @@ The acquired \eqn{K} values are calculated to sap flux density
 raw   <-is.trex(example.data(type="doy"),
     tz="GMT",time.format="\%H:\%M",
     solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-input <-time.step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
+input <-dt.steps(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
      time.int=15,max.gap=60,decimals=10,df=FALSE)
 input[which(input<0.2)]<-NA
 input <-tdm_dt.max(input, methods=c("pd","mw","dr"),

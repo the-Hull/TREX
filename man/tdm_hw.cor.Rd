@@ -4,8 +4,8 @@
 \alias{tdm_hw.cor}
 \title{Heartwood correction}
 \usage{
-tdm_hw.cor(input, dt.max, probe.length = 20, sapwood.thickness = 18,
-  df = F)
+tdm_hw.cor (input, dt.max, probe.length = 20,
+            sapwood.thickness = 18, df = FALSE)
 }
 \arguments{
 \item{input}{\code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
@@ -26,15 +26,26 @@ is provided as a zoo vector object (default = \code{FALSE}).}
 A \code{zoo} object or \code{data.frame} in the appropriate
 format for other functionalities. See \code{\link{tdm_dt.max}} for output specifications.
 All \eqn{K} values for each method are provided when an
-\code{\link{is.trex}}-compliant object was provided
+\code{\link{is.trex}}-compliant object was provided.
+If individual time series are provided for input and dt.max an alternative output is provided:
+
+\describe{
+
+ \item{input}{= \eqn{\Delta T} input data.}
+ \item{dt.max}{data.frame of applied methods to detect \eqn{\Delta T_{max}{\Delta Tmax}}.}
+ \item{dtsw}{Corrected \eqn{\Delta T} data.}
+ \item{k.value}{\eqn{K} values calculated according to Clearwater et al. (1999).}
+ \item{settings}{data.frame of the applied \code{probe.length} and \code{sapwood.thickness}}
+
+}
 }
 \description{
-The function correct for the proportion of the probe that is installed
-within the non-conductive heartwood according to Clearwater et al. 1999.
+The function corrects for the proportion of the probe that is installed
+within the non-conductive heartwood according to Clearwater et al. (1999).
 The function requires \eqn{\Delta T_{max}}{\Delta Tmax}, the probe length and the
 sapwood thickness. The correction is applied on the \eqn{\Delta T} (or \eqn{\Delta V}) values and \eqn{K}
 is recalculated accordingly. When an \code{\link{is.trex}}-compliant object is
-applied, the \eqn{K} values provided for each method are provided.
+applied, the \eqn{K} values for each method are provided (see \code{\link{tdm_dt.max}}.
 }
 \details{
 The function applied the correction provided by Clearwater et al. 1999.
@@ -52,7 +63,7 @@ The function applied the correction provided by Clearwater et al. 1999.
 raw   <-is.trex(example.data(type="doy"),
           tz="GMT",time.format="\%H:\%M",solar.time=TRUE,
           long.deg=7.7459,ref.add=FALSE)
-input <-time_step(input=raw,
+input <- dt.steps(input=raw,
                    start="2014-05-08 00:00",
                    end="2014-07-25 00:50",
                   time.int=15,max.gap=60,decimals=6,df=F)

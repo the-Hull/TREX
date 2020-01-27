@@ -19,19 +19,30 @@
 #'
 #'
 #'  @details The function fits a correction curve for signal dampening (e.g., due to wounding)
-#'  according to Peters et al. 2018. A sensor specific function was fitted to daily maximum
+#'  according to Peters et al. (2018). A sensor specific function was fitted to daily maximum
 #'  \eqn{K} values (considering a minimum cut-off threshold). Dependent variables
 #'  for the function include seasonality (DOY) and days since installation (t).
 #'  First, seasonal effects were removed by correcting the \eqn{K} series (residuals; \eqn{Kresid})
 #'  to a second-order polynomial with DOY. These residuals were then used within a
 #'  nonlinear model:
-#'  \deqn{Kresid = (a + b * t)/(1 + c * t + d * t2)}
+#'  \deqn{K_{resid} = (a + b * t)/(1 + c * t + d * t^{2})}{Kresid = (a + b * t)/(1 + c * t + d * t2)}
+#'
 #'  The fitted parameters for \eqn{t} (with \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}) were used to
 #'  correct \eqn{K} and scale it to the maximum within the first year of installation.
 #'  \strong{Note, that the stability of the fit has to be visually inspected before using the output data}.
 #'
 #' @return A \code{zoo} object or \code{data.frame} in the appropriate
-#'  format for other functionalities. See \code{\link{tdm_dt.max}} output specifications. All K values for each method have been provided when an is.trex files was provided.
+#'  format for other functionalities.
+#'  See \code{\link{tdm_dt.max}} output specifications.
+#'  All \eqn{K} values for each method are been provided when an \code{\link{is.trex}}-object was used as input.
+#'  If an individual time series was provided for input with \eqn{K} values an alternative output is given:
+#'
+#'  \describe{
+#'    \item{k.cor}{corrected K values according to the correction curve.}
+#'    \item{k}{ K values provided as input.}
+#'    \item{damp.mod}{data.frame with the coefficients of the correction curve.}
+#'
+#'  }
 #'
 #' @references Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V,
 #' Prendin AL, Schneider L, Baltzer JL, Baron-Gafford GA, Dietrich L, Heinrich I,
@@ -84,24 +95,9 @@
 #' }
 #'
 tdm_damp <- function(input,
-                 k.threshold = 0.05,
-                 make.plot = TRUE,
-                 df = FALSE) {
-  #t= test
-  #test<-read.table("D:/Documents/WSL/06_basic_data/1_database/Physiological_data/Sapflow_most.txt",header=TRUE,sep="\t")
-  #test<-test[,c("TIMESTAMP","N13Ad_S1")]
-  #colnames(test)<-c("timestamp","value")
-  #test$timestamp<-as.character(test$timestamp)
-  #raw       <-is.trex(test,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #raw       <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #raw       <-is.trex(raw,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #input     <-dt.steps(input=raw,time.int=15,max.gap=60,decimals=6,df=F)
-  #input<-tdm_dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,
-  #                   ed.window=2*60,criteria=c(sr=30,vpd=0.1,cv=0.5),df=FALSE)
-  #make.plot<-TRUE
-  #df<-F
-  #k.threshold<-0.05
-  #input<-k.pd
+                     k.threshold = 0.05,
+                     make.plot = TRUE,
+                     df = FALSE) {
 
   #d= default conditions
   if (missing(make.plot)) {
