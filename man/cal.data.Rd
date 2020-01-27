@@ -26,13 +26,13 @@ cal.data
 Returns raw calibration experiment data obtained from literature,
  with K values combined with gravimetrically determined sap flux density.
  The data.frame contains 22 studies with 37 different species. The data is used
- within the \code{\link{tdm_cal.sfd()}} function to calculate sap flux density. The data
+ within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density. The data
  originates from the manuscript by Flo \emph{et al.} 2019 and provides a
  description on the genus, species, calibration material, wood porosity and diameter
  of the stem. The presented data is open for public use.
 }
 \details{
-Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{tdm_cal.sfd()}} (argument "study"):
+Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{tdm_cal.sfd}} (argument "study"):
 
 \itemize{
     \item{Braun and Schmid 1999}

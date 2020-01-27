@@ -28,7 +28,7 @@ be filled, using linear interpolation.
 }
 \examples{
 # fill two hour gaps
-raw   <- example.data(type = "doy", species = "PCAB")
+raw   <- example.data(type = "doy")
 input <-
   is.trex(
     raw,

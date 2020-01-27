@@ -43,6 +43,10 @@ Testing if the structure of the input matches the requirements of the TREX funct
  time (see solar.time) by providing the longitude in decimal degrees at which the measurements were
  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
  be either provided in a zoo format (df = \code{FALSE}) or data.frame (df = \code{TRUE}; default is \code{FALSE}).
+
+ @usage is.trex(data, tz = “UTC”, format = “%m/%d/%y %H:%M:%S”,
+  solar.time = FALSE, long.deg = 7.7459,
+   ref.add = FALSE, df = FALSE)
 }
 \details{
 To prevent errors occurring in the other reported functions, it is advised to run this function

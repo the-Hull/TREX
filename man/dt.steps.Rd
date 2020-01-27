@@ -4,9 +4,9 @@
 \alias{dt.steps}
 \title{Determine temporal resolution}
 \usage{
-dt.steps(input, start = '2012-05-28 00:00',
-  end = '2012-06-28 00:00', time.int = 10, max.gap = 60,
-  decimals = 10, df = FALSE)
+dt.steps(input, start,
+       end, time.int = 10, max.gap = 60,
+       decimals = 10, df = FALSE)
 }
 \arguments{
 \item{input}{An \code{\link{is.trex}}-compliant (output) object}
@@ -14,7 +14,7 @@ dt.steps(input, start = '2012-05-28 00:00',
 \item{start}{Character string providing the start time for the series.
 Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
 Year-Month-Day Hour:Minute). Starting time should not be earlier
-then the start of the series.}
+than the start of the series.}
 
 \item{end}{Character string providing the start time for the series.
 Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
@@ -22,7 +22,7 @@ Year-Month-Day Hour:Minute). Starting time should be earlier than
 the end time and not later than that of the series.}
 
 \item{time.int}{Numeric value providing the number of minutes for the
-minimum time step. When time.int is smaller then the minimum time step
+minimum time step. When time.int is smaller than the minimum time step
 of the series, a linear interpolation is applied. If \code{time.int} is
 larger than the minimum time step of the series values are average
 (after performing a linear interpolation to obtain a minute resolution).}
@@ -58,10 +58,10 @@ Before this process, the entire time series is converted to a minute time
 step by applying a linear interpolation (excluding gap \eqn{periods > \code{max.gap}}).
 }
 \examples{
-input   <-is.trex(example.data(type="doy"),
-tz="GMT",time.format="\%H:\%M", solar.time=TRUE,
-long.deg=7.7459,ref.add=FALSE)
-in.ts   <-dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
+input <- is.trex(example.data(type="doy"),
+           tz="GMT",time.format="\%H:\%M", solar.time=TRUE,
+           long.deg=7.7459,ref.add=FALSE)
+in.ts <- dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
                    time.int=60,max.gap=120,decimals=6,df=FALSE)
 plot(in.ts)
 head(in.ts)

@@ -30,6 +30,10 @@
 #'  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
 #'  be either provided in a zoo format (df = \code{FALSE}) or data.frame (df = \code{TRUE}; default is \code{FALSE}).
 #'
+#'  @usage is.trex(data, tz = “UTC”, format = “%m/%d/%y %H:%M:%S”,
+#'   solar.time = FALSE, long.deg = 7.7459,
+#'    ref.add = FALSE, df = FALSE)
+#'
 #'
 #'
 #' @details To prevent errors occurring in the other reported functions, it is advised to run this function
@@ -254,101 +258,3 @@ is.trex <-
 
 
 
-
-
-
-
-# Example -----------------------------------------------------------------
-
-#
-#
-# #validating and structuring example data
-# raw   <- example.data(type="doy")
-# input <- is.trex(raw,tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
-# head(raw)
-# str(input)
-# head(input)
-# plot(input)
-
-# #Figure 1
-# pdf("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/Figure 1.pdf",height=6,width=8)
-# layout(
-#   matrix(
-#     c(2,2,1,1,
-#       1,1,1,1),
-#     nc=4, byrow = TRUE
-#   )
-# )
-# par(oma=c(2,5,2,2))
-# par(mar=c(4,5,4,4))
-# plot(input,ylab=expression(Delta*"V (mV)"),xlab="Time",yaxt="n",ylim=c(0,1.5),cex.axis=1.5,cex.lab=1.5)
-# axis(side=2,las=2,cex.axis=1.5)
-# mtext(side=3,"Picea abies",font=3,cex=1.5)
-#
-# par(mar=c(6,6,6,6))
-# plot(window(input,start=(as.POSIXct(as.character("(06/01/13 00:00:00)"),format="(%m/%d/%y %H:%M:%S)",tz="GMT")),
-#          end=(as.POSIXct(as.character("(07/01/13 00:00:00)"),format="(%m/%d/%y %H:%M:%S)",tz="GMT"))),yaxt="n",
-#      ylab="",xlab="",ylim=c(0.66,0.84),cex.axis=1.5)
-# axis(side=4,las=2,cex.axis=1.5)
-# legend("topleft","Year = 2013",bty="n",cex=1.5)
-# dev.off()
-#
-#
-#
-#
-#
-# #TRASH
-# #example
-# input<-tdm.data(type="timestamp")
-#
-#
-# left = function(string, char){
-#   substr(string, 1,char)}
-# right = function (string, char){
-#   substr(string,nchar(string)-(char-1),nchar(string))
-# }
-#
-#
-#
-# #transform to zoo object
-# type  <-"timestamp"
-# format<-"(%m/%d/%y %H:%M:%S)"
-# tz    <-"GMT"
-#
-# #timezone tests
-#
-#
-#
-#
-#
-# zoo::zoo(x, order.by= chron::as.chron(as.POSIXct(as.character(x[,1]),format=format,tz=tz)))
-#
-#
-#
-#
-# nrow(input)
-#
-#
-#
-#
-#
-# #examples
-# View(OlsonNames())
-# as.chron(base::as.POSIXct(as.character(data$timestamp)[1],format=time.format.orig,tz=tz))
-#
-# data<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",header=TRUE,sep="\t")
-# data<-data[,c("Timestamp","N13")]
-# time.format="(%m/%d/%y %H:%M:%S)"
-# tz<-"GMT"
-# sr<-zoo(data$N13,order.by=local2Solar(base::as.POSIXct(as.character(data$Timestamp),format=time.format,tz=tz), lon = long.deg))
-# start<-as.POSIXct(as.character("(11/02/15 00:00:00)"),format=time.format,tz=tz)
-# end<-as.POSIXct(as.character("(11/03/15 00:00:00)"),format=time.format,tz=tz)
-# plot(window(sr,start=start,end=end))
-#
-# as.character(data$timestamp)[c(1:24)]
-# View(cbind(
-#   as.character(chron::as.chron(base::as.POSIXct(as.character(data$timestamp),format=time.format.orig,tz=tz))),
-#   as.character(chron::as.chron(base::as.POSIXct(as.character(data$timestamp),format=time.format.orig,tz="GMT"))),
-#   as.character(local2Solar(base::as.POSIXct(as.character(data$timestamp),format=time.format.orig,tz=tz), lon = long.deg)),
-#   as.character(data$timestamp)
-# ))

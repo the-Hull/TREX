@@ -4,17 +4,13 @@
 \alias{example.data}
 \title{Generate example TDM input data}
 \usage{
-example.data(type = "timestamp", species = "PCAB")
+example.data(type = "timestamp")
 }
 \arguments{
 \item{type}{Character string, indicating whether the example data should be
 displayed with a timestamp (default = “timestamp”)
 or whether a separate day of day of year and hour column
 are provided (“doy”).}
-
-\item{species}{Character string, indicating whether the example data
-should be displayed for \emph{P. abies} (default= “PCAB”) or \emph{P. mariana}
-(“PCMA”)/L. laricina (“LALA”).}
 }
 \value{
 A data.frame containing TDM measurements according to a specific type.
@@ -29,4 +25,12 @@ This returns a data.frame containing standard TDM (thermal dissipation method)
 }
 \details{
 This dataset can be applied for testing the functions provided in the package.
+}
+\examples{
+
+# get example data
+input_data <- example.data(type = "timestamp")
+input_data <- example.data(type = "doy")
+head(input_data)
+
 }

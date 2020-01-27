@@ -4,7 +4,15 @@
 \name{tdm.data}
 \alias{tdm.data}
 \title{Sap flow measurements}
-\format{An object of class \code{data.frame} with 111792 rows and 6 columns.}
+\format{Provides a data.frame with 11,6466  rows and two  columns.
+\describe{
+  \item{timestamp }{Date and time of the measurements (\code{character})}
+  \item{year}{Year of measurements (\code{integer})}
+  \item{doy}{Day of year (\code{integer})}
+  \item{hour}{Hour of the measurements (\code{character})}
+  \item{value}{\eqn{\Delta V}(or \eqn{\Delta T}) values obtained from TDM measurements  (\code{numeric})}
+  \item{species}{Monitored species (\code{character})}
+}}
 \usage{
 tdm.data
 }

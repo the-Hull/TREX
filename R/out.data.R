@@ -27,7 +27,7 @@
 #' #Gc response function
 #' raw   <-
 #'   is.trex(
-#'     example.data(type = "doy", species = "PCAB"),
+#'     example.data(type = "doy"),
 #'     tz = "GMT",
 #'     time.format = "%H:%M",
 #'     solar.time = TRUE,

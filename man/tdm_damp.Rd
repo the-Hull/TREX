@@ -49,7 +49,7 @@ When long-term \eqn{K} series (~3 years) are provided, one can perform
  #correct for dampening of the signal
 raw   <-
   is.trex(
-    example.data(type = "doy", species = "PCAB"),
+    example.data(type = "doy"),
     tz = "GMT",
     time.format = "\%H:\%M",
     solar.time = TRUE,

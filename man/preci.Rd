@@ -4,11 +4,25 @@
 \name{preci}
 \alias{preci}
 \title{Daily precipitation (raw)}
-\format{An object of class \code{data.frame} with 3613 rows and 2 columns.}
+\format{Provides an \code{\link{is.trex}}-compliant object with 1415 rows and 1 column.
+
+\describe{
+  \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
+  \item{value}{Daily precipitation (mm d-1) from local weather stations (\code{numeric})}
+}}
 \usage{
 preci
 }
 \description{
-Returns raw precipitation measurements in mm day-1, collected at ORIGIN
+Returns an example dataset of daily precipitation data in mm d-1
+from 2012-2015 originating from weather stations surrounding the Loetschental in the Swiss Alps.
+The data was obtained from the nine nearest weather stations
+(6‐to 43‐km distance to the site, including Adelboden, Blatten, Grächen, Montana, Jungfraujoch,
+Sion, Ulrichen, Visp, and Zermatt; Federal Office of Meteorology and Climatology MeteoSwiss).
+}
+\references{
+Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
 }
 \keyword{datasets}

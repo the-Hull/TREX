@@ -8,21 +8,27 @@
 #'  larch (\emph{Larix laricina} Du Roi K. Koch) growing at the southern limit of the boreal
 #'  ecozone in central Canada.
 #'
+#' @usage example.data(type = "timestamp")
+#'
 #' @param type Character string, indicating whether the example data should be
 #' displayed with a timestamp (default = “timestamp”)
 #' or whether a separate day of day of year and hour column
 #' are provided (“doy”).
 #'
-#' @param species Character string, indicating whether the example data
-#' should be displayed for \emph{P. abies} (default= “PCAB”) or \emph{P. mariana}
-#' (“PCMA”)/L. laricina (“LALA”).
 #'
 #' @details This dataset can be applied for testing the functions provided in the package.
 #'
 #' @return A data.frame containing TDM measurements according to a specific type.
 #' @export
 #'
-example.data <- function(type = "timestamp", species = "PCAB") {
+#' @examples
+#'
+#' # get example data
+#' input_data <- example.data(type = "timestamp")
+#' input_data <- example.data(type = "doy")
+#' head(input_data)
+#'
+example.data <- function(type = "timestamp") {
   #t= test
   #type="timestamp"
 
@@ -31,23 +37,24 @@ example.data <- function(type = "timestamp", species = "PCAB") {
   if (missing(type)) {
     type = "timestamp"
   }
-  if (missing(species)) {
-    species = "PCAB"
-  }
+
 
   #e= errors
   if (type != "timestamp" &
       type != "doy")
     stop(paste0("Unused argument, please use: timestamp|doy."))
-  if (species != "PCAB" &
-      species != "PCMA")
-    stop(paste0("Unused argument, please use: PCAB|PCMA."))
+  # if (species != "PCAB" &
+  #     species != "PCMA")
+  #   stop(paste0("Unused argument, please use: PCAB|PCMA."))
+
+
+  species <- "PCAB"
 
   #p= processing
   #p1= data is loaded
   # proc.1 <- TREX:::tdm.input.txt
-  proc.1 <- tdm.input.txt
     # read.table("tdm.input.txt", header = TRUE, sep = "\t") #p1 data is loaded {CHANGE}
+  proc.1 <- TREX::tdm.data
 
   #p2= isolating of data according to criteria
   if (as.character(type) == "timestamp") {
@@ -68,35 +75,4 @@ example.data <- function(type = "timestamp", species = "PCAB") {
   return(proc.2)
 }
 
-# #loading example data
-# setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction")
-# input<-example.data(type="timestamp")
-# head(input)
-# str(input)
 
-
-
-
-
-
-
-# #REMOVE: generate example data
-# require("chron")
-# require("zoo")
-#
-# left = function(string, char){
-#   substr(string, 1,char)}
-# right = function (string, char){
-#   substr(string,nchar(string)-(char-1),nchar(string))
-# }
-
-# #generate input data
-# tdm.data<-read.table("tdm.data.txt",header=TRUE,sep="\t")
-# tdm.zoo<-zoo(tdm.data, order.by= as.chron(as.POSIXct(as.character(tdm.data[,1]),format="%d-%m-%Y %H:%M",tz="GMT")))
-# plot(tdm.zoo)
-# tdm.data<-data.frame(timestamp=as.character(tdm.data[,1]),year=left(right(as.character(tdm.data[,1]),10),4),
-#                      doy=as.integer(strftime(as.Date(index(tdm.zoo)),format="%j")),
-#                      hour=substr(as.character(tdm.data$Timestamp),nchar(as.character(tdm.data$Timestamp))-(5-1),nchar(as.character(tdm.data$Timestamp)))
-#                      ,value=as.numeric(tdm.data[,2]))
-# tdm.data$species<-"PCAB"
-# write.table(tdm.data,"tdm.input.txt",col.names=TRUE,row.names=FALSE,sep="\t")

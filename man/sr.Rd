@@ -4,11 +4,24 @@
 \name{sr}
 \alias{sr}
 \title{Solar radiation measurements (raw)}
-\format{An object of class \code{data.frame} with 318334 rows and 2 columns.}
+\format{Provides an \code{\link{is.trex}}-compliant object with 135840 rows and 1 column.
+
+\describe{
+  \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
+  \item{value}{W m−2 values obtained from the site-specific monitoring  (\code{numeric})}
+}}
 \usage{
 sr
 }
 \description{
-Returns raw solar radiation measurements in UNITS, collected at ORIGIN
+Returns an example datasets of solar irradiance monitoring from 2012-2015 at 1300 m a.s.l. in the Swiss Alps
+ (Loetschental, Switzerland; Peters et al. 2019). Solar irradiance in W m-2 was measured with
+ 15‐min resolution using a microstation (Onset,USA, H21-002 Micro Station)
+ and pyranometer (Onset, USA, S‐LIB‐M003) positioned in an open field.
+}
+\references{
+Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
 }
 \keyword{datasets}

@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' # fill two hour gaps
-#' raw   <- example.data(type = "doy", species = "PCAB")
+#' raw   <- example.data(type = "doy")
 #' input <-
 #'   is.trex(
 #'     raw,
@@ -44,7 +44,6 @@
 #'   max.gap = 15,
 #'   decimals = 10,
 #'   df = FALSE)
-
 gap.fill <- function(input,
                      max.gap = 60,
                      decimals = 10,

@@ -4,11 +4,28 @@
 \name{vpd}
 \alias{vpd}
 \title{Vapor pressure deficit measurements (raw)}
-\format{An object of class \code{data.frame} with 318429 rows and 2 columns.}
+\format{Provides an \code{\link{is.trex}}-compliant object with 135840 rows and 1 column.
+
+\describe{
+  \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
+  \item{value}{kPa values obtained from the site-specific monitoring (\code{numeric})}
+}}
 \usage{
 vpd
 }
 \description{
-Returns raw vapor pressure deficit measurements in UNITS, collected at ORIGIN
+Returns an example datasets of vapour pressure deficits monitoring from
+ 2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters et al. 2019).
+ Sensors were installed at the site on a central tower (~2.5 m above the ground)
+ within the canopy to measure air temperature and relative humidity (Onset, USA, U23-002Pro) with a 15‐min resolution.
+  Vpd (\eqn{kPa} was calculated from the air temperature and relative humidity measurements according to WMO (2008).
+}
+\references{
+Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+
+WMO. 2008.Guide to meteorological instruments and methods of observation, appendix 4B, WMO‐No. 8 (CIMO Guide).
+ Geneva, Switzerland: World Meteorological Organization.
 }
 \keyword{datasets}

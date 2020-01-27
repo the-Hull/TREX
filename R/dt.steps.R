@@ -9,31 +9,31 @@
 #' start and end time of the series and select the minimum size under
 #' which gaps should be filled, using linear interpolation.
 #'
-#' @usage dt.steps(input, start = '2012-05-28 00:00',
-#'   end = '2012-06-28 00:00', time.int = 10, max.gap = 60,
-#'   decimals = 10, df = FALSE)
+#' @usage dt.steps(input, start,
+#'        end, time.int = 10, max.gap = 60,
+#'        decimals = 10, df = FALSE)
 #'
 #' @param input An \code{\link{is.trex}}-compliant (output) object
 #' @param start Character string providing the start time for the series.
-#' Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
-#' Year-Month-Day Hour:Minute). Starting time should not be earlier
-#' then the start of the series.
+#'  Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
+#'  Year-Month-Day Hour:Minute). Starting time should not be earlier
+#'  than the start of the series.
 #' @param end Character string providing the start time for the series.
-#' Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
-#' Year-Month-Day Hour:Minute). Starting time should be earlier than
-#' the end time and not later than that of the series.
+#'  Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
+#'  Year-Month-Day Hour:Minute). Starting time should be earlier than
+#'  the end time and not later than that of the series.
 #' @param time.int Numeric value providing the number of minutes for the
-#' minimum time step. When time.int is smaller then the minimum time step
-#' of the series, a linear interpolation is applied. If \code{time.int} is
-#' larger than the minimum time step of the series values are average
-#' (after performing a linear interpolation to obtain a minute resolution).
+#'  minimum time step. When time.int is smaller than the minimum time step
+#'  of the series, a linear interpolation is applied. If \code{time.int} is
+#'  larger than the minimum time step of the series values are average
+#'  (after performing a linear interpolation to obtain a minute resolution).
 #' @param max.gap Numeric value providing the maximum size of a gap in minutes,
-#' which can be filled by performing a linear interpolation.
+#'  which can be filled by performing a linear interpolation.
 #' @param decimals Integer value defining the number of decimals of the output
-#' (default = 10).
+#'  (default = 10).
 #' @param df Logical; if \code{TRUE}, output is provided in a \code{data.frame}
-#' format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
-#' If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).
+#'  format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
+#'  If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).
 #'
 #' @description Time series have different temporal resolutions.
 #' This function provides the option to standardize the minimum time step by
@@ -49,18 +49,18 @@
 #' @export
 #'
 #' @examples
-#' input   <-is.trex(example.data(type="doy"),
-#' tz="GMT",time.format="%H:%M", solar.time=TRUE,
-#' long.deg=7.7459,ref.add=FALSE)
-#' in.ts   <-dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
+#' input <- is.trex(example.data(type="doy"),
+#'            tz="GMT",time.format="%H:%M", solar.time=TRUE,
+#'            long.deg=7.7459,ref.add=FALSE)
+#' in.ts <- dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
 #'                    time.int=60,max.gap=120,decimals=6,df=FALSE)
 #' plot(in.ts)
 #' head(in.ts)
 #'
 dt.steps <-
   function(input,
-           start = "2012-05-28 00:00",
-           end = "2012-06-28 00:00",
+           start,
+           end,
            time.int = 10,
            max.gap = 60,
            decimals = 10,
@@ -148,10 +148,10 @@ dt.steps <-
       stop("Unused argument, start is not in the correct format (%Y-%m-%d %H:%M:%S).")
     if (is.na(ts.end) == TRUE)
       stop("Unused argument, end is not in the correct format (%Y-%m-%d %H:%M:%S).")
-    if (as.numeric(ts.start - zoo::index(input[1])) < -1)
-      stop("Unused argument, start is earlier then start of the timestamp.")
-    if (as.numeric(zoo::index(input[length(input)]) - ts.end) < -1)
-      stop("Unused argument, end is later then start of the timestamp.")
+    if (round(as.numeric(ts.start - zoo::index(input[1]))) < -1)
+      stop("Unused argument, start is earlier than start of the timestamp.")
+    if (round(as.numeric(zoo::index(input[length(input)]) - ts.end)) < -1)
+      stop("Unused argument, end is later than end of the timestamp.")
 
     #p
     value <-
@@ -177,7 +177,7 @@ dt.steps <-
 
     #w= warnings
     if (time.int > (60 * 24)) {
-      warning("Selected time.int is larger then a day.")
+      warning("Selected time.int is larger than a day.")
     }
 
     #c

@@ -87,6 +87,25 @@ List items include:
  \item{k.dr}{\eqn{K} values calculated by using the \code{dr} method.}
  \item{k.ed}{\eqn{K} values calculated by using the \code{ed} method.}
  }
+
+ @details
+ There are a variety of methods which can be applied to determine zero flow conditions.
+ Zero flow conditions are required to calculate \eqn{K = (\Delta T_{max} - \Delta T) / \Delta T}{K = (\Delta Tmax - \Delta T) / \Delta T}.
+ A detailed description on the methods is provided by Peters et al. (2018).
+ In short, the \code{pd} method entails the selection of daily maximum occurring prior to sunrise.
+ This method assumes that during each night zero-flow conditions are obtained.
+ The algorithm either requires specific times within which it searches for a maximum,
+ or it analyses the cyclic pattern within the data and defines this time window.
+ The \code{mw} method uses these predawn \eqn{\Delta T_{max}}{\Delta Tmax} values
+ and calculates the maximum over a multi-day moving time-window (e.g., 7 days).
+ The \code{dr} methods is applied by calculating the mean over predawn \eqn{\Delta T_{max}}{\Delta Tmax}
+ with a specified multi-day window, removing all values below the mean,
+ and calculating a second mean over the same multi-day window and use the values as \eqn{\Delta T_{max}}{\Delta Tmax}.
+ The \code{ed} method selects predawn \eqn{\Delta T_{max}}{\Delta Tmax} values based upon 2-hour averaged environmental
+ conditions prior to the detected time for the predawn \eqn{\Delta T_{max}}{\Delta Tmax}.
+ These environmental conditions include low vapour pressure deficit (in \eqn{kPa}) and low solar irradiance
+ (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} values were low to
+ ensure the selection of stable zero-flow conditions.
 }
 \description{
 Determine zero flow conditions (\eqn{\Delta T_{max}}{\Delta Tmax}; or \eqn{\Delta V_{max}}{\Delta Vmax})
@@ -100,94 +119,30 @@ according to four methods; namely,
 }
 \examples{
 \dontrun{
-#perform Delta T maximum calculations
-raw   <-
-  TREX::is.trex(
-    example.data(type = "doy", species = "PCAB"),
-    tz = "GMT",
-    time.format = "\%H:\%M",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-input   <-
-  TREX::dt.steps(
-    input = raw,
-    start = "2014-05-08 00:00",
-    end = "2014-07-25 00:50",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 6,
-    df = F
-  )
-input[which(input < 0.2)] <- NA
-
-vpd_raw   <-
-  is.trex(
-    vpd,
-    tz = "GMT",
-    time.format = "(\%m/\%d/\%y \%H:\%M:\%S)",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-vpd.input <-
-  dt.steps(
-    input = vpd_raw,
-    start = "2014-05-08 00:00",
-    end = "2014-07-25 00:50",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 6,
-    df = F
-  )
-sr_raw   <-
-  is.trex(
-    sr,
-    tz = "GMT",
-    time.format = "(\%m/\%d/\%y \%H:\%M:\%S)",
-    solar.time = TRUE,
-    long.deg = 7.7459,
-    ref.add = FALSE
-  )
-sr.input <-
-  dt.steps(
-    input = sr_raw,
-    start = "2014-05-08 00:00",
-    end = "2014-07-25 00:50",
-    time.int = 15,
-    max.gap = 60,
-    decimals = 6,
-    df = F
-  )
-
-output.max <-
-  tdm_dt.max(
-    input,
-    methods = c("pd", "mw", "dr", "ed"),
-    det.pd = TRUE,
-    interpolate = FALSE,
-    max.days = 10,
-    sr.input = sr.input,
-    vpd.input = vpd.input,
-    ed.window = 2 * 60,
-    criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
-    df = FALSE
-  )
+#perform âˆ†Tmax calculations
+raw <- is.trex(example.data(type = "doy"),
+     tz = "GMT", time.format = "\%H:\%M", solar.time = TRUE,
+     long.deg = 7.7459, ref.add = FALSE)
+input <- dt.steps(input = raw, start = "2014-05-08 00:00",
+         end = "2014-07-25 00:50", time.int = 15, max.gap = 60,
+         decimals = 6, df = FALSE)
+input[which(input<0.2)]<- NA
+output.max <- dt.max(input, methods = c("pd", "mw", "dr"),
+                 det.pd = TRUE, interpolate = FALSE,
+                 max.days = 10, df = FALSE)
 
 str(output.max)
 
-plot(output.max$input, ylab = expression(Delta * italic("V")))
+plot(output.max$input, ylab = expression(Delta*italic("V")))
+
 lines(output.max$max.pd, col = "green")
 lines(output.max$max.mw, col = "blue")
 lines(output.max$max.dr, col = "orange")
-lines(output.max$max.ed, col = "purple")
+
 points(output.max$all.pd, col = "green", pch = 16)
-points(output.max$all.ed, col = "purple", pch = 16)
-legend(
-  "bottomright",
-  c("raw", "max.pd", "max.mw", "max.dr", "max.ed"),
-  lty = 1,
-  col = c("black", "green", "blue", "orange", "purple"))
+
+legend("bottomright", c("raw", "max.pd", "max.mw", "max.dr"),
+        lty = 1, col = c("black", "green", "blue", "orange") )
+
 }
 }

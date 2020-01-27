@@ -13,8 +13,20 @@
 #' @usage tdm.data
 #'
 #'
+#' @format Provides a data.frame with 11,6466  rows and two  columns.
+#' \describe{
+#'   \item{timestamp }{Date and time of the measurements (\code{character})}
+#'   \item{year}{Year of measurements (\code{integer})}
+#'   \item{doy}{Day of year (\code{integer})}
+#'   \item{hour}{Hour of the measurements (\code{character})}
+#'   \item{value}{\eqn{\Delta V}(or \eqn{\Delta T}) values obtained from TDM measurements  (\code{numeric})}
+#'   \item{species}{Monitored species (\code{character})}
+#' }
+#'
+#'
 #' @name tdm.data
 "tdm.data"
+
 
 
 
@@ -25,7 +37,7 @@
 #' @description Returns raw calibration experiment data obtained from literature,
 #'  with K values combined with gravimetrically determined sap flux density.
 #'  The data.frame contains 22 studies with 37 different species. The data is used
-#'  within the \code{\link{tdm_cal.sfd()}} function to calculate sap flux density. The data
+#'  within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density. The data
 #'  originates from the manuscript by Flo \emph{et al.} 2019 and provides a
 #'  description on the genus, species, calibration material, wood porosity and diameter
 #'  of the stem. The presented data is open for public use.
@@ -34,7 +46,7 @@
 #'
 #' @usage cal.data
 #'
-#' @details Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{tdm_cal.sfd()}} (argument "study"):
+#' @details Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{tdm_cal.sfd}} (argument "study"):
 #'
 #' \itemize{
 #'     \item{Braun and Schmid 1999}
@@ -96,11 +108,27 @@
 #'
 #'
 #'
-#' @description Returns raw vapor pressure deficit measurements in UNITS, collected at ORIGIN
+#' @description Returns an example datasets of vapour pressure deficits monitoring from
+#'  2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters et al. 2019).
+#'  Sensors were installed at the site on a central tower (~2.5 m above the ground)
+#'  within the canopy to measure air temperature and relative humidity (Onset, USA, U23-002Pro) with a 15‐min resolution.
+#'   Vpd (\eqn{kPa} was calculated from the air temperature and relative humidity measurements according to WMO (2008).
 #'
+#' @format Provides an \code{\link{is.trex}}-compliant object with 135840 rows and 1 column.
 #'
+#' \describe{
+#'   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
+#'   \item{value}{kPa values obtained from the site-specific monitoring (\code{numeric})}
+#' }
 #' @usage vpd
 #'
+#' @references
+#' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+#' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+#' Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+#'
+#' WMO. 2008.Guide to meteorological instruments and methods of observation, appendix 4B, WMO‐No. 8 (CIMO Guide).
+#'  Geneva, Switzerland: World Meteorological Organization.
 #'
 #' @name vpd
 "vpd"
@@ -110,10 +138,25 @@
 #'
 #'
 #'
-#' @description Returns raw solar radiation measurements in UNITS, collected at ORIGIN
+#' @description Returns an example datasets of solar irradiance monitoring from 2012-2015 at 1300 m a.s.l. in the Swiss Alps
+#'  (Loetschental, Switzerland; Peters et al. 2019). Solar irradiance in W m-2 was measured with
+#'  15‐min resolution using a microstation (Onset,USA, H21-002 Micro Station)
+#'  and pyranometer (Onset, USA, S‐LIB‐M003) positioned in an open field.
+#'
+#' @format Provides an \code{\link{is.trex}}-compliant object with 135840 rows and 1 column.
+#'
+#' \describe{
+#'   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
+#'   \item{value}{W m−2 values obtained from the site-specific monitoring  (\code{numeric})}
+#' }
 #'
 #'
 #' @usage sr
+#'
+#' @references
+#' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+#' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+#' Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
 #'
 #'
 #' @name sr
@@ -125,11 +168,27 @@
 #'
 #'
 #'
-#' @description Returns raw precipitation measurements in mm day-1, collected at ORIGIN
+#' @description Returns an example dataset of daily precipitation data in mm d-1
+#' from 2012-2015 originating from weather stations surrounding the Loetschental in the Swiss Alps.
+#' The data was obtained from the nine nearest weather stations
+#' (6‐to 43‐km distance to the site, including Adelboden, Blatten, Grächen, Montana, Jungfraujoch,
+#' Sion, Ulrichen, Visp, and Zermatt; Federal Office of Meteorology and Climatology MeteoSwiss).
 #'
 #'
 #' @usage preci
 #'
+#' @format Provides an \code{\link{is.trex}}-compliant object with 1415 rows and 1 column.
+#'
+#' \describe{
+#'   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
+#'   \item{value}{Daily precipitation (mm d-1) from local weather stations (\code{numeric})}
+#' }
+#'
+#' @references
+#' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+#' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+#' Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+
 #'
 #' @name preci
 "preci"

@@ -48,5 +48,6 @@ Imports:
     solaR,
     stats,
     graphics,
-    lubridate
+    lubridate,
+    utils
 RoxygenNote: 6.1.1

@@ -61,19 +61,7 @@
 #' }
 #'
 tdm_hw.cor<-function(input,dt.max,probe.length=20,sapwood.thickness=18,df=F){
-  #t= test
-  #raw   <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #input   <-time_step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
-  #                    time.int=15,max.gap=60,decimals=6,df=F)
-  #output.max<-tdm_dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,
-  #                   ed.window=2*60,criteria=c(sr=30,vpd=0.1,cv=0.5),df=FALSE)
-  #probe.length<-20
-  #sapwood.thickness<-11.51
-  #input<-output.max
-  #dt.max<-output.max$max.pd
-  #df=T
-  #input<-input
-  #dt.max<-max.pd
+
 
   #d= default conditions
   if(missing(probe.length)){probe.length=20}
