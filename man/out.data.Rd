@@ -4,13 +4,12 @@
 \alias{out.data}
 \title{Generating TDM output}
 \usage{
-out.data(input, vpd.input = vpd, sr.input = sr, prec.input = prec,
-  peak.hours = c(10:14), low.sr = 150, peak.sr = 300,
-  vpd.cutoff = 0.5, prec.lim = 1, method = "env.filt",
-  max.quant = 1, make.plot = TRUE)
+out.data(input, vpd.input, sr.input, prec.input, peak.hours = c(10:14),
+  low.sr = 150, peak.sr = 300, vpd.cutoff = 0.5, prec.lim = 1,
+  method = "env.filt", max.quant = 1, make.plot = TRUE)
 }
 \arguments{
-\item{input}{An \code{\link{is.trex}}-compliant time series from \code{tdm_cal.sfd} outputs
+\item{input}{An \code{\link{is.trex}}-compliant time series from \code{\link{tdm_cal.sfd}} outputs
 (e.g., \code{X$sfd.mw$sfd})}
 
 \item{vpd.input}{An \code{\link{is.trex}}-compliant object an individual series of VPD in kPa (see vpd).
@@ -22,86 +21,114 @@ Use \code{\link{dt.steps}} to correct if needed.}
  The extent and temporal resolution should be equal to input. Use \code{\link{dt.steps}} to correct if needed.
  This data is only needed when applying the “env.filt” method.}
 
+\item{prec.input}{An \code{\link{is.trex}}-compliant object of daily precipitation in mm d-1 (see \code{\link{preci}}).
+The extent should be equal to input with a daily temporal resolution.
+ Use \code{\link{dt.steps}} to correct if needed.
+ This data is only needed when applying the “env.filt” method.}
+
 \item{peak.hours}{Numeric vector with hours which should be considered as peak-of-the-day hours
-(default = c(10:14)).
+(default = \code{c(10:14)}).
 This variable is only needed when the “stat” method is selected.}
 
 \item{low.sr}{Numeric threshold value in the unit of the sr.input time-series (e.g., W m-2)
-to exclude cloudy days which impact GC (default 150 W m-2).
+to exclude cloudy days which impact \eqn{G_{C}}{Gc} (default = 150 W m-2).
  This variable is only needed when the “env.filt” method is selected.}
 
 \item{peak.sr}{Numeric threshold value in the unit of the sr.input time-series (e.g., W m-2)
-to exclude hours which are not considered as peak-of-the-day hours (default 300 W m-2).
+to exclude hours which are not considered as peak-of-the-day hours (default = 300 W m-2).
 This variable is only needed when the “env.filt” method is selected.}
 
 \item{vpd.cutoff}{Numeric threshold value in kPa for peak-of-the-day mean VPD to eliminate unrealistic
-and extremely high values of GC due to low VPD values or high values of GC (default = 0.5 kPa).}
+and extremely high values of \eqn{G_{C}}{Gc} due to low VPD values or high values of \eqn{G_{C}}{Gc} (default = 0.5 kPa).}
 
-\item{prec.lim}{nNmeric threshold value in mm d-1 for daily precipitation to remove rainy days (default = 1 mm d-1).
+\item{prec.lim}{Numeric threshold value in mm d-1 for daily precipitation to remove rainy days (default = 1 mm d-1).
 This variable is only needed when “env.filt” method is selected.}
 
-\item{method}{character string indicating whether precipitation and solar irradiance data should be used
-to determined peak-of-the-day GC values and filter the daily GC values (“env.filt”)
- or not (“stat”; default). When “env.filt” is selected, input, vpd.input, sr.input, prec.input,
-  peak.sr, low.sr, vpd.cutoff and prec.lim have to be provided.
-  When “stat” is selected only input, vpd.input and \code{peak.hours}.}
+\item{method}{Character string indicating whether precipitation and solar irradiance data should be used
+to determined peak-of-the-day \eqn{G_{C}}{Gc} values and filter the daily \eqn{G_{C}}{Gc} values (“env.filt”)
+ or not (“stat”; default). When \code{“env.filt”} is selected, \code{input}, \code{vpd.input}, \code{sr.input}, \code{prec.input},
+  \code{peak.sr}, \code{low.sr}, \code{vpd.cutoff} and \code{prec.lim} have to be provided.
+  When \code{“stat”} is selected only \code{input}, \code{vpd.input} and \code{peak.hours}.}
 
-\item{max.quant}{a numeric value defining the quantile of the GC data which should be considered as GC.max (default = 1).}
+\item{max.quant}{Numeric, defining the quantile of the \eqn{G_{C}}{Gc} data which should be considered as GC.max (default = 1).}
 
-\item{make.plot}{Logical; if \code{TRUE}, a plot is generated presenting the FILL.}
+\item{make.plot}{Logical; if \code{TRUE}, a plot is generated presenting the response of \eqn{G_{C}}{Gc} to VPD.}
 }
 \value{
-A list of data.frame objects in the appropriate format for other functionalities.
-[[“raw”]] raw = a data.frame containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
+A named list of \code{data.frame} objects in the appropriate format for other functionalities,
+ containing the following items:
+
+\describe{
+   \item{raw}{A \code{data.frame} containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
 (e.g., “2012-01-01 00:00:00”), year of the data [,“year”], day of year [,“doy”], input solar radiance data [,“sr”],
  daily average radiance data [,“sr”], input vapour pressure deficit data [,“vpd”], isolated peak-of-the-day vapour pressure
  deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in mmol m-2 s-1 [,“fd”],
- crown conductance expressed in mmol m-2 s-1 kPa-1 [,“gc”], and the filtered crown conductance [,“gc.filt”].
- [[“peak.mean”]] peak.mean = a data.frame containing the daily mean crown conductance values.
+ crown conductance expressed in mmol m-2 s-1 kPa-1 [,“gc”], and the filtered crown conductance [,“gc.filt”]}
+
+ \item{peak.mean}{A \code{data.frame} containing the daily mean crown conductance values.
  Columns include the timestamp [,“timestamp”] (e.g., “2012-01-01”), peak-of-the-day vapour pressure deficit [,“vpd.filt”],
   the filtered crown conductance mmol m-2 s-1 kPa-1 [,“gc.filt”], and the normalized crown conductance according
-   to the maximum crown conductance [,“gc.norm”]. [[“sum.mod”]] sum.mod = model summary object (see summary())
-   of the model between VPD and GC. [[“sum.mod.norm”]] sum.mod.norm = model summary object (see summary())
-   of the model between VPD and GC/GC.max.
+   to the maximum crown conductance [,“gc.norm”].}
+
+  \item{sum.mod}{A model summary object (see \code{\link{summary}()})
+   of the model between VPD and \eqn{G_{C}}{Gc}.}
+
+
+   \item{sum.mod.norm}{A model summary object (see \code{\link{summary}()})
+   of the model between VPD and \eqn{G_{C}}{Gc}/\eqn{GC.max}.}
+
+
+
+}
 }
 \description{
 Generating relevant outputs from the sap flux density (SFD) values.
 This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in mmol m-2 s-1) and crown conductance
-(GC; an analogue to stomatal conductance) values in an easily exportable format.
-Additionally, the function can perform environmental filtering on Fd and GC and model GC sensitivity to vapour pressure deficit (VPD).
+(\eqn{G_{C}}{Gc}; an analogue to stomatal conductance) values in an easily exportable format.
+Additionally, the function can perform environmental filtering on \eqn{F_{d}}{Fd} and \eqn{G_{C}}{Gc} and model \eqn{G_{C}}{Gc} sensitivity to vapour pressure deficit (VPD).
 The user can choose between in- (method = “env.filt”) or excluding (method = “stat”) environmental filtering
-on the GC and adjust the filter threshold manually.
+on the \eqn{G_{C}}{Gc} and adjust the filter threshold manually.
 }
 \details{
 Various relevant outputs can be derived from the SFD data.
-This function provides the option to recalculate SFD to Fd (expressed in mmol m-2 s-1)
+This function provides the option to recalculate SFD to \eqn{F_{d}}{Fd} (expressed in mmol m-2 s-1)
 and crown conductance (according to Pappas et al. 2018).
-GC is estimated per unit sapwood area, where \eqn{GC = Fd / VPD} (in kPa), assuming that
+\eqn{G_{C}}{Gc} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{GC = Fd / VPD} (in kPa), assuming that
 i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and
 ii) that the canopy is well coupled to the atmosphere. In order to reduce the effect of stem hydraulic capacitance,
-peak-of-the-day GC are solely considered for calculating daily average GC.
-Peak-of-the-day conditions are defined by \code{peak.hours} or \code{peak.sr}. Moreover, to analyse the relationship between GC
- and environmental measurements (e.g., VPD), the daily mean peak-of-the-day GC values can be restricted to:
- i) non-cloudy days (see \code{low.sr}), to reduce the impact of low irradiance on GC,
+peak-of-the-day \eqn{G_{C}}{Gc} are solely considered for calculating daily average \eqn{G_{C}}{Gc}.
+Peak-of-the-day conditions are defined by \code{peak.hours} or \code{peak.sr}. Moreover, to analyse the relationship between \eqn{G_{C}}{Gc}
+ and environmental measurements (e.g., VPD), the daily mean peak-of-the-day \eqn{G_{C}}{Gc} values can be restricted to:
+ i) non-cloudy days (see \code{low.sr}), to reduce the impact of low irradiance on \eqn{G_{C}}{Gc},
  ii) non-rainy days (see \code{prec.lim}), as wet leaves are not well coupled to the atmosphere, and
- iii) daily mean peak-of-the-day GC great then a threshold (see \code{vpd.cutoff}),
- to eliminate unrealistically high GC values due to low Fd or VPD values (when method = “env.filt”).
- Moreover, the sensitivity of the daily mean peak-of-the-day GC to VPD is modelled by fitting the following model:
-  \eqn{GC = \alpha + \beta VPD^{-0.5}}{GC = \alpha + \beta VPD^(-0.5)}.
-  Besides using the raw daily mean peak-of-the-day GC values, the function also applies
-  a normalization where daily mean peak-of-the-day GC is standardized to the maximum conductance (GC.max; see \code{max.quant}).
+ iii) daily mean peak-of-the-day \eqn{G_{C}}{Gc} great then a threshold (see \code{vpd.cutoff}),
+ to eliminate unrealistically high \eqn{G_{C}}{Gc} values due to low \eqn{F_{d}}{Fd} or VPD values (when method = \code{“env.filt”}).
+ Moreover, the sensitivity of the daily mean peak-of-the-day \eqn{G_{C}}{Gc} to VPD is modelled by fitting the following model:
+
+  \deqn{G_{C} = \alpha + \beta VPD^{-0.5}}{GC = \alpha + \beta VPD^(-0.5)}
+
+  Besides using the raw daily mean peak-of-the-day \eqn{G_{C}}{Gc} values, the function also applies
+  a normalization where daily mean peak-of-the-day \eqn{G_{C}}{Gc} is standardized to the maximum conductance (GC.max; see \code{max.quant}).
 }
 \examples{
 \dontrun{
 #Gc response function
 #Gc response function
-raw   <- is.trex(example.data(type="doy"), tz="GMT", time.format="\%H:\%M", solar.time=TRUE, long.deg=7.7459, ref.add=FALSE)
+raw   <- is.trex(example.data(type="doy"), tz="GMT",
+                 time.format="\%H:\%M", solar.time=TRUE,
+                 long.deg=7.7459, ref.add=FALSE)
+
 input <- time.step(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
                    time.int=15, max.gap=60, decimals=10, df=FALSE)
+
 input[which(input<0.2)]<- NA
-input <- dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE, max.days=10, df=FALSE)
+input <- dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
+                 max.days=10, df=FALSE)
+
 output.data<- cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+
 input<- output.data$sfd.dr$sfd
+
 output<- out.data(input=input, vpd.input=vpd, sr.input=sr, prec.input=preci,
                   low.sr = 150, peak.sr=300, vpd.cutoff= 0.5, prec.lim=1,
                   method="env.filt", max.quant=0.99, make.plot=TRUE)
