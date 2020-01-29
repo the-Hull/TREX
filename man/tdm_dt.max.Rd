@@ -87,9 +87,19 @@ List items include:
  \item{k.dr}{\eqn{K} values calculated by using the \code{dr} method.}
  \item{k.ed}{\eqn{K} values calculated by using the \code{ed} method.}
  }
-
- @details
- There are a variety of methods which can be applied to determine zero flow conditions.
+}
+\description{
+Determine zero flow conditions (\eqn{\Delta T_{max}}{\Delta Tmax}; or \eqn{\Delta V_{max}}{\Delta Vmax})
+according to four methods; namely,
+ i) predawn (\code{pd}),
+ ii) moving-window (\code{mw}),
+ iii) double regression (\code{dr}),
+ and iv) environmental dependent (\code{ed}) as applied in Peters et al. 2018.
+ The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
+ All outputs are provided in a list where users can review the provided output and used input data.
+}
+\details{
+There are a variety of methods which can be applied to determine zero flow conditions.
  Zero flow conditions are required to calculate \eqn{K = (\Delta T_{max} - \Delta T) / \Delta T}{K = (\Delta Tmax - \Delta T) / \Delta T}.
  A detailed description on the methods is provided by Peters et al. (2018).
  In short, the \code{pd} method entails the selection of daily maximum occurring prior to sunrise.
@@ -107,19 +117,9 @@ List items include:
  (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} values were low to
  ensure the selection of stable zero-flow conditions.
 }
-\description{
-Determine zero flow conditions (\eqn{\Delta T_{max}}{\Delta Tmax}; or \eqn{\Delta V_{max}}{\Delta Vmax})
-according to four methods; namely,
- i) predawn (\code{pd}),
- ii) moving-window (\code{mw}),
- iii) double regression (\code{dr}),
- and iv) environmental dependent (\code{ed}) as applied in Peters et al. 2018.
- The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
- All outputs are provided in a list where users can review the provided output and used input data.
-}
 \examples{
 \dontrun{
-#perform âˆ†Tmax calculations
+#perform Delta Tmax calculations
 raw <- is.trex(example.data(type = "doy"),
      tz = "GMT", time.format = "\%H:\%M", solar.time = TRUE,
      long.deg = 7.7459, ref.add = FALSE)
@@ -127,7 +127,7 @@ input <- dt.steps(input = raw, start = "2014-05-08 00:00",
          end = "2014-07-25 00:50", time.int = 15, max.gap = 60,
          decimals = 6, df = FALSE)
 input[which(input<0.2)]<- NA
-output.max <- dt.max(input, methods = c("pd", "mw", "dr"),
+output.max <- tdm_dt.max(input, methods = c("pd", "mw", "dr"),
                  det.pd = TRUE, interpolate = FALSE,
                  max.days = 10, df = FALSE)
 

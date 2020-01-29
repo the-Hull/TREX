@@ -26,7 +26,7 @@
 #'  a timestamp and a value column.
 #' @param methods Character vector of the requested \eqn{\Delta T_{max}}{\Delta Tmax} methods.
 #' Options include “pd” (predawn), “mw” (moving window), “dr” (double regression),
-#' and “ed” (environmental dependent; default= c(“pd”, “mw”, “dr”)).
+#' and “ed” (environmental dependent; default= \code{c(“pd”, “mw”, “dr”)}).
 #' @param zero.end Numeric, optionally defines the end of the predawn period.
 #' Values should be in minutes (e.g. predawn conditions until 08:00 = 8 *60).
 #' When not provided, the algorithm will automatically analyse the cyclic behaviour
@@ -35,7 +35,7 @@
 #' Values should be in minutes (e.g., 01:00 = 1*60).
 #' @param interpolate Logical: if \code{TRUE}, detected \eqn{\Delta T_{max}}{\Delta Tmax} values are linearly
 #' interpolated. If \code{FALSE}, constant \eqn{\Delta T_{max}}{\Delta Tmax} values will be selected daily
-#' (default = FALSE).
+#' (default = \code{FALSE}).
 #' @param det.pd Logical; if \code{TRUE} and no zero.end and zero.start values are provided,
 #'  predawn \eqn{\Delta T_{max}}{\Delta Tmax} will be determined based on cyclic behaviour of the entire
 #'  time-series (default = \code{TRUE}).
@@ -80,7 +80,7 @@
 #'  \item{k.ed}{\eqn{K} values calculated by using the \code{ed} method.}
 #'  }
 #'
-#'  @details
+#' @details
 #'  There are a variety of methods which can be applied to determine zero flow conditions.
 #'  Zero flow conditions are required to calculate \eqn{K = (\Delta T_{max} - \Delta T) / \Delta T}{K = (\Delta Tmax - \Delta T) / \Delta T}.
 #'  A detailed description on the methods is provided by Peters et al. (2018).
@@ -104,7 +104,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' #perform ∆Tmax calculations
+#' #perform Delta Tmax calculations
 #' raw <- is.trex(example.data(type = "doy"),
 #'      tz = "GMT", time.format = "%H:%M", solar.time = TRUE,
 #'      long.deg = 7.7459, ref.add = FALSE)
@@ -112,7 +112,7 @@
 #'          end = "2014-07-25 00:50", time.int = 15, max.gap = 60,
 #'          decimals = 6, df = FALSE)
 #' input[which(input<0.2)]<- NA
-#' output.max <- dt.max(input, methods = c("pd", "mw", "dr"),
+#' output.max <- tdm_dt.max(input, methods = c("pd", "mw", "dr"),
 #'                  det.pd = TRUE, interpolate = FALSE,
 #'                  max.days = 10, df = FALSE)
 #'

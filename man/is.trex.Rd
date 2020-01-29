@@ -51,7 +51,7 @@ Testing if the structure of the input matches the requirements of the TREX funct
 \details{
 To prevent errors occurring in the other reported functions, it is advised to run this function
  for checking the data structure and preparing it for further analyses. For the specific time zone see
- \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{OlsonNames()}.
+ \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{\link{OlsonNames}()}.
  The format of the timestamp has to be provided according to \url{https://www.stat.berkeley.edu/~s133/dates.html}.
  For the method behind the solar time conversion, see the solar package (\url{https://cran.r-project.org/web/packages/solaR/}).
  The longitude has to be provided in positive decimal degrees for study sites east from the Greenwich meridian and negative for sites to the west.

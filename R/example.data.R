@@ -53,7 +53,7 @@ example.data <- function(type = "timestamp") {
   #p= processing
   #p1= data is loaded
   # proc.1 <- TREX:::tdm.input.txt
-    # read.table("tdm.input.txt", header = TRUE, sep = "\t") #p1 data is loaded {CHANGE}
+  # read.table("tdm.input.txt", header = TRUE, sep = "\t") #p1 data is loaded {CHANGE}
   # proc.1 <- TREX::tdm.data
   proc.1 <- getExportedValue('TREX', 'tdm.data')
 
