@@ -50,5 +50,15 @@ Imports:
     graphics,
     lubridate,
     utils,
-    grDevices
+    grDevices,
+    lhs,
+    doParallel,
+    foreach,
+    tibble,
+    dplyr,
+    sensitivity,
+    randtoolbox,
+    boot,
+    doSNOW,
+    msm
 RoxygenNote: 6.1.1

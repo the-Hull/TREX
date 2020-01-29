@@ -98,6 +98,8 @@
 #'  These environmental conditions include low vapour pressure deficit (in \eqn{kPa}) and low solar irradiance
 #'  (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} values were low to
 #'  ensure the selection of stable zero-flow conditions.
+#'  Note that pre-dawn values from the “pd” method are used, meaning that the relevance
+#'   of solar irradiance criteria can be enhanced by increasing \code{zero.end} and \code{zero.star}
 #'
 #'
 #' @export

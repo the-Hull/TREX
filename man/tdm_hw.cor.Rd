@@ -8,7 +8,7 @@ tdm_hw.cor (input, dt.max, probe.length = 20,
             sapwood.thickness = 18, df = FALSE)
 }
 \arguments{
-\item{input}{\code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
+\item{input}{A \code{\link{tdm_dt.max}} ouput or \code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
 a timestamp and a value column.}
 
 \item{dt.max}{Optional \code{zoo} object or \code{data.frame} (columns = “timestamp” or “value”)

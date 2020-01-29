@@ -8,7 +8,7 @@
 #' is recalculated accordingly. When an \code{\link{is.trex}}-compliant object is
 #' applied, the \eqn{K} values for each method are provided (see \code{\link{tdm_dt.max}}.
 #'
-#' @param input \code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
+#' @param input A \code{\link{tdm_dt.max}} ouput or \code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
 #'  a timestamp and a value column.
 #' @param dt.max Optional \code{zoo} object or \code{data.frame} (columns = “timestamp” or “value”)
 #' containing the \eqn{\Delta T_{max}}{\Delta Tmax} when no \code{\link{is.trex}}-compliant object is provided.

@@ -22,7 +22,7 @@ a timestamp and a value column.}
 
 \item{methods}{Character vector of the requested \eqn{\Delta T_{max}}{\Delta Tmax} methods.
 Options include “pd” (predawn), “mw” (moving window), “dr” (double regression),
-and “ed” (environmental dependent; default= c(“pd”, “mw”, “dr”)).}
+and “ed” (environmental dependent; default= \code{c(“pd”, “mw”, “dr”)}).}
 
 \item{zero.end}{Numeric, optionally defines the end of the predawn period.
 Values should be in minutes (e.g. predawn conditions until 08:00 = 8 *60).
@@ -34,7 +34,7 @@ Values should be in minutes (e.g., 01:00 = 1*60).}
 
 \item{interpolate}{Logical: if \code{TRUE}, detected \eqn{\Delta T_{max}}{\Delta Tmax} values are linearly
 interpolated. If \code{FALSE}, constant \eqn{\Delta T_{max}}{\Delta Tmax} values will be selected daily
-(default = FALSE).}
+(default = \code{FALSE}).}
 
 \item{det.pd}{Logical; if \code{TRUE} and no zero.end and zero.start values are provided,
 predawn \eqn{\Delta T_{max}}{\Delta Tmax} will be determined based on cyclic behaviour of the entire
@@ -116,6 +116,8 @@ There are a variety of methods which can be applied to determine zero flow condi
  These environmental conditions include low vapour pressure deficit (in \eqn{kPa}) and low solar irradiance
  (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} values were low to
  ensure the selection of stable zero-flow conditions.
+ Note that pre-dawn values from the “pd” method are used, meaning that the relevance
+  of solar irradiance criteria can be enhanced by increasing \code{zero.end} and \code{zero.star}
 }
 \examples{
 \dontrun{
