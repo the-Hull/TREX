@@ -60,5 +60,6 @@ Imports:
     randtoolbox,
     boot,
     doSNOW,
-    msm
+    msm,
+    parallel
 RoxygenNote: 6.1.1

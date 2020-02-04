@@ -118,14 +118,14 @@ raw   <- is.trex(example.data(type="doy"), tz="GMT",
                  time.format="\%H:\%M", solar.time=TRUE,
                  long.deg=7.7459, ref.add=FALSE)
 
-input <- time.step(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
+input <- dt.steps(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
                    time.int=15, max.gap=60, decimals=10, df=FALSE)
 
 input[which(input<0.2)]<- NA
-input <- dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
+input <- tdm_dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
                  max.days=10, df=FALSE)
 
-output.data<- cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
 
 input<- output.data$sfd.dr$sfd
 

@@ -4,8 +4,8 @@
 \alias{tdm_uncertain}
 \title{Uncertainty and sensitivity analysis}
 \usage{
-tdm_uncertain(input, vpd.input = vpd, sr.input = sr, method = "pd",
-  n = 2000, zero.end = 8 * 60, range.end = 16, zero.start = 1 * 60,
+tdm_uncertain(input, vpd.input, sr.input, method = "pd", n = 2000,
+  zero.end = 8 * 60, range.end = 16, zero.start = 1 * 60,
   range.start = 16, probe.length = 20, sw.cor = 32.28, sw.sd = 16,
   log.a_mu = 4.085, log.a_sd = 0.628, b_mu = 1.275, b_sd = 0.262,
   max.days_min = 1, max.days_max = 7, ed.window_min = 8,
@@ -79,7 +79,7 @@ for calculating \eqn{SFD} (default = 0.262).}
 \item{ed.window_min}{Numeric, the minimum number of time steps for the \code{ed.window parameter} (see \code{\link{tdm_dt.max}}; the minimum time step of the input)
 for which an integer sampling range will be defined (default = 8, assuming a 15-min resolution or a 2 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).}
 
-\item{ed.window_max}{Numeric, the maximum number of time steps for the \ocde{ed.window} sampling range
+\item{ed.window_max}{Numeric, the maximum number of time steps for the \code{ed.window} sampling range
 (default = 16, assuming a 15-min resolution or a 4 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).}
 
 \item{criteria.vpd_min}{Numeric, value in kPa defining the minimum for the fixed sampling range to define the vapour pressure deficit (VPD)
@@ -101,7 +101,7 @@ determine the coefficient of variation (CV) threshold for establishing zero-flow
 
 \item{criteria.cv_max}{Numeric, value (in \%) defining the maximum value for the fixed sampling range
 to determine the coefficient of variation (CV) threshold for establishing zero-flow conditions
-(default = 1%; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).}
+(default = 1\%; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).}
 
 \item{min.sfd}{Numeric, defines at which \eqn{SFD} (cm3 cm-2 h-1) zero-flow conditions are expected.
 This parameter is used to define the duration of daily sap flow based on \eqn{SFD} (default = 0.5 cm3 cm-2 h-1).}
@@ -113,6 +113,30 @@ This parameter is used to define the duration of daily sap flow based on \eqn{K}
 
 \item{df}{Logical; If \code{TRUE}, output is provided in a \code{data.frame} format with a timestamp and a value column.
 If \code{FALSE}, output is provided as a zoo vector object (default = \code{FALSE}).}
+}
+\value{
+A named list of zoo or data.frame objects in the appropriate format for other functionalities.
+ Items include:
+
+ \describe{
+
+   \item{output.data}{data.frame containing uncertainty and sensitivity indices for SFD and K and the included parameters.
+        This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.min"] and lower [,"ci.max"]
+        95\% confidence interval.}
+
+   \item{output.sfd}{zoo object or data.frame with the SFD time series obtained from the bootstrap resampling.
+              This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"CIup"] and lower [,"CIlo"]
+               95\% confidence interval.}
+
+   \item{output.k}{zoo object or data.frame with the K time series obtained from the bootstrap resampling.
+   This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.max"]
+   and lower [,"ci.min"] 95\% confidence interval. }
+
+
+   \item{param}{a data.frame with an overview of selected parameters used within \code{\link{tdm_uncertain}()} function. }
+
+
+ }
 }
 \description{
 Quantifies the induced uncertainty on SFD and K time series due to the variability
@@ -163,39 +187,6 @@ Uncertainty and sensitivity analysis can be performed on TDM \eqn{\Delta T} (or 
  improvement and highlight methodological limitations. Users should keep in mind that parameter ranges represent
  a very critical component of any sensitivity analysis and should be critically assessed and clearly reported
  for each case and analytical purpose. Moreover, it is advised to run this function on one growing season of input data to reduce processing time.
-
-
- @return A named list of zoo or data.frame objects in the appropriate format for other functionalities.
- Items include:
-
- \describe{
-
-   \item{output.data}{data.frame containing uncertainty and sensitivity indices for SFD and K and the included parameters.
-        This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.min"] and lower [,"ci.max"]
-        95\% confidence interval.}
-
-   \item{output.sfd}{zoo object or data.frame with the SFD time series obtained from the bootstrap resampling.
-              This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"CIup"] and lower [,"CIlo"]
-               95\% confidence interval.}
-
-   \item{output.k}{zoo object or data.frame with the K time series obtained from the bootstrap resampling.
-   This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.max"]
-   and lower [,"ci.min"] 95\% confidence interval. }
-
-
-   \item{param}{a data.frame with an overview of selected parameters used within \code{\link{tdm_uncertain}()} function. }
-
-
- }
-
- @references
-
- Sobol’ I. 1993. Sensitivity analysis for nonlinear mathematical models.
- Math. Model Comput. Exp. 1:407-414
-
- Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
- Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
-  Journal of Geophysical Research 118:505-528 <doi: 10.1002/jgrg.20035>
 }
 \examples{
 \dontrun{
@@ -204,11 +195,19 @@ raw   <- example.data(type="doy")
 input <- is.trex(raw, tz="GMT", time.format="\%H:\%M",
            solar.time=TRUE, long.deg=7.7459, ref.add=FALSE, df=FALSE)
 input<-dt.steps(input,time.int=15,start="2013-04-01 00:00",
-             end="2013-11-01 00:00",max.gap=180,decimals=15)x
+             end="2013-11-01 00:00",max.gap=180,decimals=15)
 output<- tdm_uncertain(input, probe.length=20, method="pd",
                n=2000,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
                log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
                make.plot=TRUE)
 }
 
+}
+\references{
+Sobol’ I. 1993. Sensitivity analysis for nonlinear mathematical models.
+ Math. Model Comput. Exp. 1:407-414
+
+ Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
+ Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
+  Journal of Geophysical Research 118:505-528 <doi: 10.1002/jgrg.20035>
 }

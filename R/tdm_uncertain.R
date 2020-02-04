@@ -98,7 +98,7 @@
 #'
 #' @param criteria.cv_max Numeric, value (in \%) defining the maximum value for the fixed sampling range
 #'  to determine the coefficient of variation (CV) threshold for establishing zero-flow conditions
-#'  (default = 1%; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
+#'  (default = 1\%; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
 #' @param min.sfd Numeric, defines at which \eqn{SFD} (cm3 cm-2 h-1) zero-flow conditions are expected.
 #'  This parameter is used to define the duration of daily sap flow based on \eqn{SFD} (default = 0.5 cm3 cm-2 h-1).
@@ -173,7 +173,7 @@
 #'
 #'  }
 #'
-#'  @references
+#' @references
 #'
 #'  Sobol’ I. 1993. Sensitivity analysis for nonlinear mathematical models.
 #'  Math. Model Comput. Exp. 1:407-414
@@ -188,15 +188,18 @@
 #' input <- is.trex(raw, tz="GMT", time.format="%H:%M",
 #'            solar.time=TRUE, long.deg=7.7459, ref.add=FALSE, df=FALSE)
 #' input<-dt.steps(input,time.int=15,start="2013-04-01 00:00",
-#'              end="2013-11-01 00:00",max.gap=180,decimals=15)x
+#'              end="2013-11-01 00:00",max.gap=180,decimals=15)
 #' output<- tdm_uncertain(input, probe.length=20, method="pd",
 #'                n=2000,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
 #'                log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
 #'                make.plot=TRUE)
 #' }
 #'
+#' @import foreach
+#' @import stats
+#'
 #' @export
-tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
+tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                         n = 2000, zero.end = 8*60, range.end = 16, zero.start = 1*60,
                         range.start = 16, probe.length = 20, sw.cor = 32.28, sw.sd = 16,
                         log.a_mu = 4.085, log.a_sd = 0.628, b_mu = 1.275, b_sd = 0.262,
@@ -295,14 +298,14 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
   #e
   if(nrow(raw.input)==0)stop("Invalid input object, no values are provided within the object.")
 
-  length.input <- na.omit(tibble::tibble(days = days,value = as.numeric(as.character(input))))
-  raw.input$count<-dplyr::full_join(raw.input,aggregate(length.input, list(length.input$days), FUN=length),by=c("days"="Group.1"))$value.y
+  length.input <- stats::na.omit(tibble::tibble(days = days,value = as.numeric(as.character(input))))
+  raw.input$count<-dplyr::full_join(raw.input,stats::aggregate(length.input, list(length.input$days), FUN=length),by=c("days"="Group.1"))$value.y
 
   #d
   if(missing(zero.start)){zero.start<-1*60}
   if(missing(zero.end)){zero.end<-8*60}
-  if(missing(range.start)){range.start<-round((60*4)/median(diff(raw.input$minutes)),0)}
-  if(missing(range.end)){range.end<-round((60*4)/median(diff(raw.input$minutes)),0)}
+  if(missing(range.start)){range.start<-round((60*4)/stats::median(diff(raw.input$minutes)),0)}
+  if(missing(range.end)){range.end<-round((60*4)/stats::median(diff(raw.input$minutes)),0)}
   if(missing(sw.cor)){sw.cor<-20}
   if(missing(sw.sd)){sw.cor<-0}
   if(missing(log.a_mu)){log.a_mu<-4.085335}
@@ -351,23 +354,23 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b")
     X2<-data.frame(B)
 
-    x <- soboljansen(model = NULL , X1, X2, nboot = n)
+    x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
     #p= process
-    registerDoParallel(cores = detectCores() - 2)
-    cl<-makeCluster(detectCores() - 2)
-    registerDoSNOW(cl)
-    pb <- txtProgressBar(max = nrow(B), style = 3)
-    progress <- function(n) setTxtProgressBar(pb, n)
+    doParallel::registerDoParallel(cores = parallel::detectCores() - 2)
+    cl<-parallel::makeCluster(parallel::detectCores() - 2)
+    doSNOW::registerDoSNOW(cl)
+    pb <- utils::txtProgressBar(max = nrow(B), style = 3)
+    progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
 
     output<-foreach(i=c(1:n),.combine="rbind",.packages=c("tibble","dplyr","zoo"),.options.snow = opts)%dopar%{
-      setTxtProgressBar(pb, i)
-      ze<-zero.end+(B[i,1]*median(diff(minutes)))
+      utils::setTxtProgressBar(pb, i)
+      ze<-zero.end+(B[i,1]*stats::median(diff(minutes)))
       if(ze<0){ze<-24*60-ze}
       if(ze>24*60){ze<-ze-24*60}
-      zs<-zero.start+(B[i,2]*median(diff(minutes)))
+      zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
 
@@ -375,20 +378,20 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
       if(ze<zs){proc.1[which(proc.1$minutes>ze&minutes<zs),"dt.max"]<-NA
-      offset<-(60*24/median(diff(proc.1$minutes)))-ceiling(zs/median(diff(proc.1$minutes)))+1
+      offset<-(60*24/stats::median(diff(proc.1$minutes)))-ceiling(zs/stats::median(diff(proc.1$minutes)))+1
       proc.1$days.agg<-c(proc.1$days[(offset:length(proc.1$days))],rep(max(proc.1$days),offset-1))}
       #View(proc.1)
       if(ze==zs)stop(paste("Unused argument, zero.start and zero.end are too close together.",sep=""))
       add<-tibble::tibble(
-        days.add = aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
-        ddt.max=aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
+        days.add = stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
+        ddt.max=stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
       )
       proc.2<-dplyr::full_join(proc.1,add,by=c("days.agg"="days.add"))
       proc.2[which(proc.2$ddt.max!=proc.2$dt.max|is.na(proc.2$dt.max)==TRUE),"ddt.max"]<-NA
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"gap"]<-NA
-      proc.2$gap<-ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*median(diff(proc.1$minutes))
-      proc.2$ddt.max<-na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
-      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
+      proc.2$gap<-stats::ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*stats::median(diff(proc.1$minutes))
+      proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
+      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
 
       #HW correction
       #i<-4
@@ -408,38 +411,38 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2$sfd<-a*proc.2$k.pd^b
 
       #think about relevant output proxies
-      d.sum.k<-suppressWarnings(aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
       durat.k<-proc.2
       durat.k[which(proc.2$k.pd<=min.k),"k.pd"]<-NA
-      durat.k<-aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(na.omit(x))})
-      values.k<-aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
+      values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
 
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
-      durat<-aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(na.omit(x))})
-      values<-aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
+      values<-stats::aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values[values[,2]=="NaN",2]<-NA
-      d.sum<-suppressWarnings(aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum<-suppressWarnings(stats::aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum[which(d.sum[,2]=="-Inf"),2]<-NA
       return(
-        c(c(i,mean(values[,2],na.rm=TRUE),(sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*median(diff(proc.2$minutes)))/60),
-            mean(values.k[,2],na.rm=TRUE),(sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*median(diff(proc.2$minutes)))/60)),
+        c(c(i,mean(values[,2],na.rm=TRUE),(stats::sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*stats::median(diff(proc.2$minutes)))/60),
+            mean(values.k[,2],na.rm=TRUE),(stats::sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*stats::median(diff(proc.2$minutes)))/60)),
           c(length(proc.2$sfd),proc.2$sfd,proc.2$k.pd))
       )
     }
-    stopImplicitCluster()
+    doParallel::stopImplicitCluster()
 
     #time series output
-    number<-median(output[,8])
+    number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
     output.k<-output[,c((9+number):(8+number+number))]
     n<-nrow(output.k)
-    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,quantile,probs=c(0.025),na.rm=T))
-    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,quantile,probs=c(0.025),na.rm=T))
-    output.sfd<-zoo(output.sfd,order.by=zoo::index(input))
-    output.k<-zoo(output.k,order.by=zoo::index(input))
+    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
+    output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
 
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
@@ -450,99 +453,99 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
 
     #o= output
     output<-output[,c(1:7)]
-    output_sum<-tell(x,as.numeric(output[,2]))
-    output_cv<-tell(x,output[,3])
-    output_length<-tell(x,output[,4])
+    output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
+    output_cv<-sensitivity::tell(x,output[,3])
+    output_length<-sensitivity::tell(x,output[,4])
 
-    output_sum.k<-tell(x,output[,5])
-    output_cv.k<-tell(x,output[,6])
-    output_length.k<-tell(x,output[,7])
+    output_sum.k<-sensitivity::tell(x,output[,5])
+    output_cv.k<-sensitivity::tell(x,output[,6])
+    output_length.k<-sensitivity::tell(x,output[,7])
 
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
-                           sd=c(output_sum$T[,3],sd(output[,2]),output_cv$T[,3],sd(output[,3]),output_length$T[,3],sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],quantile(output[,2],probs=0.025),output_cv$T[,4],quantile(output[,3],probs=0.025),output_length$T[,4],quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],quantile(output[,2],probs=0.975),output_cv$T[,5],quantile(output[,3],probs=0.975),output_length$T[,5],quantile(output[,4],probs=0.975))
+                           sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
-                             sd=c(output_sum.k$T[,3],sd(output[,5]),output_cv.k$T[,3],sd(output[,6]),output_length.k$T[,3],sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],quantile(output[,5],probs=0.025),output_cv.k$T[,4],quantile(output[,6],probs=0.025),output_length.k$T[,4],quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],quantile(output[,5],probs=0.975),output_cv.k$T[,5],quantile(output[,6],probs=0.975),output_length.k$T[,5],quantile(output[,7],probs=0.975))
+                             sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
     )
 
     #figure output
     #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX")
     #pdf("Figure_SPD_sensitivity_2000_pd.pdf",height=6,width=8)
     if(make.plot==T){
-      layout(
+      graphics::layout(
         matrix(
           c(5,5,1,1,1,2,
             5,5,1,1,1,3,
             5,5,1,1,1,4),
           ncol=6, byrow = TRUE))
       #make output for the package
-      par(oma=c(6,3,3,3))
-      par(mar=c(0,2,0,0))
-      plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2,labels=F)
+      graphics::par(oma=c(6,3,3,3))
+      graphics::par(mar=c(0,2,0,0))
+      graphics::plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2,labels=F)
       lab<-colnames(B)
-      axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
-      legend("topright","SFD",bty="n",text.font=2,cex=2)
-      mtext(side=3,"Pre-dawn",outer=TRUE,padj=-0.5)
+      graphics::axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
+      graphics::legend("topright","SFD",bty="n",text.font=2,cex=2)
+      graphics::mtext(side=3,"Pre-dawn",outer=TRUE,padj=-0.5)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
       for(i in c(1:nrow(output.tot))){
         sel<-output.tot[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
-      par(mar=c(0.2,0,0.2,3))
-      plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
+      graphics::par(mar=c(0.2,0,0.2,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
 
-      par(mar=c(0,4,0,0))
+      graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
-      plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2)
-      axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
-      legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
-      legend("topright","K",bty="n",text.font=2,cex=2)
+      graphics::plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2)
+      graphics::axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
+      graphics::legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
+      graphics::legend("topright","K",bty="n",text.font=2,cex=2)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
@@ -552,12 +555,12 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         #i<-1
         sel<-output.tot.k.gr[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
@@ -631,22 +634,22 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","max.days")
     X2<-data.frame(B)
 
-    x <- soboljansen(model = NULL , X1, X2, nboot = n)
+    x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
     #p= process
-    registerDoParallel(cores = detectCores() - 2)
-    cl<-makeCluster(detectCores() - 2)
-    registerDoSNOW(cl)
-    pb <- txtProgressBar(max = nrow(B), style = 3)
-    progress <- function(n) setTxtProgressBar(pb, n)
+    doParallel::registerDoParallel(cores = parallel::detectCores() - 2)
+    cl<-parallel::makeCluster(parallel::detectCores() - 2)
+    doSNOW::registerDoSNOW(cl)
+    pb <- utils::txtProgressBar(max = nrow(B), style = 3)
+    progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
     output<-foreach(i=c(1:n),.combine="rbind",.packages=c("tibble","dplyr","zoo"),.options.snow = opts)%dopar%{
-      setTxtProgressBar(pb, i)
-      ze<-zero.end+(B[i,1]*median(diff(minutes)))
+      utils::setTxtProgressBar(pb, i)
+      ze<-zero.end+(B[i,1]*stats::median(diff(minutes)))
       if(ze<0){ze<-24*60-ze}
       if(ze>24*60){ze<-ze-24*60}
-      zs<-zero.start+(B[i,2]*median(diff(minutes)))
+      zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
 
@@ -654,18 +657,18 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
       if(ze<zs){proc.1[which(proc.1$minutes>ze&minutes<zs),"dt.max"]<-NA
-      offset<-(60*24/median(diff(proc.1$minutes)))-ceiling(zs/median(diff(proc.1$minutes)))+1
+      offset<-(60*24/stats::median(diff(proc.1$minutes)))-ceiling(zs/stats::median(diff(proc.1$minutes)))+1
       proc.1$days.agg<-c(proc.1$days[(offset:length(proc.1$days))],rep(max(proc.1$days),offset-1))}
       #View(proc.1)
       if(ze==zs)stop(paste("Unused argument, zero.start and zero.end are too close together.",sep=""))
       add<-tibble::tibble(
-        days.add = aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
-        ddt.max=aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
+        days.add = stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
+        ddt.max=stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
       )
       m.day<-(B[i,"max.days"]*2)+1
       proc.1_2<-dplyr::full_join(add,data.frame(days=c(1:max(add[,1])),rmax=NA),by=c("days.add"="days"))
       proc.1_2<-proc.1_2[order(proc.1_2$days.add),]
-      proc.1_2$rmax<-rollmax(proc.1_2$ddt.max,m.day,align = c("center"),na.rm=TRUE,fill=NA)
+      proc.1_2$rmax<-zoo::rollmax(proc.1_2$ddt.max,m.day,align = c("center"),na.rm=TRUE,fill=NA)
       gaps<-proc.1_2[which(is.na(proc.1_2$ddt.max)==TRUE),]
       if(nrow(gaps)!=0){
 
@@ -673,9 +676,9 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         split<-c(1,gaps[which(gaps$NA_value>1),]$days.add,nrow(proc.1_2))
 
         for(z in c(1:(length(split)-1))){
-          proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax<-na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax,c("extend",NA))
+          proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax,c("extend",NA))
           if(z==length(split)-1){
-            proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax<-na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax,c("extend",NA))
+            proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax,c("extend",NA))
           }
         }
       }
@@ -683,10 +686,10 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2<-dplyr::full_join(proc.1,add,by=c("days.agg"="days.add"))
       proc.2[which(proc.2$ddt.max!=proc.2$dt.max|is.na(proc.2$dt.max)==TRUE),"ddt.max"]<-NA
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"gap"]<-NA
-      proc.2$gap<-ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*median(diff(proc.1$minutes))
+      proc.2$gap<-stats::ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*stats::median(diff(proc.1$minutes))
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"ddt.max"]<-proc.2[which(is.na(proc.2$ddt.max)==FALSE),"rmax"]
-      proc.2$ddt.max<-na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
-      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
+      proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
+      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
 
       #HW correction
       #i<-4
@@ -706,39 +709,39 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2$sfd<-a*proc.2$k.pd^b
 
       #think about relevant output proxies
-      d.sum.k<-suppressWarnings(aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
       durat.k<-proc.2
       durat.k[which(proc.2$k.pd<=min.k),"k.pd"]<-NA
-      durat.k<-aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(na.omit(x))})
-      values.k<-aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
+      values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
 
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
-      durat<-aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(na.omit(x))})
-      values<-aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
+      values<-stats::aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values[values[,2]=="NaN",2]<-NA
-      d.sum<-suppressWarnings(aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum<-suppressWarnings(stats::aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum[which(d.sum[,2]=="-Inf"),2]<-NA
 
       return(
-        c(c(i,mean(values[,2],na.rm=TRUE),(sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*median(diff(proc.2$minutes)))/60),
-            mean(values.k[,2],na.rm=TRUE),(sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*median(diff(proc.2$minutes)))/60)),
+        c(c(i,mean(values[,2],na.rm=TRUE),(stats::sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*stats::median(diff(proc.2$minutes)))/60),
+            mean(values.k[,2],na.rm=TRUE),(stats::sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*stats::median(diff(proc.2$minutes)))/60)),
           c(length(proc.2$sfd),proc.2$sfd,proc.2$k.pd))
       )
     }
-    stopImplicitCluster()
+    doParallel::stopImplicitCluster()
 
     #time series output
-    number<-median(output[,8])
+    number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
     output.k<-output[,c((9+number):(8+number+number))]
     n<-nrow(output.k)
-    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,quantile,probs=c(0.025),na.rm=T))
-    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,quantile,probs=c(0.025),na.rm=T))
-    output.sfd<-zoo(output.sfd,order.by=zoo::index(input))
-    output.k<-zoo(output.k,order.by=zoo::index(input))
+    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
+    output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
 
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
@@ -749,98 +752,98 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
 
     #o= output
     output<-output[,c(1:7)]
-    output_sum<-tell(x,as.numeric(output[,2]))
-    output_cv<-tell(x,output[,3])
-    output_length<-tell(x,output[,4])
+    output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
+    output_cv<-sensitivity::tell(x,output[,3])
+    output_length<-sensitivity::tell(x,output[,4])
 
-    output_sum.k<-tell(x,output[,5])
-    output_cv.k<-tell(x,output[,6])
-    output_length.k<-tell(x,output[,7])
+    output_sum.k<-sensitivity::tell(x,output[,5])
+    output_cv.k<-sensitivity::tell(x,output[,6])
+    output_length.k<-sensitivity::tell(x,output[,7])
 
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
-                           sd=c(output_sum$T[,3],sd(output[,2]),output_cv$T[,3],sd(output[,3]),output_length$T[,3],sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],quantile(output[,2],probs=0.025),output_cv$T[,4],quantile(output[,3],probs=0.025),output_length$T[,4],quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],quantile(output[,2],probs=0.975),output_cv$T[,5],quantile(output[,3],probs=0.975),output_length$T[,5],quantile(output[,4],probs=0.975))
+                           sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
-                             sd=c(output_sum.k$T[,3],sd(output[,5]),output_cv.k$T[,3],sd(output[,6]),output_length.k$T[,3],sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],quantile(output[,5],probs=0.025),output_cv.k$T[,4],quantile(output[,6],probs=0.025),output_length.k$T[,4],quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],quantile(output[,5],probs=0.975),output_cv.k$T[,5],quantile(output[,6],probs=0.975),output_length.k$T[,5],quantile(output[,7],probs=0.975))
+                             sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
     )
 
     #figure output
     if(make.plot==T){
-      layout(
+      graphics::layout(
         matrix(
           c(5,5,1,1,1,2,
             5,5,1,1,1,3,
             5,5,1,1,1,4),
           ncol=6, byrow = TRUE))
       #make output for the package
-      par(oma=c(6,3,3,3))
-      par(mar=c(0,2,0,0))
-      plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2,labels=F)
+      graphics::par(oma=c(6,3,3,3))
+      graphics::par(mar=c(0,2,0,0))
+      graphics::plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2,labels=F)
       lab<-colnames(B)
-      axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
-      #legend("top",horiz=TRUE,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n")
-      legend("topright","SFD",bty="n",text.font=2,cex=2)
-      mtext(side=3,"Moving-window",outer=TRUE,padj=-0.5)
+      graphics::axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
+      #graphics::legend("top",horiz=TRUE,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n")
+      graphics::legend("topright","SFD",bty="n",text.font=2,cex=2)
+      graphics::mtext(side=3,"Moving-window",outer=TRUE,padj=-0.5)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
       for(i in c(1:nrow(output.tot))){
         sel<-output.tot[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
-      par(mar=c(0.2,0,0.2,3))
-      plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
+      graphics::par(mar=c(0.2,0,0.2,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
 
-      par(mar=c(0,4,0,0))
+      graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
-      plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2)
-      axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
-      legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
-      legend("topright","K",bty="n",text.font=2,cex=2)
+      graphics::plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2)
+      graphics::axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
+      graphics::legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
+      graphics::legend("topright","K",bty="n",text.font=2,cex=2)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
@@ -850,12 +853,12 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         #i<-1
         sel<-output.tot.k.gr[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
@@ -927,23 +930,23 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","max.days")
     X2<-data.frame(B)
 
-    x <- soboljansen(model = NULL , X1, X2, nboot = n)
+    x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
     #p= process
-    registerDoParallel(cores = detectCores() - 2)
-    cl<-makeCluster(detectCores() - 2)
-    registerDoSNOW(cl)
-    pb <- txtProgressBar(max = nrow(B), style = 3)
-    progress <- function(n) setTxtProgressBar(pb, n)
+    doParallel::registerDoParallel(cores = parallel::detectCores() - 2)
+    cl<-parallel::makeCluster(parallel::detectCores() - 2)
+    doSNOW::registerDoSNOW(cl)
+    pb <- utils::txtProgressBar(max = nrow(B), style = 3)
+    progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
     output<-foreach(i=c(1:n),.combine="rbind",.packages=c("tibble","dplyr","zoo"),.options.snow = opts)%dopar%{
       #i<-1
-      setTxtProgressBar(pb, i)
-      ze<-zero.end+(B[i,1]*median(diff(minutes)))
+      utils::setTxtProgressBar(pb, i)
+      ze<-zero.end+(B[i,1]*stats::median(diff(minutes)))
       if(ze<0){ze<-24*60-ze}
       if(ze>24*60){ze<-ze-24*60}
-      zs<-zero.start+(B[i,2]*median(diff(minutes)))
+      zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
 
@@ -951,18 +954,18 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
       if(ze<zs){proc.1[which(proc.1$minutes>ze&minutes<zs),"dt.max"]<-NA
-      offset<-(60*24/median(diff(proc.1$minutes)))-ceiling(zs/median(diff(proc.1$minutes)))+1
+      offset<-(60*24/stats::median(diff(proc.1$minutes)))-ceiling(zs/stats::median(diff(proc.1$minutes)))+1
       proc.1$days.agg<-c(proc.1$days[(offset:length(proc.1$days))],rep(max(proc.1$days),offset-1))}
 
       if(ze==zs)stop(paste("Unused argument, zero.start and zero.end are too close together.",sep=""))
       add<-tibble::tibble(
-        days.add = aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
-        ddt.max=aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
+        days.add = stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
+        ddt.max=stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
       )
       m.day<-(B[i,"max.days"]*2)+1
       proc.1_2<-dplyr::full_join(add,data.frame(days=c(1:max(add[,1])),rmax=NA),by=c("days.add"="days"))
       proc.1_2<-proc.1_2[order(proc.1_2$days.add),]
-      proc.1_2$rmax<-rollmean(proc.1_2$ddt.max,m.day,align = c("center"),na.pad=TRUE,na.rm=TRUE)
+      proc.1_2$rmax<-zoo::rollmean(proc.1_2$ddt.max,m.day,align = c("center"),na.pad=TRUE,na.rm=TRUE)
 
       gaps<-proc.1_2[which(is.na(proc.1_2$ddt.max)==TRUE),]
       if(nrow(gaps)!=0){
@@ -970,15 +973,15 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         split<-c(1,gaps[which(gaps$NA_value>1),]$days.add,nrow(proc.1_2))
 
         for(z in c(1:(length(split)-1))){
-          proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax<-na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax,c("extend",NA))
+          proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax,c("extend",NA))
           if(z==length(split)-1){
-            proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax<-na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax,c("extend",NA))
+            proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax,c("extend",NA))
           }
         }
       }
       proc.1_2$ddt.max.r<-proc.1_2[,"ddt.max"]
       proc.1_2[which(proc.1_2$ddt.max<proc.1_2$rmax),"ddt.max.r"]<-NA
-      proc.1_2$rmax.r<-rollmean(proc.1_2$ddt.max.r,m.day,align = c("center"),na.pad=TRUE,na.rm=TRUE)
+      proc.1_2$rmax.r<-zoo::rollmean(proc.1_2$ddt.max.r,m.day,align = c("center"),na.pad=TRUE,na.rm=TRUE)
 
       gaps<-proc.1_2[which(is.na(proc.1_2$ddt.max)==TRUE),]
       if(nrow(gaps)!=0){
@@ -986,9 +989,9 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         split<-c(1,gaps[which(gaps$NA_value>1),]$days.add,nrow(proc.1_2))
 
         for(z in c(1:(length(split)-1))){
-          proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax.r<-na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax.r,c("extend",NA))
+          proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax.r<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax.r,c("extend",NA))
           if(z==length(split)-1){
-            proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax.r<-na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax.r,c("extend",NA))
+            proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax.r<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1]))),]$rmax.r,c("extend",NA))
           }
         }
       }
@@ -997,10 +1000,10 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2<-dplyr::full_join(proc.1,add,by=c("days.agg"="days.add"))
       proc.2[which(proc.2$ddt.max!=proc.2$dt.max|is.na(proc.2$dt.max)==TRUE),"ddt.max"]<-NA
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"gap"]<-NA
-      proc.2$gap<-ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*median(diff(proc.1$minutes))
+      proc.2$gap<-stats::ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*stats::median(diff(proc.1$minutes))
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"ddt.max"]<-proc.2[which(is.na(proc.2$ddt.max)==FALSE),"rmax"]
-      proc.2$ddt.max<-na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
-      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
+      proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
+      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
 
       #HW correction
       #i<-4
@@ -1020,38 +1023,38 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2$sfd<-a*proc.2$k.pd^b
 
       #think about relevant output proxies
-      d.sum.k<-suppressWarnings(aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
       durat.k<-proc.2
       durat.k[which(proc.2$k.pd<=min.k),"k.pd"]<-NA
-      durat.k<-aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(na.omit(x))})
-      values.k<-aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
+      values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
 
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
-      durat<-aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(na.omit(x))})
-      values<-aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
+      values<-stats::aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values[values[,2]=="NaN",2]<-NA
-      d.sum<-suppressWarnings(aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum<-suppressWarnings(stats::aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum[which(d.sum[,2]=="-Inf"),2]<-NA
       return(
-        c(c(i,mean(values[,2],na.rm=TRUE),(sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*median(diff(proc.2$minutes)))/60),
-            mean(values.k[,2],na.rm=TRUE),(sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*median(diff(proc.2$minutes)))/60)),
+        c(c(i,mean(values[,2],na.rm=TRUE),(stats::sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*stats::median(diff(proc.2$minutes)))/60),
+            mean(values.k[,2],na.rm=TRUE),(stats::sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*stats::median(diff(proc.2$minutes)))/60)),
           c(length(proc.2$sfd),proc.2$sfd,proc.2$k.pd))
       )
     }
-    stopImplicitCluster()
+    doParallel::stopImplicitCluster()
 
     #time series output
-    number<-median(output[,8])
+    number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
     output.k<-output[,c((9+number):(8+number+number))]
     n<-nrow(output.k)
-    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,quantile,probs=c(0.025),na.rm=T))
-    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,quantile,probs=c(0.025),na.rm=T))
-    output.sfd<-zoo(output.sfd,order.by=zoo::index(input))
-    output.k<-zoo(output.k,order.by=zoo::index(input))
+    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
+    output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
 
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
@@ -1062,98 +1065,98 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
 
     #o= output
     output<-output[,c(1:7)]
-    output_sum<-tell(x,as.numeric(output[,2]))
-    output_cv<-tell(x,output[,3])
-    output_length<-tell(x,output[,4])
+    output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
+    output_cv<-sensitivity::tell(x,output[,3])
+    output_length<-sensitivity::tell(x,output[,4])
 
-    output_sum.k<-tell(x,output[,5])
-    output_cv.k<-tell(x,output[,6])
-    output_length.k<-tell(x,output[,7])
+    output_sum.k<-sensitivity::tell(x,output[,5])
+    output_cv.k<-sensitivity::tell(x,output[,6])
+    output_length.k<-sensitivity::tell(x,output[,7])
 
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
-                           sd=c(output_sum$T[,3],sd(output[,2]),output_cv$T[,3],sd(output[,3]),output_length$T[,3],sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],quantile(output[,2],probs=0.025),output_cv$T[,4],quantile(output[,3],probs=0.025),output_length$T[,4],quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],quantile(output[,2],probs=0.975),output_cv$T[,5],quantile(output[,3],probs=0.975),output_length$T[,5],quantile(output[,4],probs=0.975))
+                           sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
-                             sd=c(output_sum.k$T[,3],sd(output[,5]),output_cv.k$T[,3],sd(output[,6]),output_length.k$T[,3],sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],quantile(output[,5],probs=0.025),output_cv.k$T[,4],quantile(output[,6],probs=0.025),output_length.k$T[,4],quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],quantile(output[,5],probs=0.975),output_cv.k$T[,5],quantile(output[,6],probs=0.975),output_length.k$T[,5],quantile(output[,7],probs=0.975))
+                             sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
     )
 
     #figure output
     if(make.plot==T){
-      layout(
+      graphics::layout(
         matrix(
           c(5,5,1,1,1,2,
             5,5,1,1,1,3,
             5,5,1,1,1,4),
           ncol=6, byrow = TRUE))
       #make output for the package
-      par(oma=c(6,3,3,3))
-      par(mar=c(0,2,0,0))
-      plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2,labels=F)
+      graphics::par(oma=c(6,3,3,3))
+      graphics::par(mar=c(0,2,0,0))
+      graphics::plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2,labels=F)
       lab<-colnames(B)
-      axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
-      #legend("top",horiz=TRUE,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n")
-      legend("topright","SFD",bty="n",text.font=2,cex=2)
-      mtext(side=3,"Double-regression",outer=TRUE,padj=-0.5)
+      graphics::axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
+      #graphics::legend("top",horiz=TRUE,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n")
+      graphics::legend("topright","SFD",bty="n",text.font=2,cex=2)
+      graphics::mtext(side=3,"Double-regression",outer=TRUE,padj=-0.5)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
       for(i in c(1:nrow(output.tot))){
         sel<-output.tot[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
-      par(mar=c(0.2,0,0.2,3))
-      plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
+      graphics::par(mar=c(0.2,0,0.2,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
 
-      par(mar=c(0,4,0,0))
+      graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
-      plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2)
-      axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
-      legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
-      legend("topright","K",bty="n",text.font=2,cex=2)
+      graphics::plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2)
+      graphics::axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
+      graphics::legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
+      graphics::legend("topright","K",bty="n",text.font=2,cex=2)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
@@ -1163,12 +1166,12 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         #i<-1
         sel<-output.tot.k.gr[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
@@ -1204,17 +1207,7 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
   #ed----
   if(method=="ed"){
     #test
-    vpd<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",header=TRUE,sep="\t")
-    sr<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",header=TRUE,sep="\t")
-    vpd<-vpd[,c("Date","N13")]
-    colnames(vpd)<-c("timestamp","value")
-    sr<-sr[,c("Timestamp","N13")]
-    colnames(sr)<-c("timestamp","value")
-    vpd_raw   <-is.trex(vpd,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    vpd.input <-dt.steps(input=vpd_raw,time.int=15,max.gap=180,decimals=15,df=F,start="2013-04-01 00:00",end="2013-11-01 00:00")
-    sr_raw   <-is.trex(sr,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    sr.input <-dt.steps(input=sr_raw,start="2013-04-01 00:00",end="2013-11-01 00:00",
-                        time.int=15,max.gap=60,decimals=15,df=F)
+
 
 
     #e
@@ -1236,7 +1229,7 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       #e
       if(as.character(zoo::index(vpd.input)[1])=="(NA NA)"|is.na(zoo::index(vpd.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
     }
-    if(is.zoo(vpd.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
+    if(zoo::is.zoo(vpd.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
 
     if(attributes(sr.input)$class=="data.frame"){
       #e
@@ -1249,7 +1242,7 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       #e
       if(as.character(zoo::index(sr.input)[1])=="(NA NA)"|is.na(zoo::index(sr.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for sr.input.")
     }
-    if(is.zoo(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
+    if(zoo::is.zoo(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
 
     #p
     step.min<-as.numeric(min(difftime(zoo::index(input)[-1],zoo::index(input)[-length(input)],units=c("mins")),na.rm=TRUE))
@@ -1257,7 +1250,7 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     step.vpd<-as.numeric(min(difftime(zoo::index(vpd.input)[-1],zoo::index(vpd.input)[-length(vpd.input)],units=c("mins")),na.rm=TRUE))
 
     #e
-    if(step.min!=step.sr|step.min!=step.vpd)stop("time steps between input and vpd.input/sr.input differ, results will not be correctly aggregated.")
+    if(step.min!=step.sr|step.min!=step.vpd)stop("time steps between input and vpd.input/sr.input differ, results will not be correctly stats::aggregated.")
     if(zoo::index(sr.input)[1]-zoo::index(input)[1]!=0)stop("Invalid sr.input, timestamp start does not match with input.")
     if(zoo::index(sr.input)[length(sr.input)]-zoo::index(input)[length(input)]!=0)stop("Invalid sr.input, timestamp end does not match with input.")
     if(zoo::index(vpd.input)[1]-zoo::index(input)[1]!=0)stop("Invalid vpd.input, timestamp start does not match with input.")
@@ -1269,7 +1262,7 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     if(missing(criteria.vpd_min)){criteria.vpd_min<-0.05}
     if(missing(criteria.vpd_max)){criteria.vpd_max<-0.5}
     if(missing(criteria.sr_mean)){criteria.sr_mean <-30}
-    if(mssing(criteria.sr_range)){criteria.sr_range<-30} #in percentage
+    if(missing(criteria.sr_range)){criteria.sr_range<-30} #in percentage
     if(missing(criteria.cv_min)){criteria.cv_min<-0.5}
     if(missing(criteria.cv_max)){criteria.cv_max<-1}
 
@@ -1319,8 +1312,8 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     if(nrow(raw.env)==0)stop("Invalid environmental input data, input.sr or input.vpd do not cover the temporal range of input.")
 
     #p= processing
-    criteria.sr_min<- criteria.sr_mean-(cirteria.sr_mean*(criteria.sr_range/100))
-    criteria.sr_max<- criteria.sr_mean+(cirteria.sr_mean*(criteria.sr_range/100))
+    criteria.sr_min<- criteria.sr_mean-(criteria.sr_mean*(criteria.sr_range/100))
+    criteria.sr_max<- criteria.sr_mean+(criteria.sr_mean*(criteria.sr_range/100))
 
     A <- lhs::randomLHS(n,9)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
@@ -1350,23 +1343,23 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","ed.window","criteria.vpd","criteria.sr","criteria.cv")
     X2<-data.frame(B)
 
-    x <- soboljansen(model = NULL , X1, X2, nboot = n)
+    x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
     #p= process
-    registerDoParallel(cores = detectCores() - 2)
-    cl<-makeCluster(detectCores() - 2)
-    registerDoSNOW(cl)
-    pb <- txtProgressBar(max = nrow(B), style = 3)
-    progress <- function(n) setTxtProgressBar(pb, n)
+    doParallel::registerDoParallel(cores = parallel::detectCores() - 2)
+    cl<-parallel::makeCluster(parallel::detectCores() - 2)
+    doSNOW::registerDoSNOW(cl)
+    pb <- utils::txtProgressBar(max = nrow(B), style = 3)
+    progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
 
     output<-foreach(i=c(1:n),.combine="rbind",.packages=c("tibble","dplyr","zoo"),.options.snow = opts)%dopar%{
-      setTxtProgressBar(pb, i)
-      ze<-zero.end+(B[i,1]*median(diff(minutes)))
+      utils::setTxtProgressBar(pb, i)
+      ze<-zero.end+(B[i,1]*stats::median(diff(minutes)))
       if(ze<0){ze<-24*60-ze}
       if(ze>24*60){ze<-ze-24*60}
-      zs<-zero.start+(B[i,2]*median(diff(minutes)))
+      zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
 
@@ -1374,13 +1367,13 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
       if(ze<zs){proc.1[which(proc.1$minutes>ze&minutes<zs),"dt.max"]<-NA
-      offset<-(60*24/median(diff(proc.1$minutes)))-ceiling(zs/median(diff(proc.1$minutes)))+1
+      offset<-(60*24/stats::median(diff(proc.1$minutes)))-ceiling(zs/stats::median(diff(proc.1$minutes)))+1
       proc.1$days.agg<-c(proc.1$days[(offset:length(proc.1$days))],rep(max(proc.1$days),offset-1))}
       #View(proc.1)
       if(ze==zs)stop(paste("Unused argument, zero.start and zero.end are too close together.",sep=""))
       add<-tibble::tibble(
-        days.add = aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
-        ddt.max=aggregate(na.omit(proc.1)$dt.max,by=list(na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
+        days.add = stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
+        ddt.max=stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
       )
 
       #adding environmental data
@@ -1388,9 +1381,9 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       raw.env$sr.roll   <-zoo::na.locf(raw.env$sr.roll,fromLast=T)
       raw.env$vpd.roll  <-zoo::rollmean(raw.env$vpd,B[i,"ed.window"],align=c("right"),na.rm=TRUE,fill=NA)
       raw.env$vpd.roll  <-zoo::na.locf(raw.env$vpd.roll,fromLast=T)
-      raw.env$value_sd  <-zoo::rollapply(raw.env$value, width = B[i,"ed.window"], FUN = sd, align = "right",na.rm=TRUE,fill=NA)
+      raw.env$value_sd  <-zoo::rollapply(raw.env$value, width = B[i,"ed.window"], FUN = stats::sd, align = "right",na.rm=TRUE,fill=NA)
       raw.env$value_sd  <-zoo::na.locf(raw.env$value_sd,fromLast=T)
-      raw.env$value_mean<-zoo::rollapply(raw.env$value, width = B[i,"ed.window"], FUN = mean, align = "right",na.rm=TRUE,fill=NA)
+      raw.env$value_mean<-zoo::rollapply(raw.env$value, width = B[i,"ed.window"], FUN = base::mean, align = "right",na.rm=TRUE,fill=NA)
       raw.env$value_mean<-zoo::na.locf(raw.env$value_mean,fromLast=T)
       raw.env$cv.roll   <-raw.env$value_sd/raw.env$value_mean*100
 
@@ -1409,12 +1402,12 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2[which(raw.env$cv.roll>B[i,"criteria.cv"]),"ddt.max"]<-NA  #remove values above the solar irradiance
 
       #adding daily values
-      ddtmax<-suppressWarnings(aggregate((proc.2)$ddt.max,by=list((proc.2)$days.agg),max,na.rm=TRUE))[,2]
+      ddtmax<-suppressWarnings(stats::aggregate((proc.2)$ddt.max,by=list((proc.2)$days.agg),max,na.rm=TRUE))[,2]
       ddtmax[which(ddtmax=="-Inf")]<-NA
       length(ddtmax)
       ddtmax<-zoo::na.locf(zoo::na.locf(zoo::na.approx(ddtmax,na.rm=F),na.rm=F),fromLast=T)
-      add2<-tibble(
-        days.add = suppressWarnings(aggregate((proc.2)$ddt.max,by=list((proc.2)$days.agg),max,na.rm=TRUE))[,1],
+      add2<-tibble::tibble(
+        days.add = suppressWarnings(stats::aggregate((proc.2)$ddt.max,by=list((proc.2)$days.agg),max,na.rm=TRUE))[,1],
         ddt.max.add= ddtmax
       )
       proc.add<-dplyr::full_join(proc.2,add2,by=c("days.agg"="days.add"))
@@ -1422,9 +1415,9 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       nrow(proc.add)
       nrow(proc.2)
       proc.2$ddt.max<-proc.add$ddt.max.add
-      proc.2$gap<-ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*median(diff(proc.1$minutes))
-      proc.2$ddt.max<-na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=T)
-      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
+      proc.2$gap<-stats::ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*stats::median(diff(proc.1$minutes))
+      proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=T)
+      proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
 
       #HW correction
       #i<-4
@@ -1444,38 +1437,38 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
       proc.2$sfd<-a*proc.2$k.pd^b
 
       #think about relevant output proxies
-      d.sum.k<-suppressWarnings(aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
       durat.k<-proc.2
       durat.k[which(proc.2$k.pd<=min.k),"k.pd"]<-NA
-      durat.k<-aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(na.omit(x))})
-      values.k<-aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
+      values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
 
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
-      durat<-aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(na.omit(x))})
-      values<-aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
+      durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
+      values<-stats::aggregate(proc.2$sfd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values[values[,2]=="NaN",2]<-NA
-      d.sum<-suppressWarnings(aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
+      d.sum<-suppressWarnings(stats::aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum[which(d.sum[,2]=="-Inf"),2]<-NA
       return(
-        c(c(i,mean(values[,2],na.rm=TRUE),(sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*median(diff(proc.2$minutes)))/60),
-            mean(values.k[,2],na.rm=TRUE),(sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*median(diff(proc.2$minutes)))/60)),
+        c(c(i,mean(values[,2],na.rm=TRUE),(stats::sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*stats::median(diff(proc.2$minutes)))/60),
+            mean(values.k[,2],na.rm=TRUE),(stats::sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*stats::median(diff(proc.2$minutes)))/60)),
           c(length(proc.2$sfd),proc.2$sfd,proc.2$k.pd))
       )
     }
-    stopImplicitCluster()
+    doParallel::stopImplicitCluster()
 
     #time series output
-    number<-median(output[,8])
+    number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
     output.k<-output[,c((9+number):(8+number+number))]
     n<-nrow(output.k)
-    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,quantile,probs=c(0.025),na.rm=T))
-    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,quantile,probs=c(0.025),na.rm=T))
-    output.sfd<-zoo(output.sfd,order.by=zoo::index(input))
-    output.k<-zoo(output.k,order.by=zoo::index(input))
+    output.sfd<-data.frame(mu=apply(output.sfd,2,mean,na.rm=T),sd=apply(output.sfd,2,sd,na.rm=T),ci.max=apply(output.sfd,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.sfd,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
+    output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
+    output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
 
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
@@ -1486,99 +1479,97 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
 
     #o= output
     output<-output[,c(1:7)]
-    output_sum<-tell(x,as.numeric(output[,2]))
-    output_cv<-tell(x,output[,3])
-    output_length<-tell(x,output[,4])
+    output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
+    output_cv<-sensitivity::tell(x,output[,3])
+    output_length<-sensitivity::tell(x,output[,4])
 
-    output_sum.k<-tell(x,output[,5])
-    output_cv.k<-tell(x,output[,6])
-    output_length.k<-tell(x,output[,7])
+    output_sum.k<-sensitivity::tell(x,output[,5])
+    output_cv.k<-sensitivity::tell(x,output[,6])
+    output_length.k<-sensitivity::tell(x,output[,7])
 
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
-                           sd=c(output_sum$T[,3],sd(output[,2]),output_cv$T[,3],sd(output[,3]),output_length$T[,3],sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],quantile(output[,2],probs=0.025),output_cv$T[,4],quantile(output[,3],probs=0.025),output_length$T[,4],quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],quantile(output[,2],probs=0.975),output_cv$T[,5],quantile(output[,3],probs=0.975),output_length$T[,5],quantile(output[,4],probs=0.975))
+                           sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
-                             sd=c(output_sum.k$T[,3],sd(output[,5]),output_cv.k$T[,3],sd(output[,6]),output_length.k$T[,3],sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],quantile(output[,5],probs=0.025),output_cv.k$T[,4],quantile(output[,6],probs=0.025),output_length.k$T[,4],quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],quantile(output[,5],probs=0.975),output_cv.k$T[,5],quantile(output[,6],probs=0.975),output_length.k$T[,5],quantile(output[,7],probs=0.975))
+                             sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
     )
 
-    #figure output
-    #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX")
-    #pdf("Figure_SPD_sensitivity_2000_pd.pdf",height=6,width=8)
+
     if(make.plot==T){
-      layout(
+      graphics::layout(
         matrix(
           c(5,5,1,1,1,2,
             5,5,1,1,1,3,
             5,5,1,1,1,4),
           ncol=6, byrow = TRUE))
       #make output for the package
-      par(oma=c(6,3,3,3))
-      par(mar=c(0,2,0,0))
-      plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2,labels=F)
+      graphics::par(oma=c(6,3,3,3))
+      graphics::par(mar=c(0,2,0,0))
+      graphics::plot(1,1,xlim=c(0.7,ncol(B)+0.3),ylim=c(0,1.2),xaxt="n",xlab="",ylab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2,labels=F)
       lab<-colnames(B)
-      axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
-      legend("topright","SFD",bty="n",text.font=2,cex=2)
-      mtext(side=3,"Environmental dependent",outer=TRUE,padj=-0.5)
+      graphics::axis(side=1,at=c(1:ncol(B)),labels=lab,las=2)
+      graphics::legend("topright","SFD",bty="n",text.font=2,cex=2)
+      graphics::mtext(side=3,"Environmental dependent",outer=TRUE,padj=-0.5)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
       for(i in c(1:nrow(output.tot))){
         sel<-output.tot[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
-      points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
-      par(mar=c(0.2,0,0.2,3))
-      plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
-      points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
-      par(mar=c(0,0,0,3))
-      plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
-      axis(side=4,las=2)
-      lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
-      points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
-      mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.sum"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.sum"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.sum"),"ci.min"],output.tot[which(output.tot$class=="stat.sum"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=16,cex=1.5,col="darkorange")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.sum"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Sum ("*cm^3*" "*cm^-2*" "*d^-1*")"),padj=2.5,cex=0.8)
+      graphics::par(mar=c(0.2,0,0.2,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.cv"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.cv"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.cv"),"ci.min"],output.tot[which(output.tot$class=="stat.cv"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=16,cex=1.5,col="cyan")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.cv"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("CV (%)"),padj=3,cex=0.8)
+      graphics::par(mar=c(0,0,0,3))
+      graphics::plot(output.tot[which(output.tot$class=="stat.length"),"mean"]  ,yaxt="n",xaxt="n",ylab="",xlab="",col="white",ylim=c(0,output.tot[which(output.tot$class=="stat.length"),"ci.max"]))
+      graphics::axis(side=4,las=2)
+      graphics::lines(c(1,1),c(output.tot[which(output.tot$class=="stat.length"),"ci.min"],output.tot[which(output.tot$class=="stat.length"),"ci.max"] ))
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
+      graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
+      graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
 
-      par(mar=c(0,4,0,0))
+      graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
-      plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
-      abline(h=seq(0,1,0.2),col="grey")
-      abline(v=seq(0,ncol(B),1),col="grey")
-      axis(side=2,las=2)
-      axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
-      legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
-      legend("topright","K",bty="n",text.font=2,cex=2)
+      graphics::plot(1,1,xlim=c(0.7,length(lab)+0.3),ylim=c(0,1.2),xaxt="n",ylab="Total sensitivity index (-)",xlab="",yaxt="n",col="white",cex.lab=1.2)
+      graphics::abline(h=seq(0,1,0.2),col="grey")
+      graphics::abline(v=seq(0,ncol(B),1),col="grey")
+      graphics::axis(side=2,las=2)
+      graphics::axis(side=1,at=c(1:length(lab)),labels=lab,las=2)
+      graphics::legend("topleft",horiz=F,c("Sum","CV","Duration"),pch=16,col=c("darkorange","cyan","darkblue"),bty="n",cex=1.2)
+      graphics::legend("topright","K",bty="n",text.font=2,cex=2)
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
@@ -1588,12 +1579,12 @@ tdm_uncertain<-function(input, vpd.input = vpd, sr.input = sr, method = "pd",
         #i<-1
         sel<-output.tot.k.gr[i,]
         if(left(sel$class,4)=="stat"){next}
-        lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
+        graphics::lines(rep(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],2),
               c(sel$ci.min,sel$ci.max))
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=16,col=as.character(pal[which(as.character(pal$class)==as.character(sel$class)),"col"]),cex=1.5)
-        points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
+        graphics::points(loc[which(as.character(loc$item)==as.character(sel$item)),"loc"]+off[which(as.character(off$class)==as.character(sel$class)),"off"],
                sel$mean,
                pch=1,cex=1.5)
       }

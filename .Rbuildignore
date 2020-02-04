@@ -6,4 +6,5 @@
 ^\.travis\.yml$
 ^_setup\.R$
 ^_testing\.R$
+^_testing$
 ^pre_work$

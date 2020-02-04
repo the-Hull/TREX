@@ -15,8 +15,8 @@ tdm_cal.sfd(input, genus, species, study, wood, calib, a, b, decimals,
 data that should be used (e.g., \code{c("Picea", "Larix")}). See \code{\link{cal.data}}
 for the specific labels (default = Use all).}
 
-\item{species}{Optional, character vector of study specific species,
-e.g. \code{c("Peters et al. 2018")}. See \code{\link{cal.data}} for the specific labels (default= Use all).}
+\item{species}{Optional, character vector of species specific calibration data that should be used,
+e.g. \code{c("Picea abies")}. See \code{\link{cal.data}} for the specific labels (default = Use all).}
 
 \item{study}{Optional character vector of study specific calibration data that
 should be used (e.g., \code{c("Peters et al. 2018"}) ). See \code{\link{cal.data}}

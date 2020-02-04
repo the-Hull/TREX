@@ -18,8 +18,8 @@
 #' @param genus Optional, character vector specifying genus-specific calibration
 #' data that should be used (e.g., \code{c("Picea", "Larix")}). See \code{\link{cal.data}}
 #' for the specific labels (default = Use all).
-#' @param species Optional, character vector of study specific species,
-#'   e.g. \code{c("Peters et al. 2018")}. See \code{\link{cal.data}} for the specific labels (default= Use all).
+#' @param species Optional, character vector of species specific calibration data that should be used,
+#'   e.g. \code{c("Picea abies")}. See \code{\link{cal.data}} for the specific labels (default = Use all).
 #' @param study Optional character vector of study specific calibration data that
 #' should be used (e.g., \code{c("Peters et al. 2018"}) ). See \code{\link{cal.data}}
 #' for the specific labels (default= Use all).
@@ -116,7 +116,7 @@ tdm_cal.sfd <-
            df = FALSE) {
     #t= test
     #raw   <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #input <-time.step(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
+    #input <-dt.steps(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
     #                  time.int=15,max.gap=60,decimals=10,df=F)
     #input[which(input<0.2)]<-NA
     #input <-tdm_dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,

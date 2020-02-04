@@ -99,14 +99,14 @@
 #'                  time.format="%H:%M", solar.time=TRUE,
 #'                  long.deg=7.7459, ref.add=FALSE)
 #'
-#' input <- time.step(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
+#' input <- dt.steps(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
 #'                    time.int=15, max.gap=60, decimals=10, df=FALSE)
 #'
 #' input[which(input<0.2)]<- NA
-#' input <- dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
+#' input <- tdm_dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
 #'                  max.days=10, df=FALSE)
 #'
-#' output.data<- cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+#' output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
 #'
 #' input<- output.data$sfd.dr$sfd
 #'
@@ -124,11 +124,11 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
   #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction")
   #calib<-read.table("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction/cal.data.txt",header=TRUE,sep="\t")
   #raw   <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #input <-time.step(input=raw,start="2013-05-01 00:00",end="2014-11-01 00:00",
+  #input <-dt.steps(input=raw,start="2013-05-01 00:00",end="2014-11-01 00:00",
   #                time.int=15,max.gap=60,decimals=10,df=FALSE)
   #input[which(input<0.2)]<-NA
-  #input <-dt.max(input, methods=c("dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
-  #output.data<-cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+  #input <-tdm_dt.max(input, methods=c("dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+  #output.data<-tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
   #vpd<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",header=TRUE,sep="\t")
   #sr<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",header=TRUE,sep="\t")
   #vpd<-vpd[,c("Date","N13")]
@@ -136,10 +136,10 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
   #sr<-sr[,c("Timestamp","N13")]
   #colnames(sr)<-c("timestamp","value")
   #vpd_raw   <-is.trex(vpd,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #vpd.input <-time.step(input=vpd_raw,start="2012-01-01 00:00",end="2015-11-15 00:00",
+  #vpd.input <-dt.steps(input=vpd_raw,start="2012-01-01 00:00",end="2015-11-15 00:00",
   #                      time.int=15,max.gap=60,decimals=10,df=FALSE)
   #sr_raw   <-is.trex(sr,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-  #sr.input <-time.step(input=sr_raw,start="2012-01-01 00:00",end="2015-11-15 00:00",
+  #sr.input <-dt.steps(input=sr_raw,start="2012-01-01 00:00",end="2015-11-15 00:00",
   #                     time.int=15,max.gap=60,decimals=10,df=FALSE)
 
   #input<-(output.data$sfd.dr$sfd)
@@ -249,6 +249,17 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
   }
   if(zoo::index(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
 
+  if(method=="stat"){
+    #d
+    sr.input=input[]
+    sr.input[]<-NA
+
+    prec.input<-aggregate(input[],mean,na.rm=T,by=as.Date(zoo::index(input)))
+    prec.input[]<-0
+    prec.lim <-100
+  }
+
+
   if(attributes(prec.input)$class=="data.frame"){
     #e
     if(is.numeric(prec.input$value)==F)stop("Invalid prec.input data, values within the data.frame are not numeric.")
@@ -260,7 +271,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(prec.input)[1])=="(NA NA)"|is.na(zoo::index(prec.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
   }
-  if(zoo::index(prec.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
+  if(zoo::index(prec.input)==FALSE)stop("Invalid input data, prec.input must be a zoo file (use is.trex).")
 
   #e
   if(method=="env.filt"){
