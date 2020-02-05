@@ -1196,6 +1196,9 @@ tdm_dt.max <-
       k.ed <- NA
     }
 
+    if(length(max.mw)!=1){max.mw<-window(max.mw,start=zoo::index(input)[1],end=zoo::index(input)[length(input)])}
+    if(length(max.dr)!=1){max.dr<-window(max.dr,start=zoo::index(input)[1],end=zoo::index(input)[length(input)])}
+
     if (df == F) {
       output.data <- list(
         max.pd,

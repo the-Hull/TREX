@@ -618,19 +618,84 @@ tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,
 
 
 # tdm_uncertain -----------------------------------------------------------
+# why are arguments named differently? log.a_mu and b_mu?
+
 
 raw   <- example.data(type="doy")
 input <- is.trex(raw, tz="GMT", time.format="%H:%M",
                  solar.time=TRUE, long.deg=7.7459, ref.add=FALSE, df=FALSE)
 input<-dt.steps(input,time.int=15,start="2013-04-01 00:00",
                 end="2013-11-01 00:00",max.gap=180,decimals=15)
+
+
 output<- tdm_uncertain(input, probe.length=20, method="pd",
-                       n=2000,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
+                       n=2,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
                        log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
                        make.plot=TRUE)
 
+#perhaps add error message for low n values?
+
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=15,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+# perhaps suppress some warnings
+# Warning messages:
+#     1: In for (i in seq_len(n)) { ... :
+#             closing unused connection 22 (<-DESKTOP-7VJ93LA:11915)
+#         2: In for (i in seq_len(n)) { ... :
+#                 closing unused connection 21 (<-DESKTOP-7VJ93LA:11915)
+#             3: In for (i in seq_len(n)) { ... :
+#                     closing unused connection 20 (<-DESKTOP-7VJ93LA:11915)
+#                 4: In for (i in seq_len(n)) { ... :
+#                         closing unused connection 19 (<-DESKTOP-7VJ93LA:11915)
+#                     5: In for (i in seq_len(n)) { ... :
+#                             closing unused connection 18 (<-DESKTOP-7VJ93LA:11915)
+#                         6: In for (i in seq_len(n)) { ... :
+#                                 closing unused connection 17 (<-DESKTOP-7VJ93LA:11915)
 
 
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=50,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=100,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+# TSI confints and values are off charts
+
+
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=300,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+# better at n = 300 (conf int still off charts, might require additional
+# plot options? xlim, ylim?)
+
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=300,sw.cor=15,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=300,sw.cor=NA,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+
+# negative sw.cor
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+                       n=300,sw.cor=-10,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+# this should fail
+
+# negative sw.cor
+output<- tdm_uncertain(input, probe.length=-20, method="pd",
+                       n=300,sw.cor=-10,sw.sd=16,log.a_mu=3.792436,
+                       log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+                       make.plot=TRUE)
+# this should fail
 
 
 # agg.data ----------------------------------------------------------------
