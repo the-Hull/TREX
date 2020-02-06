@@ -55,7 +55,7 @@
 #' @param log.a_sd Numeric, the standard deviation of the \eqn{a} parameter (see \code{log.a_mu}) used within the calibration curve
 #'   for calculating \eqn{SFD} (default = 0.628).
 #'
-#' @param b_mu Numeric, the natural logarithm of the calibration parameter \eqn{b} (see \code{\link{tdm_cal.sfd}}; \eqn{SFD = aK^b}).
+#' @param b_mu Numeric, the value of the calibration parameter \eqn{b} (see \code{\link{tdm_cal.sfd}}; \eqn{SFD = aK^b}).
 #'   This value can be obtained from \code{\link{tdm_cal.sfd}} (see \code{out.param}).
 #'   Default conditions are determined by using all calibration data as described in \code{\link{cal.data}} (default = 1.275).
 #'
