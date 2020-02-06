@@ -5,7 +5,7 @@ language: R
 warnings_are_errors: true
 sudo: required
 cache: packages
-before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+before_cache: Rscript -e 'remotes::install_cran("pkgdown"); install.packages("tinytex"); tinytex::install_tinytex()'
 deploy:
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github()'
