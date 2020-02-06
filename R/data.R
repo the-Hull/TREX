@@ -139,7 +139,7 @@
 #'
 #'
 #' @description Returns an example datasets of solar irradiance monitoring from 2012-2015 at 1300 m a.s.l. in the Swiss Alps
-#'  (Loetschental, Switzerland; Peters et al. 2019). Solar irradiance in W m-2 was measured with
+#'  (Loetschental, Switzerland; Peters et al. 2019). Solar irradiance (W m-2) was measured with
 #'  15‐min resolution using a microstation (Onset,USA, H21-002 Micro Station)
 #'  and pyranometer (Onset, USA, S‐LIB‐M003) positioned in an open field.
 #'
