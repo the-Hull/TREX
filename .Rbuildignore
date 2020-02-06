@@ -8,3 +8,6 @@
 ^_testing\.R$
 ^_testing$
 ^pre_work$
+^docs$
+^\./pkgdown/_pkgdown\.yml$
+^pkgdown$
