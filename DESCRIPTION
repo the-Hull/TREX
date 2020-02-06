@@ -11,25 +11,25 @@ Authors@R: c(
             person(
                 'Christoforos',
                 'Pappas',
-                role = c('aut', 'ctr'),
+                role = c('aut', 'ctb'),
                 comment=c(ORCID = '0000-0001-5721-557X')),
             person(
                 'Alexander',
                 'Hurley',
-                role = c('aut', 'ctr'),
+                role = c('aut', 'ctb'),
                 comment=c(ORCID = '0000-0002-9641-2805')),
             person(
                 'Rafael',
                 'Poyatos',
-                role = c('ctr')),
+                role = c('ctb')),
             person(
                 'Victor',
                 'Flo',
-                role = c('ctr')),
+                role = c('ctb')),
             person(
                 'Roman',
                 'Zweifel',
-                role = c('ctr')),
+                role = c('ctb')),
             person(
                 'Kathy',
                 'Steppe',
@@ -38,7 +38,7 @@ Authors@R: c(
 Description: Performs data homogenisation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM). The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties, generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply common data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere (Peters et al. 2018 <doi: 10.1111/nph.15241>).
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/the-Hull/TREX
+URL: https://the-hull.github.io/TREX/
 BugReports: https://github.com/the-Hull/TREX/issues
 Encoding: UTF-8
 Depends: R (>= 2.10)
