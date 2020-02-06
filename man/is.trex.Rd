@@ -19,7 +19,7 @@ is.trex(data, tz = "UTC", time.format = "\%m/\%d/\%y \%H:\%M:\%S",
 
 \item{long.deg}{Numeric value (longitude in decimal degrees E) to perform the solar time conversion. Only required when \code{solar.time=TRUE}.}
 
-\item{ref.add}{Logical flag. If \code{TRUE}, additional probes provided within data are considered. The \eqn{\Delta T} values are then corrected by subtracting the \eqn{\Delta T} measured between the reference probes from the ∆T measured between the heated and unheated probe (default = \code{FALSE}).}
+\item{ref.add}{Logical flag. If \code{TRUE}, additional probes provided within data are considered. The \eqn{\Delta T} values are then corrected by subtracting the \eqn{\Delta T} measured between the reference probes from the \eqn{\Delta} T measured between the heated and unheated probe (default = \code{FALSE}).}
 
 \item{df}{Logical flag. If \code{TRUE}, output is provided in a data.frame format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column. If \code{FALSE}, output is provided as a zoo vector object (default = \code{FALSE}).}
 }
