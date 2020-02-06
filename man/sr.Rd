@@ -8,7 +8,7 @@
 
 \describe{
   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
-  \item{value}{W m−2 values obtained from the site-specific monitoring  (\code{numeric})}
+  \item{value}{W m-2 values obtained from the site-specific monitoring  (\code{numeric})}
 }}
 \usage{
 sr
