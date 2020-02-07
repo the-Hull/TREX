@@ -84,12 +84,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/the-Hull/TREX">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -117,22 +112,16 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-import-and-assimilation" class="hasAnchor"><a href="#section-import-and-assimilation" class="anchor"></a>Import and assimilation</h2>
+          <p class="section-desc"><p>Functions for generating homogenized time series from raw data (sap flow and ancillary environmental data).</p></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="agg.data.html">agg.data()</a></code> </p>
+          <p><code><a href="is.trex.html">is.trex()</a></code> </p>
         </td>
-        <td><p>Aggregation of time-series data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cal.data.html">cal.data</a></code> </p>
-        </td>
-        <td><p>Calibration Measurements</p></td>
+        <td><p>Testing and preparing input data</p></td>
       </tr><tr>
         
         <td>
@@ -142,58 +131,18 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="example.data.html">example.data()</a></code> </p>
-        </td>
-        <td><p>Generate example TDM input data</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="gap.fill.html">gap.fill()</a></code> </p>
         </td>
         <td><p>Gap filling by linear interpolation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.trex.html">is.trex()</a></code> </p>
-        </td>
-        <td><p>Testing and preparing input data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="out.data.html">out.data()</a></code> </p>
-        </td>
-        <td><p>Generating TDM output</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="preci.html">preci</a></code> </p>
-        </td>
-        <td><p>Daily precipitation (raw)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sr.html">sr</a></code> </p>
-        </td>
-        <td><p>Solar radiation measurements (raw)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tdm.data.html">tdm.data</a></code> </p>
-        </td>
-        <td><p>Sap flow measurements</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tdm_cal.sfd.html">tdm_cal.sfd()</a></code> </p>
-        </td>
-        <td><p>Calculate sap flux density</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tdm_damp.html">tdm_damp()</a></code> </p>
-        </td>
-        <td><p>Signal dampening correction</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-processing" class="hasAnchor"><a href="#section-data-processing" class="anchor"></a>Data Processing</h2>
+          <p class="section-desc"><p>Functions to calculate and adjust/correct sap flux densities.</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="tdm_dt.max.html">tdm_dt.max()</a></code> </p>
@@ -208,21 +157,85 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="tdm_damp.html">tdm_damp()</a></code> </p>
+        </td>
+        <td><p>Signal dampening correction</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tdm_cal.sfd.html">tdm_cal.sfd()</a></code> </p>
+        </td>
+        <td><p>Calculate sap flux density</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-output-and-analyses" class="hasAnchor"><a href="#section-output-and-analyses" class="anchor"></a>Output and analyses</h2>
+          <p class="section-desc"><p>Functions to generate (aggregated) output data sets and associated uncertainties.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
           <p><code><a href="tdm_uncertain.html">tdm_uncertain()</a></code> </p>
         </td>
         <td><p>Uncertainty and sensitivity analysis</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="TREX.html">TREX</a></code> </p>
+          <p><code><a href="agg.data.html">agg.data()</a></code> </p>
         </td>
-        <td><p>TREX: TRree sap flow EXtractor.</p></td>
+        <td><p>Aggregation of time-series data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="out.data.html">out.data()</a></code> </p>
+        </td>
+        <td><p>Generating TDM output</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-sets" class="hasAnchor"><a href="#section-data-sets" class="anchor"></a>Data sets</h2>
+          <p class="section-desc"><p>Functions and objects containing test (ancillary) and calibration data</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="sr.html">sr</a></code> </p>
+        </td>
+        <td><p>Solar radiation measurements (raw)</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="vpd.html">vpd</a></code> </p>
         </td>
         <td><p>Vapor pressure deficit measurements (raw)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="preci.html">preci</a></code> </p>
+        </td>
+        <td><p>Daily precipitation (raw)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tdm.data.html">tdm.data</a></code> </p>
+        </td>
+        <td><p>Sap flow measurements</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cal.data.html">cal.data</a></code> </p>
+        </td>
+        <td><p>Calibration Measurements</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="example.data.html">example.data()</a></code> </p>
+        </td>
+        <td><p>Generate example TDM input data</p></td>
       </tr>
     </tbody>
     </table>
@@ -231,7 +244,10 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-import-and-assimilation">Import and assimilation</a></li>
+      <li><a href="#section-data-processing">Data Processing</a></li>
+      <li><a href="#section-output-and-analyses">Output and analyses</a></li>
+      <li><a href="#section-data-sets">Data sets</a></li>
     </ul>
   </div>
 </div>

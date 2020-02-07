@@ -104,12 +104,7 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/the-Hull/TREX">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -124,7 +119,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Testing and preparing input data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/the-Hull/TREX/blob/master/R/is.trex.R'><code>R/is.trex.R</code></a></small>
+    
     <div class="hidden name"><code>is.trex.Rd</code></div>
     </div>
 
@@ -179,7 +174,7 @@
     </tr>
     <tr>
       <th>ref.add</th>
-      <td><p>Logical flag. If <code>TRUE</code>, additional probes provided within data are considered. The \(\Delta T\) values are then corrected by subtracting the \(\Delta T\) measured between the reference probes from the ∆T measured between the heated and unheated probe (default = <code>FALSE</code>).</p></td>
+      <td><p>Logical flag. If <code>TRUE</code>, additional probes provided within data are considered. The \(\Delta T\) values are then corrected by subtracting the \(\Delta T\) measured between the reference probes from the \(\Delta\) T measured between the heated and unheated probe (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>df</th>
@@ -211,7 +206,7 @@
 #&gt; 3 2012 108 15:30 0.560
 #&gt; 4 2012 108 15:45 0.568
 #&gt; 5 2012 108 16:00 0.572
-#&gt; 6 2012 108 16:15 0.545</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>input</span>)</div><div class='output co'>#&gt; 'zoo' series from 2012-04-17 15:30:00 to 2015-07-19 17:15:00
+#&gt; 6 2012 108 16:15 0.545</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>input</span>)</div><div class='output co'>#&gt; ‘zoo’ series from 2012-04-17 15:30:00 to 2015-07-19 17:15:00
 #&gt;   Data: num [1:111792] 0.444 0.541 0.56 0.568 0.572 0.545 0.576 0.578 0.581 0.584 ...
 #&gt;   Index:  POSIXct[1:111792], format: "2012-04-17 15:30:00" "2012-04-17 15:45:00" "2012-04-17 16:00:00" ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>input</span>)</div><div class='output co'>#&gt; 2012-04-17 15:30:00 2012-04-17 15:45:00 2012-04-17 16:00:00 2012-04-17 16:15:00 
 #&gt;               0.444               0.541               0.560               0.568 

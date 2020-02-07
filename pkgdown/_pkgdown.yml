@@ -1,1 +1,32 @@
 destination: docs
+reference:
+  - title: "Import and assimilation"
+    desc: >
+      Functions for generating homogenized time series from raw data (sap flow and ancillary environmental data).
+    contents:
+      - is.trex
+      - outlier
+      - dt.steps
+      - gap.fill
+  - title: "Data Processing"
+    desc: "Functions to calculate and adjust/correct sap flux densities."
+    contents:
+      - tdm_dt.max
+      - tdm_hw.cor
+      - tdm_damp
+      - tdm_cal.sfd
+  - title: "Output and analyses"
+    desc: "Functions to generate (aggregated) output data sets and associated uncertainties."
+    contents:
+      - tdm_uncertain
+      - agg.data
+      - out.data
+  - title: "Data sets"
+    desc: "Functions and objects containing test (ancillary) and calibration data"
+    contents:
+      - sr
+      - vpd
+      - preci
+      - tdm.data
+      - cal.data
+      - example.data
