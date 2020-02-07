@@ -1,12 +1,12 @@
 #' Testing and preparing input data
 #'
-#' @param data data.frame in either timestamp format or doy format.
-#' @param tz Character string indicating the time zone in which the measurements have been recorded.
-#' @param time.format Character string indicating the format of the timestamp.
-#' @param solar.time Logical flag. If \code{TRUE}, time is converted to solar time, depending upon the location where the measurements have been taken. If \code{FALSE}, the output is provided in "UTC" (default = \code{FALSE}).
-#' @param long.deg Numeric value (longitude in decimal degrees E) to perform the solar time conversion. Only required when \code{solar.time=TRUE}.
-#' @param ref.add Logical flag. If \code{TRUE}, additional probes provided within data are considered. The \eqn{\Delta T} values are then corrected by subtracting the \eqn{\Delta T} measured between the reference probes from the \eqn{\Delta} T measured between the heated and unheated probe (default = \code{FALSE}).
-#' @param df Logical flag. If \code{TRUE}, output is provided in a data.frame format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column. If \code{FALSE}, output is provided as a zoo vector object (default = \code{FALSE}).
+#' @param data A \code{data.frame} in either timestamp format or doy format.
+#' @param tz Character string, indicates the time zone in which the measurements have been recorded.
+#' @param time.format Character string, indicates the format of the timestamp.
+#' @param solar.time Logical; if \code{TRUE}, time is converted to solar time, depending upon the location where the measurements have been taken. If \code{FALSE}, the output is provided in "UTC" (default = \code{FALSE}).
+#' @param long.deg Numeric, longitude in decimal degrees East to perform the solar time conversion. Only required when \code{solar.time=TRUE}.
+#' @param ref.add Logical; if \code{TRUE}, additional probes provided within data are considered. The \eqn{\Delta T} values are then corrected by subtracting the \eqn{\Delta T} measured between the reference probes from the \eqn{\Delta} T measured between the heated and unheated probe (default = \code{FALSE}).
+#' @param df Logical; if \code{TRUE}, output is provided in a data.frame format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column. If \code{FALSE}, output is provided as a zoo vector object (default = \code{FALSE}).
 #'
 #'
 #' @description Testing if the structure of the input matches the requirements of the TREX functions
@@ -32,12 +32,12 @@
 #'
 #'
 #'
-#' @details To prevent errors occurring in the other reported functions, it is advised to run this function
+#' @details To prevent errors occurring in subsequent \code{TREX} functions, it is advised to run this function
 #'  for checking the data structure and preparing it for further analyses. For the specific time zone see
 #'  \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{\link{OlsonNames}()}.
 #'  The format of the timestamp has to be provided according to \url{https://www.stat.berkeley.edu/~s133/dates.html}.
 #'  For the method behind the solar time conversion, see the solar package (\url{https://cran.r-project.org/web/packages/solaR/}).
-#'  The longitude has to be provided in positive decimal degrees for study sites east from the Greenwich meridian and negative for sites to the west.
+#'  The longitude has to be provided in positive decimal degrees for study sites East from the Greenwich meridian and negative for sites to the West.
 #'
 #' @return A zoo object or data.frame in the appropriate format for other functionalities.
 #' @export
