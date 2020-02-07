@@ -14,7 +14,7 @@
 #'  i) Timestamp format: including a 1) timestamp of the measurements column (\code{as.character}), and
 #'  2) value of \eqn{\Delta}V (or \eqn{\Delta}T; [\code{as.numeric}]). ii) Doy format: including a 1) year of measurements column \code{as.integer},
 #'  2) day of the year (doy) of measurement (\code{as.integer}), 3) hour of the measurement (\code{as.character}), and
-#'  4) value of \eqn{\Delta}V (or \eqn{\Delta}T) \code{as.numeric}. TREX functions are applied on time series obtained from a set of
+#'  4) value of \eqn{\Delta}V (or \eqn{\Delta}T; [\code{as.numeric}]). TREX functions are applied on time series obtained from a set of
 #'  thermal dissipation probes. This includes the option where the thermal dissipation method (TDM) is
 #'  used with only a reference and heating probe, or when including addition reference probes (see \code{ref.add}).
 #'  These reference probe measurements can be added to the doy or timestamp format in \eqn{\Delta}V (or \eqn{\Delta}T) (\code{as.numeric})
