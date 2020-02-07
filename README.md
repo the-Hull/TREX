@@ -6,22 +6,17 @@
 [![Travis build status](https://travis-ci.org/the-Hull/TREX.svg?branch=master)](https://travis-ci.org/the-Hull/TREX)
 <!-- badges: end -->
 
-The goal of TREX is to ...
+
+**Please note, that `TREX` is currently under developoment.  More information will be added in due time.**
+
 
 ## Installation
 
-You can install the released version of TREX from [CRAN](https://CRAN.R-project.org) with:
+A development version of `TREX` can be installed via
 
-``` r
-install.packages("TREX")
+```r
+remotes::install_github(remotes::install_github("the-Hull/TREX"))
+
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(TREX)
-## basic example code
-```
 
