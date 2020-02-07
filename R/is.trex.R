@@ -10,21 +10,21 @@
 #'
 #'
 #' @description Testing if the structure of the input matches the requirements of the TREX functions
-#'  and specify the time zone. The input has to be presented either one of two different data.frame formats.
+#'  and specify the time zone. The input has to be presented in one of two different \code{data.frame} formats.
 #'  i) Timestamp format: including a 1) timestamp of the measurements column <as.character>, and
-#'  2) value of \eqn{\Delta}V (or \eqn{\Delta}T) \emph{as.numeric}. ii) Doy format: including a 1) year of measurements column \emph{as.integer},
+#'  2) value of \eqn{\Delta}V (or \eqn{\Delta}T) \code{as.numeric}. ii) Doy format: including a 1) year of measurements column \code{as.integer},
 #'  2) day of the year (doy) of measurement \emph{as.integer}, 3) hour of the measurement \emph{as.character}, and
-#'  4) value of \eqn{\Delta}V (or \eqn{\Delta}T) \emph{as.numeric}. TREX functions are applied on time series obtained from a set of
+#'  4) value of \eqn{\Delta}V (or \eqn{\Delta}T) \code{as.numeric}. TREX functions are applied on time series obtained from a set of
 #'  thermal dissipation probes. This includes the option where the thermal dissipation method (TDM) is
-#'  used with only a reference and heating probe, or when including addition reference probes (see ref.add).
-#'  These reference probe measurements can be added to the doy or timestamp format in \eqn{\Delta}V (or \eqn{\Delta}T) \emph{as.numeric}
-#'  labelled ref1, ref2, etc. (depending on the number of reference probes). For this function the following
-#'  column names have to be present within the data.frame: "timestamp” or "year” & "doy” & "hour” = indicators
+#'  used with only a reference and heating probe, or when including addition reference probes (see \code{ref.add}).
+#'  These reference probe measurements can be added to the doy or timestamp format in \eqn{\Delta}V (or \eqn{\Delta}T) \code{as.numeric}
+#'  labelled \code{ref1}, \code{ref2}, etc. (depending on the number of reference probes). For this function the following
+#'  column names have to be present within the \code{data.frame}: "timestamp” or "year” & "doy” & "hour” = indicators
 #'  of time and "value” = TDM measurements (option "ref1”, "ref2, …, refn = reference probes).
-#'  After specifying the time zone (tz), one can select whether to standardize the temporal series to solar
-#'  time (see solar.time) by providing the longitude in decimal degrees at which the measurements were
+#'  After specifying the time zone (\code{tz}), one can select whether to standardize the temporal series to solar
+#'  time (see \code{solar.time}) by providing the longitude in decimal degrees at which the measurements were
 #'  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
-#'  be either provided in a zoo format (df = \code{FALSE}) or data.frame (df = \code{TRUE}; default is \code{FALSE}).
+#'  be either provided in a \code{zoo} format (df = \code{FALSE}) or \code{data.frame} (\code{df = TRUE}; default is \code{FALSE}).
 #'
 #'  @usage is.trex(data, tz = “UTC”, format = “%m/%d/%y %H:%M:%S”,
 #'   solar.time = FALSE, long.deg = 7.7459,
