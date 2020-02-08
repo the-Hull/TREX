@@ -3,17 +3,17 @@
 #'
 #'
 #' @description Returns an example thermal dissipation probe (TDM)
-#'  datasets of either two types measurement formats (either “timestamp” or “doy” format).
-#'   TDM \eqn{\Delta V} measurements are provide at a 15-minute resolution from 2012-2015 from
+#'  dataset with time stamp (n = 1) and doy-columns (n = 3), a value and a species column.
+#'   TDM \eqn{\Delta V} measurements are provided at a 15-minute resolution from 2012-2015 from
 #'    a Norway spruce (\emph{Picea abies} (L.) Karts.) growing at 1300 m a.s.l.
-#'    in the Swiss Alps (Loetschental, Switzerland; see Peters et al. 2019).
+#'    in the Swiss Alps (Loetschental, Switzerland; see Peters \emph{et al.} 2019).
 #'    The presented data is open for public use.
 #'
 #'
 #' @usage tdm.data
 #'
 #'
-#' @format Provides a data.frame with 11,6466  rows and two  columns.
+#' @format Provides a data.frame with 11,6466  rows and 6 columns.
 #' \describe{
 #'   \item{timestamp }{Date and time of the measurements (\code{character})}
 #'   \item{year}{Year of measurements (\code{integer})}
@@ -36,7 +36,7 @@
 #'
 #' @description Returns raw calibration experiment data obtained from literature,
 #'  with K values combined with gravimetrically determined sap flux density.
-#'  The data.frame contains 22 studies with 37 different species. The data is used
+#'  The \code{data.frame} contains 22 studies with 37 different species. The data is used
 #'  within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density. The data
 #'  originates from the manuscript by Flo \emph{et al.} 2019 and provides a
 #'  description on the genus, species, calibration material, wood porosity and diameter

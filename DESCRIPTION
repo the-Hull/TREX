@@ -1,5 +1,5 @@
 Package: TREX
-Title: Homogenise, Process and Analyse Thermal Dissipation Sap Flow Data: TRee sapflow EXtractor
+Title: TRree sap flow EXtractor
 Version: 0.0.0.9000
 Authors@R: c(
             person(
@@ -31,11 +31,19 @@ Authors@R: c(
                 'Zweifel',
                 role = c('ctb')),
             person(
+                'Willem',
+                'Goossens',
+                role = c('ctb')),
+            person(
+                'Patrick',
+                'Fonti',
+                role = c('ctb')),
+            person(
                 'Kathy',
                 'Steppe',
                 role = c('ths', 'etr', 'fnd'))
             )
-Description: Performs data homogenisation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM). The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties, generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply common data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere (Peters et al. 2018 <doi: 10.1111/nph.15241>).
+Description: Performs data assimilation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM). The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties and generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply commonly used data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere (Peters et al. 2018 <doi: 10.1111/nph.15241>).
 License: MIT + file LICENSE
 LazyData: true
 URL: https://the-hull.github.io/TREX/
