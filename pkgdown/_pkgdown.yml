@@ -1,4 +1,7 @@
 destination: docs
+template:
+  params:
+    bootswatch: flatly
 reference:
   - title: "Import and assimilation"
     desc: >
