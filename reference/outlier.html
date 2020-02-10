@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sap flow measurements — tdm.data • TREX</title>
+<title>Automated and manual outlier detection — outlier • TREX</title>
 
 
 <!-- jquery -->
@@ -35,13 +35,10 @@
 
 
 
-<meta property="og:title" content="Sap flow measurements — tdm.data" />
-<meta property="og:description" content="Returns an example thermal dissipation probe (TDM)
- dataset with time stamp (n = 1) and doy-columns (n = 3), a value and a species column.
-  TDM \(\Delta V\) measurements are provided at a 15-minute resolution from 2012-2015 from
-   a Norway spruce (Picea abies (L.) Karts.) growing at 1300 m a.s.l.
-   in the Swiss Alps (Loetschental, Switzerland; see Peters et al. 2019).
-   The presented data is open for public use." />
+<meta property="og:title" content="Automated and manual outlier detection — outlier" />
+<meta property="og:description" content="This interactive app allows filtering outlier data via a specified threshold
+and by manually clicking on problematic observations. The data must be provided as a
+data.frame saved to disk in .Rda format." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -105,40 +102,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sap flow measurements</h1>
+    <h1>Automated and manual outlier detection</h1>
     
-    <div class="hidden name"><code>tdm.data.Rd</code></div>
+    <div class="hidden name"><code>outlier.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns an example thermal dissipation probe (TDM)
- dataset with time stamp (n = 1) and doy-columns (n = 3), a value and a species column.
-  TDM \(\Delta V\) measurements are provided at a 15-minute resolution from 2012-2015 from
-   a Norway spruce (<em>Picea abies</em> (L.) Karts.) growing at 1300 m a.s.l.
-   in the Swiss Alps (Loetschental, Switzerland; see Peters <em>et al.</em> 2019).
-   The presented data is open for public use.</p>
+    <p>This interactive app allows filtering outlier data via a specified threshold
+and by manually clicking on problematic observations. The data must be provided as a
+<code>data.frame</code> saved to disk in <code>.Rda</code> format.</p>
     </div>
 
-    <pre class="usage"><span class='no'>tdm.data</span></pre>
+    <pre class="usage"><span class='fu'>outlier</span>()</pre>
 
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Provides a data.frame with 11,6466  rows and 6 columns.</p><dl class='dl-horizontal'>
-  <dt>timestamp </dt><dd><p>Date and time of the measurements (<code>character</code>)</p></dd>
-  <dt>year</dt><dd><p>Year of measurements (<code>integer</code>)</p></dd>
-  <dt>doy</dt><dd><p>Day of year (<code>integer</code>)</p></dd>
-  <dt>hour</dt><dd><p>Hour of the measurements (<code>character</code>)</p></dd>
-  <dt>value</dt><dd><p>\(\Delta V\)(or \(\Delta T\)) values obtained from TDM measurements  (<code>numeric</code>)</p></dd>
-  <dt>species</dt><dd><p>Monitored species (<code>character</code>)</p></dd>
+    <p>Runs an interactive shiny app with option to save output as a <code>.Rda</code> file</p>
 
-</dl>
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'># find example file path</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"exdata"</span>, <span class='st'>"example.RData"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"TREX"</span>, <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># either copy-paste this into the navigation bar of the file selection window</span>
+<span class='co'># or navigate here manually for selection</span>
+<span class='fu'>outlier</span>()
 
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#format">Format</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

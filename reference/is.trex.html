@@ -37,14 +37,14 @@
 
 <meta property="og:title" content="Testing and preparing input data — is.trex" />
 <meta property="og:description" content="Testing if the structure of the input matches the requirements of the TREX functions
- and specify the time zone. The input has to be presented either one of two different data.frame formats.
- i) Timestamp format: including a 1) timestamp of the measurements column &amp;lt;as.character&amp;gt;, and
- 2) value of \(\Delta\)V (or \(\Delta\)T) as.numeric. ii) Doy format: including a 1) year of measurements column as.integer,
- 2) day of the year (doy) of measurement as.integer, 3) hour of the measurement as.character, and
- 4) value of \(\Delta\)V (or \(\Delta\)T) as.numeric. TREX functions are applied on time series obtained from a set of
+ and specify the time zone. The input has to be presented in one of two different data.frame formats.
+ i) Timestamp format: including a 1) timestamp of the measurements column (as.character), and
+ 2) value of \(\Delta\)V (or \(\Delta\)T; [as.numeric]). ii) Doy format: including a 1) year of measurements column as.integer,
+ 2) day of the year (doy) of measurement (as.integer), 3) hour of the measurement (as.character), and
+ 4) value of \(\Delta\)V (or \(\Delta\)T; [as.numeric]). TREX functions are applied on time series obtained from a set of
  thermal dissipation probes. This includes the option where the thermal dissipation method (TDM) is
  used with only a reference and heating probe, or when including addition reference probes (see ref.add).
- These reference probe measurements can be added to the doy or timestamp format in \(\Delta\)V (or \(\Delta\)T) as.numeric
+ These reference probe measurements can be added to the doy or timestamp format in \(\Delta\)V (or \(\Delta\)T) (as.numeric)
  labelled ref1, ref2, etc. (depending on the number of reference probes). For this function the following
  column names have to be present within the data.frame: &quot;timestamp” or &quot;year” &amp;amp; &quot;doy” &amp;amp; &quot;hour” = indicators
  of time and &quot;value” = TDM measurements (option &quot;ref1”, &quot;ref2, …, refn = reference probes).
@@ -125,21 +125,21 @@
 
     <div class="ref-description">
     <p>Testing if the structure of the input matches the requirements of the TREX functions
- and specify the time zone. The input has to be presented either one of two different data.frame formats.
- i) Timestamp format: including a 1) timestamp of the measurements column &lt;as.character&gt;, and
- 2) value of \(\Delta\)V (or \(\Delta\)T) <em>as.numeric</em>. ii) Doy format: including a 1) year of measurements column <em>as.integer</em>,
- 2) day of the year (doy) of measurement <em>as.integer</em>, 3) hour of the measurement <em>as.character</em>, and
- 4) value of \(\Delta\)V (or \(\Delta\)T) <em>as.numeric</em>. TREX functions are applied on time series obtained from a set of
+ and specify the time zone. The input has to be presented in one of two different <code>data.frame</code> formats.
+ i) Timestamp format: including a 1) timestamp of the measurements column (<code>as.character</code>), and
+ 2) value of \(\Delta\)V (or \(\Delta\)T; [<code>as.numeric</code>]). ii) Doy format: including a 1) year of measurements column <code>as.integer</code>,
+ 2) day of the year (doy) of measurement (<code>as.integer</code>), 3) hour of the measurement (<code>as.character</code>), and
+ 4) value of \(\Delta\)V (or \(\Delta\)T; [<code>as.numeric</code>]). TREX functions are applied on time series obtained from a set of
  thermal dissipation probes. This includes the option where the thermal dissipation method (TDM) is
- used with only a reference and heating probe, or when including addition reference probes (see ref.add).
- These reference probe measurements can be added to the doy or timestamp format in \(\Delta\)V (or \(\Delta\)T) <em>as.numeric</em>
- labelled ref1, ref2, etc. (depending on the number of reference probes). For this function the following
- column names have to be present within the data.frame: "timestamp” or "year” &amp; "doy” &amp; "hour” = indicators
+ used with only a reference and heating probe, or when including addition reference probes (see <code>ref.add</code>).
+ These reference probe measurements can be added to the doy or timestamp format in \(\Delta\)V (or \(\Delta\)T) (<code>as.numeric</code>)
+ labelled <code>ref1</code>, <code>ref2</code>, etc. (depending on the number of reference probes). For this function the following
+ column names have to be present within the <code>data.frame</code>: "timestamp” or "year” &amp; "doy” &amp; "hour” = indicators
  of time and "value” = TDM measurements (option "ref1”, "ref2, …, refn = reference probes).
- After specifying the time zone (tz), one can select whether to standardize the temporal series to solar
- time (see solar.time) by providing the longitude in decimal degrees at which the measurements were
+ After specifying the time zone (<code>tz</code>), one can select whether to standardize the temporal series to solar
+ time (see <code>solar.time</code>) by providing the longitude in decimal degrees at which the measurements were
  obtained (in <code>long.deg</code>). All timestamps within the function are rounded to minute resolution and output can
- be either provided in a zoo format (df = <code>FALSE</code>) or data.frame (df = <code>TRUE</code>; default is <code>FALSE</code>).</p>
+ be either provided in a <code>zoo</code> format (df = <code>FALSE</code>) or <code>data.frame</code> (<code>df = TRUE</code>; default is <code>FALSE</code>).</p>
 <p>@usage is.trex(data, tz = “UTC”, format = “<!-- %m/%d/%y %H:%M:%S”, -->
   solar.time = FALSE, long.deg = 7.7459,
    ref.add = FALSE, df = FALSE)</p>
@@ -154,31 +154,31 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>data.frame in either timestamp format or doy format.</p></td>
+      <td><p>A <code>data.frame</code> in either timestamp format or doy format.</p></td>
     </tr>
     <tr>
       <th>tz</th>
-      <td><p>Character string indicating the time zone in which the measurements have been recorded.</p></td>
+      <td><p>Character string, indicates the time zone in which the measurements have been recorded.</p></td>
     </tr>
     <tr>
       <th>time.format</th>
-      <td><p>Character string indicating the format of the timestamp.</p></td>
+      <td><p>Character string, indicates the format of the timestamp.</p></td>
     </tr>
     <tr>
       <th>solar.time</th>
-      <td><p>Logical flag. If <code>TRUE</code>, time is converted to solar time, depending upon the location where the measurements have been taken. If <code>FALSE</code>, the output is provided in "UTC" (default = <code>FALSE</code>).</p></td>
+      <td><p>Logical; if <code>TRUE</code>, time is converted to solar time, depending upon the location where the measurements have been taken. If <code>FALSE</code>, the output is provided in "UTC" (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>long.deg</th>
-      <td><p>Numeric value (longitude in decimal degrees E) to perform the solar time conversion. Only required when <code>solar.time=TRUE</code>.</p></td>
+      <td><p>Numeric, longitude in decimal degrees East to perform the solar time conversion. Only required when <code>solar.time=TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>ref.add</th>
-      <td><p>Logical flag. If <code>TRUE</code>, additional probes provided within data are considered. The \(\Delta T\) values are then corrected by subtracting the \(\Delta T\) measured between the reference probes from the \(\Delta\) T measured between the heated and unheated probe (default = <code>FALSE</code>).</p></td>
+      <td><p>Logical; if <code>TRUE</code>, additional probes provided within data are considered. The \(\Delta T\) values are then corrected by subtracting the \(\Delta T\) measured between the reference probes from the \(\Delta\) T measured between the heated and unheated probe (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>df</th>
-      <td><p>Logical flag. If <code>TRUE</code>, output is provided in a data.frame format with a timestamp and a value (\(\Delta T\) or \(\Delta V\)) column. If <code>FALSE</code>, output is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
+      <td><p>Logical; if <code>TRUE</code>, output is provided in a data.frame format with a timestamp and a value (\(\Delta T\) or \(\Delta V\)) column. If <code>FALSE</code>, output is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
     </tr>
     </table>
 
@@ -187,12 +187,12 @@
     <p>A zoo object or data.frame in the appropriate format for other functionalities.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>To prevent errors occurring in the other reported functions, it is advised to run this function
+    <p>To prevent errors occurring in subsequent <code>TREX</code> functions, it is advised to run this function
  for checking the data structure and preparing it for further analyses. For the specific time zone see
  <a href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</a> or for formatting see <code><a href='https://rdrr.io/r/base/timezones.html'>OlsonNames</a>()</code>.
  The format of the timestamp has to be provided according to <a href='https://www.stat.berkeley.edu/~s133/dates.html'>https://www.stat.berkeley.edu/~s133/dates.html</a>.
  For the method behind the solar time conversion, see the solar package (<a href='https://cran.r-project.org/web/packages/solaR/'>https://cran.r-project.org/web/packages/solaR/</a>).
- The longitude has to be provided in positive decimal degrees for study sites east from the Greenwich meridian and negative for sites to the west.</p>
+ The longitude has to be provided in positive decimal degrees for study sites East from the Greenwich meridian and negative for sites to the West.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#validating and structuring example data</span>
