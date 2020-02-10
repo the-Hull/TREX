@@ -69,5 +69,10 @@ Imports:
     boot,
     doSNOW,
     msm,
-    parallel
+    parallel,
+    magrittr
 RoxygenNote: 6.1.1
+Suggests: 
+    shiny,
+    DT,
+    plotly

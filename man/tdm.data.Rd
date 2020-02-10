@@ -4,7 +4,7 @@
 \name{tdm.data}
 \alias{tdm.data}
 \title{Sap flow measurements}
-\format{Provides a data.frame with 11,6466  rows and two  columns.
+\format{Provides a data.frame with 11,6466  rows and 6 columns.
 \describe{
   \item{timestamp }{Date and time of the measurements (\code{character})}
   \item{year}{Year of measurements (\code{integer})}
@@ -18,10 +18,10 @@ tdm.data
 }
 \description{
 Returns an example thermal dissipation probe (TDM)
- datasets of either two types measurement formats (either “timestamp” or “doy” format).
-  TDM \eqn{\Delta V} measurements are provide at a 15-minute resolution from 2012-2015 from
+ dataset with time stamp (n = 1) and doy-columns (n = 3), a value and a species column.
+  TDM \eqn{\Delta V} measurements are provided at a 15-minute resolution from 2012-2015 from
    a Norway spruce (\emph{Picea abies} (L.) Karts.) growing at 1300 m a.s.l.
-   in the Swiss Alps (Loetschental, Switzerland; see Peters et al. 2019).
+   in the Swiss Alps (Loetschental, Switzerland; see Peters \emph{et al.} 2019).
    The presented data is open for public use.
 }
 \keyword{datasets}
