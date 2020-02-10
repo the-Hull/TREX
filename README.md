@@ -85,7 +85,7 @@ lines(input$max.dr, col = "orange")
 output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
 
 plot(output.data$sfd.pd$sfd[1:1000, ], ylim=c(0,10))
-# add  uncertainty
+# see estimated uncertainty
 lines(output.data$sfd.pd$q025[1:1000, ], lty=1,col="grey")
 lines(output.data$sfd.pd$q975[1:1000, ], lty=1,col="grey")
 lines(output.data$sfd.pd$sfd[1:1000, ])
