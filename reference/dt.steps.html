@@ -36,7 +36,7 @@
 
 
 <meta property="og:title" content="Determine temporal resolution — dt.steps" />
-<meta property="og:description" content="Performing minimum time step standardization,
+<meta property="og:description" content="Performs minimum time step standardization,
 gap filling and start/end time selection. This function
 provides the option to select the minimum temporal step size of an
 is.trex object. Additionally, the user can define the
@@ -47,7 +47,7 @@ This function provides the option to standardize the minimum time step by
 either performing a linear interpolation when the requested time step
 is smaller than the minimum time step of the series or averages values when
 the requested time step is larger than the minimum time step of the series.
-Before this process, the entire time series is converted to a minute time
+Before this process, the entire time series is converted to a one-minute time
 step by applying a linear interpolation (excluding gap \(periods &amp;gt; \code{max.gap}\))." />
 <meta name="twitter:card" content="summary" />
 
@@ -118,7 +118,7 @@ step by applying a linear interpolation (excluding gap \(periods &amp;gt; \code{
     </div>
 
     <div class="ref-description">
-    <p>Performing minimum time step standardization,
+    <p>Performs minimum time step standardization,
 gap filling and start/end time selection. This function
 provides the option to select the minimum temporal step size of an
 <code><a href='is.trex.html'>is.trex</a></code> object. Additionally, the user can define the
@@ -129,7 +129,7 @@ This function provides the option to standardize the minimum time step by
 either performing a linear interpolation when the requested time step
 is smaller than the minimum time step of the series or averages values when
 the requested time step is larger than the minimum time step of the series.
-Before this process, the entire time series is converted to a minute time
+Before this process, the entire time series is converted to a one-minute time
 step by applying a linear interpolation (excluding gap \(periods &gt; \code{max.gap}\)).</p>
     </div>
 
@@ -161,10 +161,10 @@ the end time and not later than that of the series.</p></td>
     <tr>
       <th>time.int</th>
       <td><p>Numeric value providing the number of minutes for the
-minimum time step. When time.int is smaller than the minimum time step
+minimum time step. When <code>time.int</code> is smaller than the minimum time step
 of the series, a linear interpolation is applied. If <code>time.int</code> is
 larger than the minimum time step of the series values are average
-(after performing a linear interpolation to obtain a minute resolution).</p></td>
+(after performing a linear interpolation to obtain a one-minute resolution).</p></td>
     </tr>
     <tr>
       <th>max.gap</th>
