@@ -19,7 +19,7 @@ format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
 If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).}
 }
 \value{
-A \code{zoo} object or data.frame in the appropriate format for further processing.
+A \code{zoo} object or \code{data.frame} in the appropriate format for further processing.
 }
 \description{
 Fills gaps by performing a linear interpolation between observations.

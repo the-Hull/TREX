@@ -21,11 +21,11 @@ df = FALSE)
 a timestamp and a value column.}
 
 \item{methods}{Character vector of the requested \eqn{\Delta T_{max}}{\Delta Tmax} methods.
-Options include “pd” (predawn), “mw” (moving window), “dr” (double regression),
-and “ed” (environmental dependent; default= \code{c(“pd”, “mw”, “dr”)}).}
+Options include \code{“pd”} (predawn), \code{“mw”} (moving-window), \code{“dr”} (double regression),
+and \code{“ed”} (environmental-dependent; default= \code{c(“pd”, “mw”, “dr”)}).}
 
 \item{zero.end}{Numeric, optionally defines the end of the predawn period.
-Values should be in minutes (e.g. predawn conditions until 08:00 = 8 *60).
+Values should be in minutes (e.g. predawn conditions until 08:00 = 8 * 60).
 When not provided, the algorithm will automatically analyse the cyclic behaviour
 of the data and define the day length.}
 
@@ -36,12 +36,12 @@ Values should be in minutes (e.g., 01:00 = 1*60).}
 interpolated. If \code{FALSE}, constant \eqn{\Delta T_{max}}{\Delta Tmax} values will be selected daily
 (default = \code{FALSE}).}
 
-\item{det.pd}{Logical; if \code{TRUE} and no zero.end and zero.start values are provided,
+\item{det.pd}{Logical; if \code{TRUE} and no \code{zero.end} and \code{zero.start} values are provided,
 predawn \eqn{\Delta T_{max}}{\Delta Tmax} will be determined based on cyclic behaviour of the entire
 time-series (default = \code{TRUE}).}
 
 \item{max.days}{Numeric, defines the number of days which the \code{mw} and \code{dr}
-methods will consider for their moving-windows.}
+methods will consider for their moving windows.}
 
 \item{ed.window}{Numeric, defines the length of the period considered for assessing the
 environmental conditions and stable \eqn{\Delta T_{max}}{\Delta Tmax} values.}
@@ -78,7 +78,7 @@ List items include:
  \item{daily_max.dr}{daily predawn \eqn{\Delta T_{max}}{\Delta Tmax} as determined by \code{dr}.}
  \item{daily_max.ed}{daily predawn \eqn{\Delta T_{max}}{\Delta Tmax} as determined by \code{ed}.}
  \item{all.pd}{exact predawn \eqn{\Delta T_{max}}{\Delta Tmax} values detected with \code{pd}.}
- \item{all.pd}{exact predawn \eqn{\Delta T_{max}}{\Delta Tmax} values detected with \code{ed}.}
+ \item{all.ed}{exact predawn \eqn{\Delta T_{max}}{\Delta Tmax} values detected with \code{ed}.}
  \item{input}{\eqn{\Delta T} input data.}
  \item{ed.criteria}{\code{data.frame} of the applied environmental and variability criteria used within \code{ed}.}
  \item{methods}{\code{data.frame} of applied methods to detect \eqn{\Delta T_{max}}{\Delta Tmax}.}
@@ -94,15 +94,15 @@ according to four methods; namely,
  i) predawn (\code{pd}),
  ii) moving-window (\code{mw}),
  iii) double regression (\code{dr}),
- and iv) environmental dependent (\code{ed}) as applied in Peters et al. 2018.
+ and iv) environmental-dependent (\code{ed}) as applied in Peters \emph{et al.} 2018.
  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
- All outputs are provided in a list where users can review the provided output and used input data.
+ All outputs are provided in a \code{list} where users can review the generated outputs and provided input data.
 }
 \details{
-There are a variety of methods which can be applied to determine zero flow conditions.
- Zero flow conditions are required to calculate \eqn{K = (\Delta T_{max} - \Delta T) / \Delta T}{K = (\Delta Tmax - \Delta T) / \Delta T}.
- A detailed description on the methods is provided by Peters et al. (2018).
- In short, the \code{pd} method entails the selection of daily maximum occurring prior to sunrise.
+There are a variety of methods which can be applied to determine zero-flow conditions.
+ Zero-flow conditions are required to calculate \eqn{K = (\Delta T_{max} - \Delta T) / \Delta T}{K = (\Delta Tmax - \Delta T) / \Delta T}.
+ A detailed description on the methods is provided by Peters \emph{et al.} (2018).
+ In short, the \code{pd} method entails the selection of daily maxima occurring prior to sunrise.
  This method assumes that during each night zero-flow conditions are obtained.
  The algorithm either requires specific times within which it searches for a maximum,
  or it analyses the cyclic pattern within the data and defines this time window.
@@ -114,10 +114,10 @@ There are a variety of methods which can be applied to determine zero flow condi
  The \code{ed} method selects predawn \eqn{\Delta T_{max}}{\Delta Tmax} values based upon 2-hour averaged environmental
  conditions prior to the detected time for the predawn \eqn{\Delta T_{max}}{\Delta Tmax}.
  These environmental conditions include low vapour pressure deficit (in \eqn{kPa}) and low solar irradiance
- (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} values were low to
+ (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} are scanned for low values to
  ensure the selection of stable zero-flow conditions.
- Note that pre-dawn values from the “pd” method are used, meaning that the relevance
-  of solar irradiance criteria can be enhanced by increasing \code{zero.end} and \code{zero.star}
+ Note that pre-dawn values from the \code{“pd”} method are used, meaning that the relevance
+  of solar irradiance criteria can be enhanced by increasing \code{zero.end} and \code{zero.star}.
 }
 \examples{
 \dontrun{
