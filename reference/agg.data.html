@@ -170,8 +170,15 @@ applied to all data subsets (see aggregate; including "sum", "mean",
     <tr>
       <th>df</th>
       <td><p>Logical; If <code>TRUE</code>, output is provided in a <code>data.frame</code> format
-with a timestamp and a value column. If <code>FALSE</code>, output
-is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
+ with a timestamp and a value column. If <code>FALSE</code>, output
+ is provided as a zoo vector object (default = <code>FALSE</code>).</p>
+<p>@details
+ Time series have different temporal resolutions.
+ This function provides the option to aggregate time steps with
+ standard <code>FUN</code> statistics. When applying this function to calculate
+ summed sap flow values (e.g., <code>cm^3 cm^{-2} d^{-1}</code>cm3 cm-2 d-1) one needs
+ to include the velocity unit, as the summation is dependent upon the minimum timestep
+ of the time series (e.g., <code>cm^3 cm^{-2} h^{-1}</code>cm3 cm-2 h-1, <code>unit = 60</code>).</p></td>
     </tr>
     </table>
 
