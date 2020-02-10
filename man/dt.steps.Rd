@@ -22,10 +22,10 @@ Year-Month-Day Hour:Minute). Starting time should be earlier than
 the end time and not later than that of the series.}
 
 \item{time.int}{Numeric value providing the number of minutes for the
-minimum time step. When time.int is smaller than the minimum time step
+minimum time step. When \code{time.int} is smaller than the minimum time step
 of the series, a linear interpolation is applied. If \code{time.int} is
 larger than the minimum time step of the series values are average
-(after performing a linear interpolation to obtain a minute resolution).}
+(after performing a linear interpolation to obtain a one-minute resolution).}
 
 \item{max.gap}{Numeric value providing the maximum size of a gap in minutes,
 which can be filled by performing a linear interpolation.}
@@ -42,7 +42,7 @@ A \code{zoo} object or \code{data.frame} in the appropriate
 format for further processing.
 }
 \description{
-Performing minimum time step standardization,
+Performs minimum time step standardization,
 gap filling and start/end time selection. This function
 provides the option to select the minimum temporal step size of an
 \code{\link{is.trex}} object. Additionally, the user can define the
@@ -54,7 +54,7 @@ This function provides the option to standardize the minimum time step by
 either performing a linear interpolation when the requested time step
 is smaller than the minimum time step of the series or averages values when
 the requested time step is larger than the minimum time step of the series.
-Before this process, the entire time series is converted to a minute time
+Before this process, the entire time series is converted to a one-minute time
 step by applying a linear interpolation (excluding gap \eqn{periods > \code{max.gap}}).
 }
 \examples{

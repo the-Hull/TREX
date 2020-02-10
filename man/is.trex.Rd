@@ -27,8 +27,8 @@ is.trex(data, tz = "UTC", time.format = "\%m/\%d/\%y \%H:\%M:\%S",
 A zoo object or data.frame in the appropriate format for other functionalities.
 }
 \description{
-Testing if the structure of the input matches the requirements of the TREX functions
- and specify the time zone. The input has to be presented in one of two different \code{data.frame} formats.
+Tests if the structure of the input matches the requirements of \code{TREX} functions
+ and specifies the time zone. The input has to be presented in one of two different \code{data.frame} formats.
  i) Timestamp format: including a 1) timestamp of the measurements column (\code{as.character}), and
  2) value of \eqn{\Delta}V (or \eqn{\Delta}T; [\code{as.numeric}]). ii) Doy format: including a 1) year of measurements column \code{as.integer},
  2) day of the year (doy) of measurement (\code{as.integer}), 3) hour of the measurement (\code{as.character}), and
