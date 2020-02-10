@@ -13,18 +13,16 @@ or whether a separate day of day of year and hour column
 are provided (“doy”).}
 }
 \value{
-A data.frame containing TDM measurements according to a specific type.
+A \code{data.frame} containing TDM measurements according to a specific type.
 }
 \description{
-This returns a data.frame containing standard TDM (thermal dissipation method)
- measurements provided in two different formats. The data is obtain from \code{tdm.data}
- where \eqn{\Delta V} measurements are provide for i) Norway spruce (\emph{Picea abies} Karts.)
- growing in a valley in the Swiss Alps or ii) black spruce (\emph{Picea mariana} Mill. BSP)/eastern
- larch (\emph{Larix laricina} Du Roi K. Koch) growing at the southern limit of the boreal
- ecozone in central Canada.
+This function returns a \code{data.frame} containing standard TDM (thermal dissipation method)
+ measurements provided in two different formats. The data is obtained from \code{tdm.data}
+ where \eqn{\Delta V} measurements are given for Norway spruce (\emph{Picea abies} Karts.)
+ growing in a valley in the Swiss Alps. See \code{\link{tdm.data}} for additional details.
 }
 \details{
-This dataset can be applied for testing the functions provided in the package.
+This dataset can be applied for testing the functions provided in \code{TREX}.
 }
 \examples{
 
