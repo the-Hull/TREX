@@ -1,10 +1,10 @@
 #' Generating TDM output
 #'
-#' @description Generating relevant outputs from the sap flux density (SFD) values.
-#' This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in mmol m-2 s-1) and crown conductance
+#' @description Generates relevant outputs from the sap flux density (SFD) values.
+#' This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol m^{-2} s^{-1}}{mmol m-2 s-1}) and crown conductance
 #' (\eqn{G_{C}}{Gc}; an analogue to stomatal conductance) values in an easily exportable format.
 #' Additionally, the function can perform environmental filtering on \eqn{F_{d}}{Fd} and \eqn{G_{C}}{Gc} and model \eqn{G_{C}}{Gc} sensitivity to vapour pressure deficit (VPD).
-#' The user can choose between in- (method = “env.filt”) or excluding (method = “stat”) environmental filtering
+#' The user can choose between in- (\code{method = “env.filt”}) or excluding (\code{method = “stat”}) environmental filtering
 #' on the \eqn{G_{C}}{Gc} and adjust the filter threshold manually.
 #'
 #' @param input An \code{\link{is.trex}}-compliant time series from \code{\link{tdm_cal.sfd}} outputs
@@ -43,7 +43,7 @@
 #'
 #' @details Various relevant outputs can be derived from the SFD data.
 #' This function provides the option to recalculate SFD to \eqn{F_{d}}{Fd} (expressed in mmol m-2 s-1)
-#' and crown conductance (according to Pappas et al. 2018).
+#' and crown conductance (according to Pappas \emph{et al.} 2018).
 #' \eqn{G_{C}}{Gc} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{GC = Fd / VPD} (in kPa), assuming that
 #' i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and
 #' ii) that the canopy is well coupled to the atmosphere. In order to reduce the effect of stem hydraulic capacitance,

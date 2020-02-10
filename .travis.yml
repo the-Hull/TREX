@@ -1,12 +1,20 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 # added webhook
 
-language: R
-warnings_are_errors: true
+language: r
 sudo: required
 cache: packages
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+
+matrix:
+  include:
+   - r: release
+   - r: devel
+   - r: oldrel
+
 deploy:
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY", ""))'
   skip_cleanup: true
+
+warnings_are_errors: true
