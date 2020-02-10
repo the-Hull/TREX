@@ -52,9 +52,9 @@ input[which(input<0.2)]<- NA
 
 ```
 
-### Calculate maximum &Delta; T Values
+### Calculate maximum &Delta;T-Values
 
-Here we apply three methods for calculating &Delta; T:  
+Here we apply three methods for calculating &Delta;T:  
 
 - `pd`: pre-dawn
 - `mw`: moving-window
@@ -76,3 +76,23 @@ lines(input$max.dr, col = "orange")
 
 ```
 ![](man/figures/dtmax.png)
+
+### Calculate Sap Flux Density
+
+
+```r
+
+output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+
+plot(output.data$sfd.pd$sfd[1:1000, ], ylim=c(0,10))
+lines(output.data$sfd.pd$q025[1:1000, ], lty=1,col="grey")
+lines(output.data$sfd.pd$q975[1:1000, ], lty=1,col="grey")
+lines(output.data$sfd.pd$sfd[1:1000, ])
+
+sfd_data <- output.data$sfd.dr$sfd
+
+
+```
+![](man/figures/sfd.png)
+
+
