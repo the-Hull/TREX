@@ -75,4 +75,4 @@ lines(input$max.mw, col = "blue")
 lines(input$max.dr, col = "orange")
 
 ```
-![](img/dtmax.png)
+![](man/figures/dtmax.png)
