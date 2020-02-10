@@ -1,17 +1,17 @@
 #' Calculate sap flux density
 #'
 #' @description The acquired \eqn{K} values are calculated to sap flux density
-#'  (SFD in cm3 cm-2 h-1). As many calibration curves exist
-#'  (see Peters et al. 2018; Flo et al. 2019), the function provides the option to
+#'  (SFD in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}). As many calibration curves exist
+#'  (see Peters \emph{et al}. 2018; Flo \emph{et al.} 2019), the function provides the option to
 #'  calculate \eqn{SFD} using all available calibration experiment data
-#'  (see \code{\link{cal.data}}; Flo et al. 2019). Additionally,
-#'  raw calibration data can be provided or specified \eqn{a} and \eqn{b}
-#'  parameters for a specific calibration function (\eqn{aK^b}).
+#'  (see \code{\link{cal.data}}; Flo \emph{et al.} 2019). Additionally,
+#'  raw calibration data can be provided or parameters \eqn{a} and \eqn{b}
+#'  for a specific calibration function (\eqn{aK^b}) can be provided.
 #'  The algorithm determines for each calibration experiment dataset
 #'  the calibration curve (\eqn{SFD = aK^b}) and calculates \eqn{SFD} from
 #'  either the mean of all curves and the \eqn{95}% confidence interval
 #'  of either all curves, or bootstrapped resampled uncertainty around
-#'  the raw calibration experiment data (when one calibration dataset is selected).
+#'  the raw calibration experiment data when one calibration dataset is selected.
 #'
 #' @param input An \code{\link{is.trex}}-compliant object (\code{zoo} vector,
 #' \code{data.frame}) of \eqn{K} values containing a timestamp and a value column.
@@ -28,7 +28,7 @@
 #' See \code{\link{cal.data}} for the specific labels (default= Use all).
 #' @param calib Optional \code{data.frame} containing raw calibration experiment values.
 #' Required columns include: \code{[ ,1]} \eqn{K = K} values measured with the probe (numeric),
-#' and [,2] \eqn{SFD =} Gravimetrically measured sap flux density (cm3 cm-2 h-1) (numeric).
+#' and [,2] \eqn{SFD =} Gravimetrically measured sap flux density (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1})) (numeric).
 #' If not provided, literature values are used.
 #' @param a Optional, numeric value for the calibration curve (\eqn{SFD = aK^b}).
 #' No uncertainty can be calculated when this value is provided.
@@ -36,10 +36,19 @@
 #' No uncertainty can be calculated when this value is provided.
 #' @param decimals Integer, the number of decimals of the output (default = 10).
 #' @param make.plot Logical; if \code{TRUE}, a plot is generated showing
-#' the calibration curve with \eqn{K vs sap flux density} (cm3 cm-2 h-1).
+#' the calibration curve with \eqn{K vs sap flux density} (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1})).
 #' @param df Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
 #'  with a timestamp and a value column. If \code{FALSE}, output
 #'  is provided as a \code{zoo} vector object (default = FALSE).
+#'
+#'
+#' @details The function fits a calibration curve (\eqn{SFD = aK^b}{SFD = aK^b})
+#' through all selected raw calibration data. If multiple studies are provided,
+#' multiple calibration curves are fitted. In case a single calibration dataset
+#' is provided a bootstrap resampling is applied (n = 100) to determined the
+#' mean and 95% confidence interval of the fit. When multiple calibration curves
+#' are requested the mean and 95% confidence interval is determined on the fitted functions.
+#' The mean and confidence interval are used to calculate \eqn{SFD} from \eqn{K}.
 #'
 #' @return A list containing either a \code{zoo} object or \code{data.frame} in the appropriate format
 #'  for other functionalities (see \code{\link{tdm_dt.max}} output specifications), as well as

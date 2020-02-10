@@ -28,7 +28,7 @@ See \code{\link{cal.data}} for the specific labels (default= Use all).}
 
 \item{calib}{Optional \code{data.frame} containing raw calibration experiment values.
 Required columns include: \code{[ ,1]} \eqn{K = K} values measured with the probe (numeric),
-and [,2] \eqn{SFD =} Gravimetrically measured sap flux density (cm3 cm-2 h-1) (numeric).
+and [,2] \eqn{SFD =} Gravimetrically measured sap flux density (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1})) (numeric).
 If not provided, literature values are used.}
 
 \item{a}{Optional, numeric value for the calibration curve (\eqn{SFD = aK^b}).
@@ -40,7 +40,7 @@ No uncertainty can be calculated when this value is provided.}
 \item{decimals}{Integer, the number of decimals of the output (default = 10).}
 
 \item{make.plot}{Logical; if \code{TRUE}, a plot is generated showing
-the calibration curve with \eqn{K vs sap flux density} (cm3 cm-2 h-1).}
+the calibration curve with \eqn{K vs sap flux density} (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1})).}
 
 \item{df}{Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
 with a timestamp and a value column. If \code{FALSE}, output
@@ -65,17 +65,17 @@ A list containing either a \code{zoo} object or \code{data.frame} in the appropr
 }
 \description{
 The acquired \eqn{K} values are calculated to sap flux density
- (SFD in cm3 cm-2 h-1). As many calibration curves exist
- (see Peters et al. 2018; Flo et al. 2019), the function provides the option to
+ (SFD in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}). As many calibration curves exist
+ (see Peters \emph{et al}. 2018; Flo \emph{et al.} 2019), the function provides the option to
  calculate \eqn{SFD} using all available calibration experiment data
- (see \code{\link{cal.data}}; Flo et al. 2019). Additionally,
- raw calibration data can be provided or specified \eqn{a} and \eqn{b}
- parameters for a specific calibration function (\eqn{aK^b}).
+ (see \code{\link{cal.data}}; Flo \emph{et al.} 2019). Additionally,
+ raw calibration data can be provided or parameters \eqn{a} and \eqn{b}
+ for a specific calibration function (\eqn{aK^b}) can be provided.
  The algorithm determines for each calibration experiment dataset
  the calibration curve (\eqn{SFD = aK^b}) and calculates \eqn{SFD} from
  either the mean of all curves and the \eqn{95}% confidence interval
  of either all curves, or bootstrapped resampled uncertainty around
- the raw calibration experiment data (when one calibration dataset is selected).
+ the raw calibration experiment data when one calibration dataset is selected.
 }
 \examples{
 #calculating sap flux density
