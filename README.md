@@ -1,5 +1,5 @@
+# TREX <img src="man/trex_logo.png" align="right" width = "150"/>
 
-# TREX
 
 <!-- badges: start -->
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
