@@ -10,7 +10,6 @@ matrix:
   include:
    - r: release
    - r: devel
-   - r: oldrel
 
 deploy:
   provider: script
