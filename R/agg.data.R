@@ -36,6 +36,15 @@
 #'  with a timestamp and a value column. If \code{FALSE}, output
 #'  is provided as a zoo vector object (default = \code{FALSE}).
 #'
+#'  @details
+#'  Time series have different temporal resolutions.
+#'  This function provides the option to aggregate time steps with
+#'  standard \code{FUN} statistics. When applying this function to calculate
+#'  summed sap flow values (e.g., \code{cm^3 cm^{-2} d^{-1}}{cm3 cm-2 d-1}) one needs
+#'  to include the velocity unit, as the summation is dependent upon the minimum timestep
+#'  of the time series (e.g., \code{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}, \code{unit = 60}).
+#'
+#'
 #' @return A zoo object or data.frame in the appropriate format for other functionalities.
 #'
 #' @export
