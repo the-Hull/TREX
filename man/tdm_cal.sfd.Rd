@@ -77,6 +77,15 @@ The acquired \eqn{K} values are calculated to sap flux density
  of either all curves, or bootstrapped resampled uncertainty around
  the raw calibration experiment data when one calibration dataset is selected.
 }
+\details{
+The function fits a calibration curve (\eqn{SFD = aK^b}{SFD = aK^b})
+through all selected raw calibration data. If multiple studies are provided,
+multiple calibration curves are fitted. In case a single calibration dataset
+is provided a bootstrap resampling is applied (n = 100) to determined the
+mean and 95% confidence interval of the fit. When multiple calibration curves
+are requested the mean and 95% confidence interval is determined on the fitted functions.
+The mean and confidence interval are used to calculate \eqn{SFD} from \eqn{K}.
+}
 \examples{
 #calculating sap flux density
 \dontrun{

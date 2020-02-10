@@ -1,15 +1,15 @@
 #' Uncertainty and sensitivity analysis
 #'
 #'
-#' @description Quantifies the induced uncertainty on SFD and K time series due to the variability
-#' in input parameters applied during TDM data processing. Moreover, it applied a global sensitivity
-#'  analysis to quantify the impact of each individual parameter on three relevant outputs derived from SFD and K, namely:
+#' @description Quantifies the induced uncertainty on \emph{SFD} and \emph{K} time series due to the variability
+#' in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
+#'  analysis to quantify the impact of each individual parameter on three relevant outputs derived from \emph{SFD} and \emph{K}, namely:
 #'   i) the mean daily sum of water use,
-#'   ii) the variability of maximum daily SFD or K values,
+#'   ii) the variability of maximum daily \emph{SFD} or \emph{K} values,
 #'   iii) and the duration of daily sap flow.
-#'  This function provides both the uncertainty and sensitivity indices, as time-series of SFD and K with the mean,
-#'  standard deviation (sd) and confidence interval (CI) due to parameter uncertainty.
-#'  Users should ensure that no gaps are present within the input data and environmental time series.
+#'  This function provides both the uncertainty and sensitivity indices, as time-series of \emph{SFD} and \emph{K} with the mean,
+#'  standard deviation (\emph{sd}) and confidence interval (CI) due to parameter uncertainty.
+#'  \strong{Users should ensure that no gaps are present within the input data and environmental time series}.
 #'
 #' @param input An \code{\link{is.trex}}-compliant object (\code{zoo} object
 #'
@@ -120,7 +120,7 @@
 #'  The sampling algorithm generates multiple sampling distributions, including an integer sampling range (for \code{zero.start},
 #'  \code{zero.end}, \code{max.days}, and \code{ed.window}), a continuous sampling range (criteria for \code{sr}, \code{vpd} and \code{cv}),
 #'  and a normal distribution (for \code{sw.cor} and calibration parameters \code{a} and \code{b}).
-#'  Within this algorithm the no within day interpolations are made between the \eqn{\Delta T_{max}}{\Delta Tmax} points
+#'  Within this algorithm no within-day interpolations are made between the \eqn{\Delta T_{max}}{\Delta Tmax} points
 #'  (see \code{\link{tdm_dt.max}}, \code{interpolate = FALSE}). This approach ensures near-random sampling across different
 #'  types of sampling distributions, while avoiding the need for increasing the number of replicates
 #'  (which increases computation time). For the application of this approach one needs to;
@@ -129,7 +129,7 @@
 #'  iii) determine the parameter range and distribution.
 #'  For a given time-series three output variables are considered, calculated as the mean over the entire time-series,
 #'  to be relevant, namely;
-#'  i) mean daily sum of water use (or Sum, expressed in cm3 cm-2 d-1 for \eqn{SFD} and unitless for \eqn{K}),
+#'  i) mean daily sum of water use (or Sum, expressed in \eqn{cm^3 cm^{-2} d^{-1}}{cm3 cm-2 d-1} for \eqn{SFD} and unitless for \eqn{K}),
 #'  ii) the variability of maximum \eqn{SFD} or \eqn{K} values (or CV, expressed as the coefficient of variation in \%
 #'  as this alters climate response correlations), and
 #'  iii) the duration of daily sap flow based on \eqn{SFD} or \eqn{K} (or Duration, expressed in hours per day dependent on a threshold,
@@ -143,14 +143,14 @@
 #'  Sobol' (1993), considering the improvements applied within the {sensitivity} R package.
 #'  The method proposed by Sobol’ (1993) is a variance-based sensitivity analysis,
 #'  where sensitivity indices (dimensionless from 0 to 1) indicate the partial variance contribution
-#'  by a specific parameters of interest over the total output variance (e.g., Pappas et al. 2013).
+#'  by a given parameter over the total output variance (e.g., Pappas \emph{et al.} 2013).
 #'  This global sensitivity analysis facilitates the identification of key parameters for data-processing
-#'  improvement and highlight methodological limitations. Users should keep in mind that parameter ranges represent
+#'  improvement and highlights methodological limitations. Users should keep in mind that parameter ranges represent
 #'  a very critical component of any sensitivity analysis and should be critically assessed and clearly reported
 #'  for each case and analytical purpose. Moreover, it is advised to run this function on one growing season of input data to reduce processing time.
 #'
 #'
-#' @return A named list of zoo or data.frame objects in the appropriate format for other functionalities.
+#' @return A named \code{list} of \code{zoo} or \code{data.frame} objects in the appropriate format for other functionalities.
 #'  Items include:
 #'
 #'  \describe{
