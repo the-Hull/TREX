@@ -85,6 +85,7 @@ lines(input$max.dr, col = "orange")
 output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
 
 plot(output.data$sfd.pd$sfd[1:1000, ], ylim=c(0,10))
+# add  uncertainty
 lines(output.data$sfd.pd$q025[1:1000, ], lty=1,col="grey")
 lines(output.data$sfd.pd$q975[1:1000, ], lty=1,col="grey")
 lines(output.data$sfd.pd$sfd[1:1000, ])
@@ -95,4 +96,23 @@ sfd_data <- output.data$sfd.dr$sfd
 ```
 ![](man/figures/sfd.png)
 
+
+### Generate Outputs including G<sub>c</sub>
+
+```r
+output<- out.data(input=sfd_data,
+                  vpd.input=vpd, 
+                  sr.input=sr,
+                  prec.input=preci,
+                  low.sr = 150,
+                  peak.sr=300, 
+                  vpd.cutoff= 0.5, 
+                  prec.lim=1,
+                  method="env.filt", 
+                  max.quant=0.99, 
+                  make.plot=TRUE)
+
+```
+
+![](man/figures/output.png)
 
