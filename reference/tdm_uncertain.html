@@ -37,7 +37,7 @@
 
 <meta property="og:title" content="Uncertainty and sensitivity analysis — tdm_uncertain" />
 <meta property="og:description" content="Quantifies the induced uncertainty on SFD and K time series due to the variability
-in input parameters applied during TDM data processing. Moreover, it applied a global sensitivity
+in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
  analysis to quantify the impact of each individual parameter on three relevant outputs derived from SFD and K, namely:
   i) the mean daily sum of water use,
   ii) the variability of maximum daily SFD or K values,
@@ -114,15 +114,15 @@ in input parameters applied during TDM data processing. Moreover, it applied a g
     </div>
 
     <div class="ref-description">
-    <p>Quantifies the induced uncertainty on SFD and K time series due to the variability
-in input parameters applied during TDM data processing. Moreover, it applied a global sensitivity
- analysis to quantify the impact of each individual parameter on three relevant outputs derived from SFD and K, namely:
+    <p>Quantifies the induced uncertainty on <em>SFD</em> and <em>K</em> time series due to the variability
+in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
+ analysis to quantify the impact of each individual parameter on three relevant outputs derived from <em>SFD</em> and <em>K</em>, namely:
   i) the mean daily sum of water use,
-  ii) the variability of maximum daily SFD or K values,
+  ii) the variability of maximum daily <em>SFD</em> or <em>K</em> values,
   iii) and the duration of daily sap flow.
- This function provides both the uncertainty and sensitivity indices, as time-series of SFD and K with the mean,
- standard deviation (sd) and confidence interval (CI) due to parameter uncertainty.
- Users should ensure that no gaps are present within the input data and environmental time series.</p>
+ This function provides both the uncertainty and sensitivity indices, as time-series of <em>SFD</em> and <em>K</em> with the mean,
+ standard deviation (<em>sd</em>) and confidence interval (CI) due to parameter uncertainty.
+ <strong>Users should ensure that no gaps are present within the input data and environmental time series</strong>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>tdm_uncertain</span>(<span class='no'>input</span>, <span class='no'>vpd.input</span>, <span class='no'>sr.input</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pd"</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>2000</span>,
@@ -301,7 +301,7 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A named list of zoo or data.frame objects in the appropriate format for other functionalities.
+    <p>A named <code>list</code> of <code>zoo</code> or <code>data.frame</code> objects in the appropriate format for other functionalities.
  Items include:</p>
 <p></p><dl class='dl-horizontal'>
 
@@ -335,7 +335,7 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  The sampling algorithm generates multiple sampling distributions, including an integer sampling range (for <code>zero.start</code>,
  <code>zero.end</code>, <code>max.days</code>, and <code>ed.window</code>), a continuous sampling range (criteria for <code>sr</code>, <code>vpd</code> and <code>cv</code>),
  and a normal distribution (for <code>sw.cor</code> and calibration parameters <code>a</code> and <code>b</code>).
- Within this algorithm the no within day interpolations are made between the \(\Delta T_{max}\) points
+ Within this algorithm no within-day interpolations are made between the \(\Delta T_{max}\) points
  (see <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code>, <code>interpolate = FALSE</code>). This approach ensures near-random sampling across different
  types of sampling distributions, while avoiding the need for increasing the number of replicates
  (which increases computation time). For the application of this approach one needs to;
@@ -344,7 +344,7 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  iii) determine the parameter range and distribution.
  For a given time-series three output variables are considered, calculated as the mean over the entire time-series,
  to be relevant, namely;
- i) mean daily sum of water use (or Sum, expressed in cm3 cm-2 d-1 for \(SFD\) and unitless for \(K\)),
+ i) mean daily sum of water use (or Sum, expressed in \(cm^3 cm^{-2} d^{-1}\) for \(SFD\) and unitless for \(K\)),
  ii) the variability of maximum \(SFD\) or \(K\) values (or CV, expressed as the coefficient of variation in %
  as this alters climate response correlations), and
  iii) the duration of daily sap flow based on \(SFD\) or \(K\) (or Duration, expressed in hours per day dependent on a threshold,
@@ -357,9 +357,9 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  Sobol' (1993), considering the improvements applied within the sensitivity R package.
  The method proposed by Sobol’ (1993) is a variance-based sensitivity analysis,
  where sensitivity indices (dimensionless from 0 to 1) indicate the partial variance contribution
- by a specific parameters of interest over the total output variance (e.g., Pappas et al. 2013).
+ by a given parameter over the total output variance (e.g., Pappas <em>et al.</em> 2013).
  This global sensitivity analysis facilitates the identification of key parameters for data-processing
- improvement and highlight methodological limitations. Users should keep in mind that parameter ranges represent
+ improvement and highlights methodological limitations. Users should keep in mind that parameter ranges represent
  a very critical component of any sensitivity analysis and should be critically assessed and clearly reported
  for each case and analytical purpose. Moreover, it is advised to run this function on one growing season of input data to reduce processing time.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>

@@ -37,17 +37,17 @@
 
 <meta property="og:title" content="Calculate sap flux density — tdm_cal.sfd" />
 <meta property="og:description" content="The acquired \(K\) values are calculated to sap flux density
- (SFD in cm3 cm-2 h-1). As many calibration curves exist
+ (SFD in \(cm^3 cm^{-2} h^{-1}\)). As many calibration curves exist
  (see Peters et al. 2018; Flo et al. 2019), the function provides the option to
  calculate \(SFD\) using all available calibration experiment data
  (see cal.data; Flo et al. 2019). Additionally,
- raw calibration data can be provided or specified \(a\) and \(b\)
- parameters for a specific calibration function (\(aK^b\)).
+ raw calibration data can be provided or parameters \(a\) and \(b\)
+ for a specific calibration function (\(aK^b\)) can be provided.
  The algorithm determines for each calibration experiment dataset
  the calibration curve (\(SFD = aK^b\)) and calculates \(SFD\) from
  either the mean of all curves and the \(95\)
  of either all curves, or bootstrapped resampled uncertainty around
- the raw calibration experiment data (when one calibration dataset is selected)." />
+ the raw calibration experiment data when one calibration dataset is selected." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -118,17 +118,17 @@
 
     <div class="ref-description">
     <p>The acquired \(K\) values are calculated to sap flux density
- (SFD in cm3 cm-2 h-1). As many calibration curves exist
- (see Peters et al. 2018; Flo et al. 2019), the function provides the option to
+ (SFD in \(cm^3 cm^{-2} h^{-1}\)). As many calibration curves exist
+ (see Peters <em>et al</em>. 2018; Flo <em>et al.</em> 2019), the function provides the option to
  calculate \(SFD\) using all available calibration experiment data
- (see <code><a href='cal.data.html'>cal.data</a></code>; Flo et al. 2019). Additionally,
- raw calibration data can be provided or specified \(a\) and \(b\)
- parameters for a specific calibration function (\(aK^b\)).
+ (see <code><a href='cal.data.html'>cal.data</a></code>; Flo <em>et al.</em> 2019). Additionally,
+ raw calibration data can be provided or parameters \(a\) and \(b\)
+ for a specific calibration function (\(aK^b\)) can be provided.
  The algorithm determines for each calibration experiment dataset
  the calibration curve (\(SFD = aK^b\)) and calculates \(SFD\) from
  either the mean of all curves and the \(95\)<!-- % confidence interval -->
  of either all curves, or bootstrapped resampled uncertainty around
- the raw calibration experiment data (when one calibration dataset is selected).</p>
+ the raw calibration experiment data when one calibration dataset is selected.</p>
     </div>
 
     <pre class="usage"><span class='fu'>tdm_cal.sfd</span>(<span class='no'>input</span>, <span class='no'>genus</span>, <span class='no'>species</span>, <span class='no'>study</span>, <span class='no'>wood</span>, <span class='no'>calib</span>, <span class='no'>a</span>, <span class='no'>b</span>, <span class='no'>decimals</span>,
@@ -169,7 +169,7 @@ See <code><a href='cal.data.html'>cal.data</a></code> for the specific labels (d
       <th>calib</th>
       <td><p>Optional <code>data.frame</code> containing raw calibration experiment values.
 Required columns include: <code>[ ,1]</code> \(K = K\) values measured with the probe (numeric),
-and [,2] \(SFD =\) Gravimetrically measured sap flux density (cm3 cm-2 h-1) (numeric).
+and [,2] \(SFD =\) Gravimetrically measured sap flux density (\(cm^3 cm^{-2} h^{-1}\))) (numeric).
 If not provided, literature values are used.</p></td>
     </tr>
     <tr>
@@ -189,7 +189,7 @@ No uncertainty can be calculated when this value is provided.</p></td>
     <tr>
       <th>make.plot</th>
       <td><p>Logical; if <code>TRUE</code>, a plot is generated showing
-the calibration curve with \(K vs sap flux density\) (cm3 cm-2 h-1).</p></td>
+the calibration curve with \(K vs sap flux density\) (\(cm^3 cm^{-2} h^{-1}\))).</p></td>
     </tr>
     <tr>
       <th>df</th>
@@ -217,6 +217,15 @@ is provided as a <code>zoo</code> vector object (default = FALSE).</p></td>
  
 </dl>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The function fits a calibration curve (\(SFD = aK^b\))
+through all selected raw calibration data. If multiple studies are provided,
+multiple calibration curves are fitted. In case a single calibration dataset
+is provided a bootstrap resampling is applied (n = 100) to determined the
+mean and 95<!-- % confidence interval of the fit. When multiple calibration curves -->
+are requested the mean and 95<!-- % confidence interval is determined on the fitted functions. -->
+The mean and confidence interval are used to calculate \(SFD\) from \(K\).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V, Prendin AL, Schneider L, Baltzer JL,
@@ -262,6 +271,7 @@ is provided as a <code>zoo</code> vector object (default = FALSE).</p></td>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#references">References</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
