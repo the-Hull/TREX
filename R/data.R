@@ -109,8 +109,8 @@
 #'
 #'
 #'
-#' @description Returns an example datasets of vapour pressure deficits monitoring from
-#'  2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters et al. 2019).
+#' @description Returns an example dataset of vapour pressure deficit (\emph{VPD}) monitoring from
+#'  2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters \emph{et al.} 2019).
 #'  Sensors were installed at the site on a central tower (~2.5 m above the ground)
 #'  within the canopy to measure air temperature and relative humidity (Onset, USA, U23-002Pro) with a 15‐min resolution.
 #'   Vpd (\eqn{kPa} was calculated from the air temperature and relative humidity measurements according to WMO (2008).
@@ -139,8 +139,8 @@
 #'
 #'
 #'
-#' @description Returns an example datasets of solar irradiance monitoring from 2012-2015 at 1300 m a.s.l. in the Swiss Alps
-#'  (Loetschental, Switzerland; Peters et al. 2019). Solar irradiance (W m-2) was measured with
+#' @description Returns an example dataset of solar irradiance monitoring from 2012-2015 at 1300 m a.s.l. in the Swiss Alps
+#'  (Loetschental, Switzerland; Peters et al. 2019). Solar irradiance (\eqn{W m^{-2}}{W m-2}) was measured with
 #'  15‐min resolution using a microstation (Onset,USA, H21-002 Micro Station)
 #'  and pyranometer (Onset, USA, S‐LIB‐M003) positioned in an open field.
 #'
@@ -169,7 +169,7 @@
 #'
 #'
 #'
-#' @description Returns an example dataset of daily precipitation data in mm d-1
+#' @description Returns an example dataset of daily precipitation data in \eqn{mm d^{-1}}{mm d-1}
 #' from 2012-2015 originating from weather stations surrounding the Loetschental in the Swiss Alps.
 #' The data was obtained from the nine nearest weather stations
 #' (6‐to 43‐km distance to the site, including Adelboden, Blatten, Grächen, Montana, Jungfraujoch,

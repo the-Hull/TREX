@@ -14,7 +14,7 @@
 preci
 }
 \description{
-Returns an example dataset of daily precipitation data in mm d-1
+Returns an example dataset of daily precipitation data in \eqn{mm d^{-1}}{mm d-1}
 from 2012-2015 originating from weather stations surrounding the Loetschental in the Swiss Alps.
 The data was obtained from the nine nearest weather stations
 (6‐to 43‐km distance to the site, including Adelboden, Blatten, Grächen, Montana, Jungfraujoch,

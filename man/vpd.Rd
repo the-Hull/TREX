@@ -14,8 +14,8 @@
 vpd
 }
 \description{
-Returns an example datasets of vapour pressure deficits monitoring from
- 2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters et al. 2019).
+Returns an example dataset of vapour pressure deficit (\emph{VPD}) monitoring from
+ 2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters \emph{et al.} 2019).
  Sensors were installed at the site on a central tower (~2.5 m above the ground)
  within the canopy to measure air temperature and relative humidity (Onset, USA, U23-002Pro) with a 15‐min resolution.
   Vpd (\eqn{kPa} was calculated from the air temperature and relative humidity measurements according to WMO (2008).
