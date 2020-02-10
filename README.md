@@ -1,4 +1,4 @@
-# TREX <img src="man/trex_logo.png" align="right" width = "150"/>
+# TREX <img src="man/figures/trex_logo.png" align="right" width = "150"/>
 
 
 <!-- badges: start -->
