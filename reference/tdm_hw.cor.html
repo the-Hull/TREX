@@ -112,7 +112,7 @@ applied, the \(K\) values for each method are provided (see tdm_dt.max." />
 
     <div class="ref-description">
     <p>The function corrects for the proportion of the probe that is installed
-within the non-conductive heartwood according to Clearwater et al. (1999).
+within the non-conductive heartwood according to Clearwater <em>et al.</em> (1999).
 The function requires \(\Delta T_{max}\), the probe length and the
 sapwood thickness. The correction is applied on the \(\Delta T\) (or \(\Delta V\)) values and \(K\)
 is recalculated accordingly. When an <code><a href='is.trex.html'>is.trex</a></code>-compliant object is
@@ -147,7 +147,7 @@ containing the \(\Delta T_{max}\) when no <code><a href='is.trex.html'>is.trex</
       <th>df</th>
       <td><p>Logical; If <code>TRUE</code>, output is provided in a <code>data.frame</code> format
 with a timestamp and a value column. If <code>FALSE</code>, output
-is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
+is provided as a <code>zoo</code> vector object (default = <code>FALSE</code>).</p></td>
     </tr>
     </table>
 
@@ -157,7 +157,7 @@ is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
 format for other functionalities. See <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code> for output specifications.
 All \(K\) values for each method are provided when an
 <code><a href='is.trex.html'>is.trex</a></code>-compliant object was provided.
-If individual time series are provided for input and dt.max an alternative output is provided:</p>
+If individual time series are provided for <code>input</code> and <code>dt.max</code> an alternative output is provided:</p>
 <dl class='dl-horizontal'>
 
  <dt>input</dt><dd><p>= \(\Delta T\) input data.</p></dd>
@@ -171,7 +171,7 @@ If individual time series are provided for input and dt.max an alternative outpu
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function applied the correction provided by Clearwater et al. 1999.
+    <p>The function applied the correction provided by Clearwater <em>et al.</em> 1999.
  \(\Delta T\) (or \(\Delta V\)) was corrected (denoted as \(\Delta T_{sw}\)) for the proportion of
  the probe that was inserted into the conducting sapwood vs the
  proportion of the probe that was inserted into the nonconductive heartwood
