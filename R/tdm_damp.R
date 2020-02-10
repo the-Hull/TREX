@@ -2,12 +2,12 @@
 #' Signal dampening correction
 #'
 #' @description When long-term \eqn{K} series (~3 years) are provided, one can perform
-#'  a signal dampening correction (when no re-installation of the sensors has been applied;
-#'  see Peters et al. 2018). For the application of the signal dampening
-#'  correction care has to be taken in visually inspecting the correction curve
+#'  a signal dampening correction (when sensors were not re-installed;
+#'  see Peters \emph{et al.} 2018). Applying the signal dampening
+#'  correction requires  visually inspecting the correction curve
 #'  (see \code{make.plot = TRUE}). The correction curve is constructed with
 #'  the day since installation and the day of year (DOY) to account for seasonal changes in \eqn{K}
-#'  values. The function provided corrected \eqn{K} values and the subsequent correction curve.
+#'  values. The function returns corrected \eqn{K} values and the applied correction curve.
 #'
 #' @param input An \code{\link{is.trex}}-compliant object (\code{zoo} vector, \code{data.frame}) of \eqn{K} values containing
 #'  a timestamp and a value column.
@@ -19,28 +19,28 @@
 #'
 #'
 #'  @details The function fits a correction curve for signal dampening (e.g., due to wounding)
-#'  according to Peters et al. (2018). A sensor specific function was fitted to daily maximum
+#'  according to Peters \emph{et al.} (2018). A sensor specific function is fitted to daily maximum
 #'  \eqn{K} values (considering a minimum cut-off threshold). Dependent variables
 #'  for the function include seasonality (DOY) and days since installation (t).
-#'  First, seasonal effects were removed by correcting the \eqn{K} series (residuals; \eqn{Kresid})
-#'  to a second-order polynomial with DOY. These residuals were then used within a
-#'  nonlinear model:
+#'  First, seasonal effects are removed by correcting the \eqn{K} series (residuals; \eqn{Kresid})
+#'  to a second-order polynomial with DOY. These residuals are then used within a
+#'  non-linear model:
 #'  \deqn{K_{resid} = (a + b * t)/(1 + c * t + d * t^{2})}{Kresid = (a + b * t)/(1 + c * t + d * t2)}
 #'
-#'  The fitted parameters for \eqn{t} (with \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}) were used to
+#'  The fitted parameters for \eqn{t} (with \eqn{a}, \eqn{b}, \eqn{c} and \eqn{d}) are used to
 #'  correct \eqn{K} and scale it to the maximum within the first year of installation.
 #'  \strong{Note, that the stability of the fit has to be visually inspected before using the output data}.
 #'
 #' @return A \code{zoo} object or \code{data.frame} in the appropriate
 #'  format for other functionalities.
 #'  See \code{\link{tdm_dt.max}} output specifications.
-#'  All \eqn{K} values for each method are been provided when an \code{\link{is.trex}}-object was used as input.
+#'  All \eqn{K} values for each method are provided when an \code{\link{is.trex}}-object was used as input.
 #'  If an individual time series was provided for input with \eqn{K} values an alternative output is given:
 #'
 #'  \describe{
-#'    \item{k.cor}{corrected K values according to the correction curve.}
-#'    \item{k}{ K values provided as input.}
-#'    \item{damp.mod}{data.frame with the coefficients of the correction curve.}
+#'    \item{k.cor}{corrected \eqn{K} values according to the correction curve.}
+#'    \item{k}{\eqn{K} values provided as input.}
+#'    \item{damp.mod}{\code{data.frame} with the coefficients of the correction curve.}
 #'
 #'  }
 #'
