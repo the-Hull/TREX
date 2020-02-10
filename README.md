@@ -52,9 +52,9 @@ input[which(input<0.2)]<- NA
 
 ```
 
-### Calculate maximum $\Delta T$ Values
+### Calculate maximum &Delta; T Values
 
-Here we apply three methods for calculating $\Delta T$:  
+Here we apply three methods for calculating &Delta; T:  
 
 - `pd`: pre-dawn
 - `mw`: moving-window
