@@ -69,7 +69,7 @@ arg_df <- expand.grid(type = c("timestamp",
 safe_example.data <- purrr::possibly(TREX::example.data, otherwise = NA)
 
 test_example.data <- purrr::pmap(arg_df,
-                            ~safe_example.data(type = ..1)
+                                 ~safe_example.data(type = ..1)
 )
 
 
@@ -96,8 +96,8 @@ plot(input)
 
 # combination of values
 arg_df <- expand.grid(solar.time = c(TRUE,FALSE),
-                        long.deg = c(-500,-100, -10, 0, 10, 100,500),
-                        df = c(TRUE, FALSE),
+                      long.deg = c(-500,-100, -10, 0, 10, 100,500),
+                      df = c(TRUE, FALSE),
                       KEEP.OUT.ATTRS = FALSE,
                       stringsAsFactors = FALSE)
 
@@ -108,14 +108,14 @@ safe_is.trex <- purrr::possibly(TREX::is.trex, otherwise = NA)
 
 # run test
 test_is.trex <- furrr::future_pmap(arg_df,
-                            ~safe_is.trex(raw,
-                                     tz="GMT",
-                                     time.format="%H:%M",
-                                    solar.time=..1,
-                                    long.deg=..2,
-                                    ref.add=FALSE,
-                                    df=..3)
-                            )
+                                   ~safe_is.trex(raw,
+                                                 tz="GMT",
+                                                 time.format="%H:%M",
+                                                 solar.time=..1,
+                                                 long.deg=..2,
+                                                 ref.add=FALSE,
+                                                 df=..3)
+)
 
 
 test_summary(test_is.trex, arg_df)
@@ -168,17 +168,17 @@ dt.steps(input=input,start='2012-07-25 00:00',end='2000-06-28 00:00',
 
 ## Large time steps
 dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
-                  time.int=240,max.gap=120,decimals=6,df=FALSE)
+         time.int=240,max.gap=120,decimals=6,df=FALSE)
 ## works fine
 
 ## Large time steps, 0 decimals
 dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
-                  time.int=240,max.gap=120,decimals=0,df=FALSE)
+         time.int=240,max.gap=120,decimals=0,df=FALSE)
 #3 fails appropriately
 
 ## Large time steps, character decimals
 dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
-                  time.int=240,max.gap=120,decimals="6",df=FALSE)
+         time.int=240,max.gap=120,decimals="6",df=FALSE)
 ## fails appropriately
 
 ## Large max gap, character decimals
@@ -233,10 +233,10 @@ arg_df <- expand.grid(max.gap = c(-5, 0, 10, 50, 6000),
 safe_gap.fill <- purrr::possibly(TREX::gap.fill, otherwise = NA)
 
 test_gap.fill <- furrr::future_pmap(arg_df,
-                                 ~safe_gap.fill(input = input,
-                                                max.gap = ..1,
-                                                decimals = ..2,
-                                                df = ..3)
+                                    ~safe_gap.fill(input = input,
+                                                   max.gap = ..1,
+                                                   decimals = ..2,
+                                                   df = ..3)
 )
 
 
@@ -249,23 +249,23 @@ gap.fill(
     decimals = 5,
     df = FALSE)
 # fails with inapproriate message:
-    # Error in gap.fill(input = input, max.gap = 10, decimals = 5, df = FALSE) :
-    # Unused argument, min.gap is smaller the minimum timestep.
+# Error in gap.fill(input = input, max.gap = 10, decimals = 5, df = FALSE) :
+# Unused argument, min.gap is smaller the minimum timestep.
 
 
 
 # tdm_dt.max ------------------------------------------------------------------
 
 raw <- is.trex(example.data(type = "doy"),
-              tz = "GMT", time.format = "%H:%M", solar.time = TRUE,
-              long.deg = 7.7459, ref.add = FALSE)
+               tz = "GMT", time.format = "%H:%M", solar.time = TRUE,
+               long.deg = 7.7459, ref.add = FALSE)
 input <- dt.steps(input = raw, start = "2014-05-08 00:00",
                   end = "2014-07-25 00:50", time.int = 15, max.gap = 60,
                   decimals = 6, df = FALSE)
 input[which(input<0.2)]<- NA
 output.max <- tdm_dt.max(input, methods = c("pd", "mw", "dr"),
-                     det.pd = TRUE, interpolate = FALSE,
-                     max.days = 10, df = FALSE)
+                         det.pd = TRUE, interpolate = FALSE,
+                         max.days = 10, df = FALSE)
 
 str(output.max)
 
@@ -297,11 +297,11 @@ arg_df <- expand.grid(zero.end = c(NA, 8*60, -60),
 safe_tdm_dt.max <- purrr::possibly(TREX::tdm_dt.max, otherwise = NA)
 
 test_tdm_dt.max <- furrr::future_pmap(arg_df,
-                                    ~safe_tdm_dt.max(input = input,
-                                                   zero.end = ..1,
-                                                   zero.start = ..2,
-                                                   max.days = ..3,
-                                                   df = ..4)
+                                      ~safe_tdm_dt.max(input = input,
+                                                       zero.end = ..1,
+                                                       zero.start = ..2,
+                                                       max.days = ..3,
+                                                       df = ..4)
 )
 
 test_summary(test_tdm_dt.max, arg_df)
@@ -396,8 +396,8 @@ output.data<-tdm_hw.cor(input,probe.length=0,
                         sapwood.thickness=18,df=FALSE)
 # good, but should fail with similar message as when sapwood < probe
 # Warning messages:
-    # 1: In tdm_hw.cor(input, probe.length = 25, sapwood.thickness = 180,  :
-                         # No heartwood correction performed, the sapwood.thickness>probe.length.
+# 1: In tdm_hw.cor(input, probe.length = 25, sapwood.thickness = 180,  :
+# No heartwood correction performed, the sapwood.thickness>probe.length.
 
 output.data<-tdm_hw.cor(input,probe.length=10,
                         sapwood.thickness=18,df=FALSE)
@@ -480,9 +480,9 @@ arg_df <- expand.grid(k.threshold = c(NA, 0.05, 0.1, 1, -1, -0.05),
 safe_tdm_damp <- purrr::possibly(TREX::tdm_damp, otherwise = NA)
 
 test_tdm_tdm_damp <- furrr::future_pmap(arg_df,
-                                      ~safe_tdm_damp(input = input,
-                                                     k.threshold = ..1,
-                                                     make.plot = ..2,
+                                        ~safe_tdm_damp(input = input,
+                                                       k.threshold = ..1,
+                                                       make.plot = ..2,
                                                        df = ..3)
 )
 
@@ -557,14 +557,14 @@ arg_df <- expand.grid(wood=c("Diffuse-porous", "Ring-porous", "Coniferous"),
 safe_tdm_cal.sfd <- purrr::possibly(TREX::tdm_cal.sfd, otherwise = NA)
 
 test_tdm_cal.sfd <- furrr::future_pmap(arg_df,
-                                        ~safe_tdm_cal.sfd(input = input,
-                                                          wood = ..1,
-                                                          genus = ..2,
-                                                          speciies = ..3,
-                                                          a = ..4,
-                                                          b = ..5,
-                                                          make.plot = ..6,
-                                                       df = ..7)
+                                       ~safe_tdm_cal.sfd(input = input,
+                                                         wood = ..1,
+                                                         genus = ..2,
+                                                         speciies = ..3,
+                                                         a = ..4,
+                                                         b = ..5,
+                                                         make.plot = ..6,
+                                                         df = ..7)
 )
 
 
@@ -764,14 +764,14 @@ arg_df <- expand.grid(time.agg =c(NULL, NA, -60, 0, 60, 60*12),
 safe_agg.data <- purrr::possibly(TREX::agg.data, otherwise = NA)
 
 test_agg.data <- furrr::future_pmap(arg_df,
-                                       ~safe_agg.data(input = sfd.input,
-                                                         time.agg = ..1,
-                                                         start="2012-07-28 00:00",
-                                                         end="2012-10-29 00:00",
-                                                         FUN=..2,
-                                                         unit=..3,
-                                                         na.rm=TRUE,
-                                                         df=..4)
+                                    ~safe_agg.data(input = sfd.input,
+                                                   time.agg = ..1,
+                                                   start="2012-07-28 00:00",
+                                                   end="2012-10-29 00:00",
+                                                   FUN=..2,
+                                                   unit=..3,
+                                                   na.rm=TRUE,
+                                                   df=..4)
 )
 
 
@@ -820,11 +820,11 @@ raw   <- is.trex(example.data(type="doy"), tz="GMT",
                  long.deg=7.7459, ref.add=FALSE)
 
 input <- dt.steps(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
-                   time.int=15, max.gap=60, decimals=10, df=FALSE)
+                  time.int=15, max.gap=60, decimals=10, df=FALSE)
 
 input[which(input<0.2)]<- NA
 input <- tdm_dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
-                max.days=10, df=FALSE)
+                    max.days=10, df=FALSE)
 
 output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
 

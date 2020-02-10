@@ -35,7 +35,7 @@
 #'
 #'
 #' @description Returns raw calibration experiment data obtained from literature,
-#'  with K values combined with gravimetrically determined sap flux density.
+#'  with \emph{K} values combined with gravimetrically determined sap flux density.
 #'  The \code{data.frame} contains 22 studies with 37 different species. The data is used
 #'  within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density. The data
 #'  originates from the manuscript by Flo \emph{et al.} 2019 and provides a
@@ -77,6 +77,7 @@
 #' @format Provides a data.frame with 4024 rows and 10 columns.
 #' \describe{
 #'   \item{Study}{Study from which the data originates (see Flo et al. 2019) (\code{character})}
+#'   \item{Method}{Heat-based sap flow measurement method (TD = Thermal Dissipation) (\code{as.character})}
 #'   \item{Genus}{Monitored genus (\code{character})}
 #'   \item{Species}{Monitored species (\code{character})}
 #'   \item{Calibration.material}{Description on the calibration method that was used,
@@ -84,8 +85,8 @@
 #'   \item{Wood.porosity}{Wood structure type of the examined species, including coniferous, diffuse-porous, ring-porous and monocots (\code{character})}
 #'   \item{Diameter}{Diameter at breast height of the calibration subject (in cm) (\code{numeric})}
 #'   \item{k}{Proportional difference between \eqn{\Delta T} and \eqn{\Delta T_{max}}{\Delta Tmax} measured
-#'          by the thermal dissipation probes (unitless; -) (\code{numeric})}
-#'   \item{SFD}{Sap flux density measured gravimetrically (in \eqn{cm^3}{cm3} cm-2 h-1) (\code{numeric})}
+#'          by the thermal dissipation probes (unitless; \code{numeric})}
+#'   \item{SFD}{Sap flux density measured gravimetrically (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; \code{numeric})}
 #'   \item{Granier}{Sap flux density calculated according to Granier et al. 1985 using k
 #'        (in \eqn{cm^{3}}{cm3} cm-2 h-1; using \eqn{43.84 k^{1.231}{k^1.231}}) (\code{numeric})}
 #' }
