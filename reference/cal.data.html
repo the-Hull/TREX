@@ -113,7 +113,7 @@
 
     <div class="ref-description">
     <p>Returns raw calibration experiment data obtained from literature,
- with K values combined with gravimetrically determined sap flux density.
+ with <em>K</em> values combined with gravimetrically determined sap flux density.
  The <code>data.frame</code> contains 22 studies with 37 different species. The data is used
  within the <code><a href='tdm_cal.sfd.html'>tdm_cal.sfd</a></code> function to calculate sap flux density. The data
  originates from the manuscript by Flo <em>et al.</em> 2019 and provides a
@@ -128,6 +128,7 @@
 
     <p>Provides a data.frame with 4024 rows and 10 columns.</p><dl class='dl-horizontal'>
   <dt>Study</dt><dd><p>Study from which the data originates (see Flo et al. 2019) (<code>character</code>)</p></dd>
+  <dt>Method</dt><dd><p>Heat-based sap flow measurement method (TD = Thermal Dissipation) (<code>as.character</code>)</p></dd>
   <dt>Genus</dt><dd><p>Monitored genus (<code>character</code>)</p></dd>
   <dt>Species</dt><dd><p>Monitored species (<code>character</code>)</p></dd>
   <dt>Calibration.material</dt><dd><p>Description on the calibration method that was used,
@@ -135,8 +136,8 @@
   <dt>Wood.porosity</dt><dd><p>Wood structure type of the examined species, including coniferous, diffuse-porous, ring-porous and monocots (<code>character</code>)</p></dd>
   <dt>Diameter</dt><dd><p>Diameter at breast height of the calibration subject (in cm) (<code>numeric</code>)</p></dd>
   <dt>k</dt><dd><p>Proportional difference between \(\Delta T\) and \(\Delta T_{max}\) measured
-         by the thermal dissipation probes (unitless; -) (<code>numeric</code>)</p></dd>
-  <dt>SFD</dt><dd><p>Sap flux density measured gravimetrically (in \(cm^3\) cm-2 h-1) (<code>numeric</code>)</p></dd>
+         by the thermal dissipation probes (unitless; <code>numeric</code>)</p></dd>
+  <dt>SFD</dt><dd><p>Sap flux density measured gravimetrically (in \(cm^3 cm^{-2} h^{-1}\); <code>numeric</code>)</p></dd>
   <dt>Granier</dt><dd><p>Sap flux density calculated according to Granier et al. 1985 using k
        (in \(cm^{3}\) cm-2 h-1; using \(43.84 k^{1.231}{k^1.231}\)) (<code>numeric</code>)</p></dd>
 
