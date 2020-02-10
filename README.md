@@ -16,13 +16,16 @@ The package includes functions for gap filling time-series data, detecting outli
 The package is designed to deal with large quantities of data and apply commonly used data-processing methods. 
 The functions have been validated on data collected from different tree species across the northern hemisphere [Peters et al. 2018 <doi: 10.1111/nph.15241>)](https://doi.org/10.1111/nph.15241).   
 
+---
 
 ## Installation
 
-A development version of `TREX` can be installed via
+A development version of `TREX` can be installed and used via
 
 ```r
 remotes::install_github(remotes::install_github("the-Hull/TREX"))
+
+library(TREX)
 
 ```
 
@@ -97,7 +100,10 @@ sfd_data <- output.data$sfd.dr$sfd
 ![](man/figures/sfd.png)
 
 
-### Generate Outputs including G<sub>c</sub>
+### Generate Outputs 
+
+Here we generate outputs based on environmental filters and calculate crown conductance (G<sub>c</sub>) values.
+
 
 ```r
 output<- out.data(input=sfd_data,
