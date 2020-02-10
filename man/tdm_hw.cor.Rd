@@ -20,14 +20,14 @@ containing the \eqn{\Delta T_{max}}{\Delta Tmax} when no \code{\link{is.trex}}-c
 
 \item{df}{Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
 with a timestamp and a value column. If \code{FALSE}, output
-is provided as a zoo vector object (default = \code{FALSE}).}
+is provided as a \code{zoo} vector object (default = \code{FALSE}).}
 }
 \value{
 A \code{zoo} object or \code{data.frame} in the appropriate
 format for other functionalities. See \code{\link{tdm_dt.max}} for output specifications.
 All \eqn{K} values for each method are provided when an
 \code{\link{is.trex}}-compliant object was provided.
-If individual time series are provided for input and dt.max an alternative output is provided:
+If individual time series are provided for \code{input} and \code{dt.max} an alternative output is provided:
 
 \describe{
 
@@ -41,14 +41,14 @@ If individual time series are provided for input and dt.max an alternative outpu
 }
 \description{
 The function corrects for the proportion of the probe that is installed
-within the non-conductive heartwood according to Clearwater et al. (1999).
+within the non-conductive heartwood according to Clearwater \emph{et al.} (1999).
 The function requires \eqn{\Delta T_{max}}{\Delta Tmax}, the probe length and the
 sapwood thickness. The correction is applied on the \eqn{\Delta T} (or \eqn{\Delta V}) values and \eqn{K}
 is recalculated accordingly. When an \code{\link{is.trex}}-compliant object is
 applied, the \eqn{K} values for each method are provided (see \code{\link{tdm_dt.max}}.
 }
 \details{
-The function applied the correction provided by Clearwater et al. 1999.
+The function applied the correction provided by Clearwater \emph{et al.} 1999.
  \eqn{\Delta T} (or \eqn{\Delta V}) was corrected (denoted as \eqn{\Delta T_{sw}}{\Delta Tsw}) for the proportion of
  the probe that was inserted into the conducting sapwood vs the
  proportion of the probe that was inserted into the nonconductive heartwood
