@@ -834,8 +834,14 @@ output<- out.data(input=input, vpd.input=vpd, sr.input=sr, prec.input=preci,
                   low.sr = 150, peak.sr=300, vpd.cutoff= 0.5, prec.lim=1,
                   method="env.filt", max.quant=0.99, make.plot=TRUE)
 ## all data sets are in zoo, but getting warnings
-head(output)
+## Need to change the conditional checks
+# In if (zoo::index(prec.input) == FALSE) stop("Invalid input data, prec.input must be a zoo file (use is.trex).") :
+#     the condition has length > 1 and only the first element will be used
+#
 
+
+plot(1:10)
+# does not reset to original par values
 
 
 # arg_df <- expand.grid(low.sr =c(-150, 150),

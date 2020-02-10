@@ -26,4 +26,53 @@ remotes::install_github(remotes::install_github("the-Hull/TREX"))
 
 ```
 
+## Basic use and workflow
 
+
+### Load data
+
+```r
+# load raw data
+raw   <- is.trex(example.data(type="doy"), tz="GMT",
+                 time.format="%H:%M", solar.time=TRUE,
+                 long.deg=7.7459, ref.add=FALSE)
+                 
+# adjust time steps
+input <- dt.steps(input=raw, 
+                start="2013-05-01 00:00",
+                end="2013-11-01 00:00",
+                time.int=15,
+                max.gap=60,
+                decimals=10,
+                df=FALSE)
+                
+# remove obvious outliers
+input[which(input<0.2)]<- NA
+
+
+```
+
+### Calculate maximum $\Delta T$ Values
+
+Here we apply three methods for calculating $\Delta T$:  
+
+- `pd`: pre-dawn
+- `mw`: moving-window
+- `dr`: double-regression
+
+```r
+input <- tdm_dt.max(input,
+                    methods = c("pd", "mw", "dr"),
+                    det.pd = TRUE,
+                    interpolate = FALSE,
+                    max.days = 10,
+                    df = FALSE)
+                    
+plot(input$input, ylab = expression(Delta*italic("V")))
+
+lines(input$max.pd, col = "green")
+lines(input$max.mw, col = "blue")
+lines(input$max.dr, col = "orange")
+
+```
+![](img/dtmax.png)

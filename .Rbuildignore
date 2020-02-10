@@ -1,6 +1,7 @@
 ^TREX\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
+^img$
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$
 ^\.travis\.yml$
@@ -9,5 +10,6 @@
 ^_testing$
 ^pre_work$
 ^docs$
+^mkreadme$
 ^\./pkgdown/_pkgdown\.yml$
 ^pkgdown$
