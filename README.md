@@ -23,7 +23,7 @@ The functions have been validated on data collected from different tree species 
 A development version of `TREX` can be installed and used via
 
 ```r
-remotes::install_github(remotes::install_github("the-Hull/TREX"))
+remotes::install_github("the-Hull/TREX")
 
 library(TREX)
 
@@ -36,9 +36,12 @@ library(TREX)
 
 ```r
 # load raw data
-raw   <- is.trex(example.data(type="doy"), tz="GMT",
-                 time.format="%H:%M", solar.time=TRUE,
-                 long.deg=7.7459, ref.add=FALSE)
+raw   <- is.trex(example.data(type="doy"),
+                 tz="GMT",
+                 time.format="%H:%M",
+                 solar.time=TRUE,
+                 long.deg=7.7459,
+                 ref.add=FALSE)
                  
 # adjust time steps
 input <- dt.steps(input=raw, 
