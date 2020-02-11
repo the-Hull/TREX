@@ -73,7 +73,7 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>A development version of <code>TREX</code> can be installed and used via</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"the-Hull/TREX"</span>))</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"the-Hull/TREX"</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(TREX)</a></code></pre></div>
 </div>
@@ -84,22 +84,25 @@
 <h3 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load data</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># load raw data</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">raw   &lt;-<span class="st"> </span><span class="kw"><a href="reference/is.trex.html">is.trex</a></span>(<span class="kw"><a href="reference/example.data.html">example.data</a></span>(<span class="dt">type=</span><span class="st">"doy"</span>), <span class="dt">tz=</span><span class="st">"GMT"</span>,</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">                 <span class="dt">time.format=</span><span class="st">"%H:%M"</span>, <span class="dt">solar.time=</span><span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">                 <span class="dt">long.deg=</span><span class="fl">7.7459</span>, <span class="dt">ref.add=</span><span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">                 </a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># adjust time steps</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">input &lt;-<span class="st"> </span><span class="kw"><a href="reference/dt.steps.html">dt.steps</a></span>(<span class="dt">input=</span>raw, </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">                <span class="dt">start=</span><span class="st">"2013-05-01 00:00"</span>,</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">                <span class="dt">end=</span><span class="st">"2013-11-01 00:00"</span>,</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">                <span class="dt">time.int=</span><span class="dv">15</span>,</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">                <span class="dt">max.gap=</span><span class="dv">60</span>,</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">                <span class="dt">decimals=</span><span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">                <span class="dt">df=</span><span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">                </a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co"># remove obvious outliers</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">input[<span class="kw"><a href="https://rdrr.io/r/base/which.html">which</a></span>(input<span class="op">&lt;</span><span class="fl">0.2</span>)]&lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"></a></code></pre></div>
+<a class="sourceLine" id="cb2-2" data-line-number="2">raw   &lt;-<span class="st"> </span><span class="kw"><a href="reference/is.trex.html">is.trex</a></span>(<span class="kw"><a href="reference/example.data.html">example.data</a></span>(<span class="dt">type=</span><span class="st">"doy"</span>),</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">                 <span class="dt">tz=</span><span class="st">"GMT"</span>,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">                 <span class="dt">time.format=</span><span class="st">"%H:%M"</span>,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">                 <span class="dt">solar.time=</span><span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">                 <span class="dt">long.deg=</span><span class="fl">7.7459</span>,</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">                 <span class="dt">ref.add=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">                 </a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co"># adjust time steps</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">input &lt;-<span class="st"> </span><span class="kw"><a href="reference/dt.steps.html">dt.steps</a></span>(<span class="dt">input=</span>raw, </a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">                <span class="dt">start=</span><span class="st">"2013-05-01 00:00"</span>,</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">                <span class="dt">end=</span><span class="st">"2013-11-01 00:00"</span>,</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">                <span class="dt">time.int=</span><span class="dv">15</span>,</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">                <span class="dt">max.gap=</span><span class="dv">60</span>,</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">                <span class="dt">decimals=</span><span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">                <span class="dt">df=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">                </a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co"># remove obvious outliers</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">input[<span class="kw"><a href="https://rdrr.io/r/base/which.html">which</a></span>(input<span class="op">&lt;</span><span class="fl">0.2</span>)]&lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"></a></code></pre></div>
 </div>
 <div id="calculate-maximum-t-values" class="section level3">
 <h3 class="hasAnchor">
