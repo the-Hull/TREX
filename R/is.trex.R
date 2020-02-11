@@ -26,7 +26,7 @@
 #'  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
 #'  be either provided in a \code{zoo} format (df = \code{FALSE}) or \code{data.frame} (\code{df = TRUE}; default is \code{FALSE}).
 #'
-#'  @usage is.trex(data, tz = “UTC”, format = “%m/%d/%y %H:%M:%S”,
+#' @usage is.trex(data, tz = “UTC”, format = “%m/%d/%y %H:%M:%S”,
 #'   solar.time = FALSE, long.deg = 7.7459,
 #'    ref.add = FALSE, df = FALSE)
 #'
