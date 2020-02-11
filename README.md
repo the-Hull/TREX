@@ -60,7 +60,7 @@ input[which(input<0.2)]<- NA
 
 ### Calculate maximum &Delta;T-Values
 
-Here we apply three methods for calculating &Delta;T:  
+Three methods can be applied to calculate &Delta;T (or &Delta;V for voltage differences between TDM probes):  
 
 - `pd`: pre-dawn
 - `mw`: moving-window
