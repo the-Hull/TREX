@@ -147,7 +147,7 @@ a timestamp and a value column.</p></td>
 
 <p>@details The function fits a correction curve for signal dampening (e.g., due to wounding)
  according to Peters <em>et al.</em> (2018). A sensor specific function is fitted to daily maximum
- \(K\) values (considering a minimum cut-off threshold). Dependent variables
+ \(K\) values (considering a minimum cut-off threshold; see <code>k.threshold</code>). Dependent variables
  for the function include seasonality (DOY) and days since installation (t).
  First, seasonal effects are removed by correcting the \(K\) series (residuals; \(Kresid\))
  to a second-order polynomial with DOY. These residuals are then used within a

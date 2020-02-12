@@ -41,7 +41,7 @@ within the non-conductive heartwood according to Clearwater et al. (1999).
 The function requires \(\Delta T_{max}\), the probe length and the
 sapwood thickness. The correction is applied on the \(\Delta T\) (or \(\Delta V\)) values and \(K\)
 is recalculated accordingly. When an is.trex-compliant object is
-applied, the \(K\) values for each method are provided (see tdm_dt.max." />
+provided, the \(K\) values for each method are determined (see tdm_dt.max." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -116,7 +116,7 @@ within the non-conductive heartwood according to Clearwater <em>et al.</em> (199
 The function requires \(\Delta T_{max}\), the probe length and the
 sapwood thickness. The correction is applied on the \(\Delta T\) (or \(\Delta V\)) values and \(K\)
 is recalculated accordingly. When an <code><a href='is.trex.html'>is.trex</a></code>-compliant object is
-applied, the \(K\) values for each method are provided (see <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code>.</p>
+provided, the \(K\) values for each method are determined (see <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>tdm_hw.cor</span> (<span class='no'>input</span>, <span class='no'>dt.max</span>, <span class='kw'>probe.length</span> <span class='kw'>=</span> <span class='fl'>20</span>,
@@ -161,7 +161,7 @@ If individual time series are provided for <code>input</code> and <code>dt.max</
 <dl class='dl-horizontal'>
 
  <dt>input</dt><dd><p>= \(\Delta T\) input data.</p></dd>
- <dt>dt.max</dt><dd><p>data.frame of applied methods to detect \(\Delta T_{max}{\Delta Tmax}\).</p></dd>
+ <dt>dt.max</dt><dd><p>\(\Delta T_{max}{\Delta Tmax}\) input data.</p></dd>
  <dt>dtsw</dt><dd><p>Corrected \(\Delta T\) data.</p></dd>
  <dt>k.value</dt><dd><p>\(K\) values calculated according to Clearwater et al. (1999).</p></dd>
  <dt>settings</dt><dd><p>data.frame of the applied <code>probe.length</code> and <code>sapwood.thickness</code></p></dd>

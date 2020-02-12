@@ -38,10 +38,10 @@
 <meta property="og:title" content="Calculate zero-flow conditions — tdm_dt.max" />
 <meta property="og:description" content="Determine zero flow conditions (\(\Delta T_{max}\); or \(\Delta V_{max}\))
 according to four methods; namely,
- i) predawn (pd),
- ii) moving-window (mw),
- iii) double regression (dr),
- and iv) environmental-dependent (ed) as applied in Peters et al. 2018.
+ 1) predawn (pd),
+ 2) moving-window (mw),
+ 3) double regression (dr),
+ and 4) environmental-dependent (ed) as applied in Peters et al. 2018.
  The function can provide (\(\Delta T_{max}\) values and subsequent K values for all methods.
  All outputs are provided in a list where users can review the generated outputs and provided input data." />
 <meta name="twitter:card" content="summary" />
@@ -115,10 +115,10 @@ according to four methods; namely,
     <div class="ref-description">
     <p>Determine zero flow conditions (\(\Delta T_{max}\); or \(\Delta V_{max}\))
 according to four methods; namely,
- i) predawn (<code>pd</code>),
- ii) moving-window (<code>mw</code>),
- iii) double regression (<code>dr</code>),
- and iv) environmental-dependent (<code>ed</code>) as applied in Peters <em>et al.</em> 2018.
+ 1) predawn (<code>pd</code>),
+ 2) moving-window (<code>mw</code>),
+ 3) double regression (<code>dr</code>),
+ and 4) environmental-dependent (<code>ed</code>) as applied in Peters <em>et al.</em> 2018.
  The function can provide (\(\Delta T_{max}\) values and subsequent <em>K</em> values for all methods.
  All outputs are provided in a <code>list</code> where users can review the generated outputs and provided input data.</p>
     </div>
@@ -197,13 +197,13 @@ with a timestamp and a value column the solar radiation data (<em>sr</em>; e.g.,
     <tr>
       <th>sel.max</th>
       <td><p>Optional <code>zoo</code> time-series or <code>data.frame</code> with the specified \(\Delta T_{max}\).
-This is included to change predawn \(\Delta T_{max}\) values selected with the <code>ed</code> method.</p></td>
+This option is included to change predawn \(\Delta T_{max}\) values selected with the <code>ed</code> method.</p></td>
     </tr>
     <tr>
       <th>criteria</th>
       <td><p>Numeric vector, thresholds for the <code>ed</code> method.
 Thresholds should be provided for all environmental data included in the function
-(e.g. <em>sr</em> = 30; <em>vpd</em> = 0.1; coefficient of variation, <em>cv</em> = 0.5)</p></td>
+(e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(sr = 30, vpd = 0.1)</a></code>; coefficient of variation, <em>cv</em> = 0.5)</p></td>
     </tr>
     <tr>
       <th>df</th>
@@ -251,14 +251,12 @@ List items include:</p><dl class='dl-horizontal'>
  and calculates the maximum over a multi-day moving time-window (e.g., 7 days).
  The <code>dr</code> methods is applied by calculating the mean over predawn \(\Delta T_{max}\)
  with a specified multi-day window, removing all values below the mean,
- and calculating a second mean over the same multi-day window and use the values as \(\Delta T_{max}\).
+ and calculating a second mean over the same multi-day window and uses these values as \(\Delta T_{max}\).
  The <code>ed</code> method selects predawn \(\Delta T_{max}\) values based upon 2-hour averaged environmental
  conditions prior to the detected time for the predawn \(\Delta T_{max}\).
  These environmental conditions include low vapour pressure deficit (in \(kPa\)) and low solar irradiance
- (e.g., in W m-2). In addition, the coefficient of variation of predawn \(\Delta T_{max}\) are scanned for low values to
- ensure the selection of stable zero-flow conditions.
- Note that pre-dawn values from the <code>“pd”</code> method are used, meaning that the relevance
-  of solar irradiance criteria can be enhanced by increasing <code>zero.end</code> and <code>zero.star</code>.</p>
+ (e.g., in W m-2). In addition, the coefficient of variation (cv) of predawn \(\Delta T_{max}\) are scanned for low values to
+ ensure the selection of stable zero-flow conditions.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
