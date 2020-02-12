@@ -49,7 +49,7 @@ LazyData: true
 URL: https://the-hull.github.io/TREX/
 BugReports: https://github.com/the-Hull/TREX/issues
 Encoding: UTF-8
-Depends: R (>= 2.10)
+Depends: R (>= 3.5.0)
 Imports: 
     chron,
     zoo,

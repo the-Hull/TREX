@@ -9,9 +9,8 @@
 #' @usage example.data(type = "timestamp")
 #'
 #' @param type Character string, indicating whether the example data should be
-#' displayed with a timestamp (default = “timestamp”)
-#' or whether a separate day of day of year and hour column
-#' are provided (“doy”).
+#' displayed with a timestamp (default = \code{“timestamp”})
+#' or separate year, day of day (\code{“doy”}).
 #'
 #'
 #' @details This dataset can be applied for testing the functions provided in \code{TREX}.

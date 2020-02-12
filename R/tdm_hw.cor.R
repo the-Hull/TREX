@@ -6,7 +6,7 @@
 #' The function requires \eqn{\Delta T_{max}}{\Delta Tmax}, the probe length and the
 #' sapwood thickness. The correction is applied on the \eqn{\Delta T} (or \eqn{\Delta V}) values and \eqn{K}
 #' is recalculated accordingly. When an \code{\link{is.trex}}-compliant object is
-#' applied, the \eqn{K} values for each method are provided (see \code{\link{tdm_dt.max}}.
+#' provided, the \eqn{K} values for each method are determined (see \code{\link{tdm_dt.max}}.
 #'
 #' @param input A \code{\link{tdm_dt.max}} ouput or \code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
 #'  a timestamp and a value column.
@@ -40,7 +40,7 @@
 #' \describe{
 #'
 #'  \item{input}{= \eqn{\Delta T} input data.}
-#'  \item{dt.max}{data.frame of applied methods to detect \eqn{\Delta T_{max}{\Delta Tmax}}.}
+#'  \item{dt.max}{ \eqn{\Delta T_{max}{\Delta Tmax}} input data.}
 #'  \item{dtsw}{Corrected \eqn{\Delta T} data.}
 #'  \item{k.value}{\eqn{K} values calculated according to Clearwater et al. (1999).}
 #'  \item{settings}{data.frame of the applied \code{probe.length} and \code{sapwood.thickness}}

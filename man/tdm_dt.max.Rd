@@ -54,11 +54,11 @@ with the same temporal extent and time steps as the input data.}
 with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR}).}
 
 \item{sel.max}{Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\Delta T_{max}}{\Delta Tmax}.
-This is included to change predawn \eqn{\Delta T_{max}}{\Delta Tmax} values selected with the \code{ed} method.}
+This option is included to change predawn \eqn{\Delta T_{max}}{\Delta Tmax} values selected with the \code{ed} method.}
 
 \item{criteria}{Numeric vector, thresholds for the \code{ed} method.
 Thresholds should be provided for all environmental data included in the function
-(e.g. \emph{sr} = 30; \emph{vpd} = 0.1; coefficient of variation, \emph{cv} = 0.5)}
+(e.g. \code{c(sr = 30, vpd = 0.1)}; coefficient of variation, \emph{cv} = 0.5)}
 
 \item{df}{Logical; if \code{TRUE}, output is provided in a \code{data.frame}
 format with a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
@@ -91,10 +91,10 @@ List items include:
 \description{
 Determine zero flow conditions (\eqn{\Delta T_{max}}{\Delta Tmax}; or \eqn{\Delta V_{max}}{\Delta Vmax})
 according to four methods; namely,
- i) predawn (\code{pd}),
- ii) moving-window (\code{mw}),
- iii) double regression (\code{dr}),
- and iv) environmental-dependent (\code{ed}) as applied in Peters \emph{et al.} 2018.
+ 1) predawn (\code{pd}),
+ 2) moving-window (\code{mw}),
+ 3) double regression (\code{dr}),
+ and 4) environmental-dependent (\code{ed}) as applied in Peters \emph{et al.} 2018.
  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
  All outputs are provided in a \code{list} where users can review the generated outputs and provided input data.
 }
@@ -110,14 +110,12 @@ There are a variety of methods which can be applied to determine zero-flow condi
  and calculates the maximum over a multi-day moving time-window (e.g., 7 days).
  The \code{dr} methods is applied by calculating the mean over predawn \eqn{\Delta T_{max}}{\Delta Tmax}
  with a specified multi-day window, removing all values below the mean,
- and calculating a second mean over the same multi-day window and use the values as \eqn{\Delta T_{max}}{\Delta Tmax}.
+ and calculating a second mean over the same multi-day window and uses these values as \eqn{\Delta T_{max}}{\Delta Tmax}.
  The \code{ed} method selects predawn \eqn{\Delta T_{max}}{\Delta Tmax} values based upon 2-hour averaged environmental
  conditions prior to the detected time for the predawn \eqn{\Delta T_{max}}{\Delta Tmax}.
  These environmental conditions include low vapour pressure deficit (in \eqn{kPa}) and low solar irradiance
- (e.g., in W m-2). In addition, the coefficient of variation of predawn \eqn{\Delta T_{max}}{\Delta Tmax} are scanned for low values to
+ (e.g., in W m-2). In addition, the coefficient of variation (cv) of predawn \eqn{\Delta T_{max}}{\Delta Tmax} are scanned for low values to
  ensure the selection of stable zero-flow conditions.
- Note that pre-dawn values from the \code{“pd”} method are used, meaning that the relevance
-  of solar irradiance criteria can be enhanced by increasing \code{zero.end} and \code{zero.star}.
 }
 \examples{
 \dontrun{

@@ -18,7 +18,7 @@
 #'  than the start of the series.
 #' @param end Character string providing the start time for the series.
 #'  Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
-#'  Year-Month-Day Hour:Minute). Starting time should be earlier than
+#'  Year-Month-Day Hour:Minute). End time should be earlier than
 #'  the end time and not later than that of the series.
 #' @param time.int Numeric value providing the number of minutes for the
 #'  minimum time step. When \code{time.int} is smaller than the minimum time step
@@ -36,7 +36,7 @@
 #' @description Time series have different temporal resolutions.
 #' This function provides the option to standardize the minimum time step by
 #' either performing a linear interpolation when the requested time step
-#' is smaller than the minimum time step of the series or averages values when
+#' is smaller than the minimum time step of the series or average values when
 #' the requested time step is larger than the minimum time step of the series.
 #' Before this process, the entire time series is converted to a one-minute time
 #' step by applying a linear interpolation (excluding gap \eqn{periods > \code{max.gap}}).

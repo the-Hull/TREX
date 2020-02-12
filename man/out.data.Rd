@@ -55,7 +55,7 @@ to determined peak-of-the-day \eqn{G_{C}}{Gc} values and filter the daily \eqn{G
 \item{make.plot}{Logical; if \code{TRUE}, a plot is generated presenting the response of \eqn{G_{C}}{Gc} to VPD.}
 }
 \value{
-A named list of \code{data.frame} objects in the appropriate format for other functionalities,
+A named list of \code{data.frame} objects,
  containing the following items:
 
 \describe{
@@ -83,8 +83,8 @@ A named list of \code{data.frame} objects in the appropriate format for other fu
 }
 \description{
 Generates relevant outputs from the sap flux density (SFD) values.
-This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol m^{-2} s^{-1}}{mmol m-2 s-1}) and crown conductance
-(\eqn{G_{C}}{Gc}; an analogue to stomatal conductance) values in an easily exportable format.
+This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol m^{-2} s^{-1}}{mmol m-2 s-1}) and crown conductance values
+(\eqn{G_{C}}{Gc}; an analogue to stomatal conductance) in an easily exportable format.
 Additionally, the function can perform environmental filtering on \eqn{F_{d}}{Fd} and \eqn{G_{C}}{Gc} and model \eqn{G_{C}}{Gc} sensitivity to vapour pressure deficit (VPD).
 The user can choose between in- (\code{method = “env.filt”}) or excluding (\code{method = “stat”}) environmental filtering
 on the \eqn{G_{C}}{Gc} and adjust the filter threshold manually.

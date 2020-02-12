@@ -1,7 +1,7 @@
 
 #' Gap filling by linear interpolation
 #'
-#' @description Fills gaps by performing a linear interpolation between observations.
+#' @description Fills gaps by linear interpolation between observations.
 #' This function provides the option to define the minimum size under which gaps should
 #' be filled, using linear interpolation.
 #'

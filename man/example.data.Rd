@@ -8,9 +8,8 @@ example.data(type = "timestamp")
 }
 \arguments{
 \item{type}{Character string, indicating whether the example data should be
-displayed with a timestamp (default = “timestamp”)
-or whether a separate day of day of year and hour column
-are provided (“doy”).}
+displayed with a timestamp (default = \code{“timestamp”})
+or separate year, day of day (\code{“doy”}).}
 }
 \value{
 A \code{data.frame} containing TDM measurements according to a specific type.

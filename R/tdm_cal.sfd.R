@@ -61,7 +61,7 @@
 #'
 #'  \describe{
 #'    \item{input}{K values provided as input.}
-#'    \item{sfd.input}{sfd values calculated for the input according to the mean of the calibration function.}
+#'    \item{sfd.input}{\eqn{SFD} values calculated for the input according to the mean of the calibration function.}
 #'    \item{model.ens}{A \code{data.frame} providing the mean and 95\% confidence interval of the applied calibration function.}
 #'    \item{out.param}{A \code{data.frame} with the coefficients of calibration function.}
 #'  }
