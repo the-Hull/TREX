@@ -29,13 +29,13 @@
 #' @param n Numeric, specifies the number of times the bootstrap resampling procedure is repeated (default = 2000).
 #'   Keep in mind that high values increase processing time.
 #'
-#' @param zero.end Numeric, definies the end of the predawn period.
+#' @param zero.end Numeric, defines the end of the predawn period.
 #'  Values should be in minutes (e.g., predawn conditions until 8:00 = 8*60; default = 8*60).
 #'
 #' @param range.end Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
 #'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
 #'
-#' @param zero.start Numeric, definies the number of time steps for \code{zero.end} (the minimum time step of the input)
+#' @param zero.start Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
 #'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
 #'
 #' @param range.start Numeric, defines the number of time steps for \code{zero.start} (the minimum time step of the input)

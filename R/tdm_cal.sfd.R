@@ -75,8 +75,8 @@
 #'  New Phytologist 219:1283-1299 <doi: 10.1111/nph.15241>
 #'
 #'  Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
-#'  A synthesis of bias and uncertainty in sap flow methods. A
-#'  gricultural and Forest Meteorology 271:362-374 <doi: 10.1016/j.agrformet.2019.03.012>
+#'  A synthesis of bias and uncertainty in sap flow methods.
+#'  Agricultural and Forest Meteorology 271:362-374 <doi: 10.1016/j.agrformet.2019.03.012>
 #'
 #'
 #' @export

@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 
-**Please note, that `TREX` is currently under developoment.  More information will be added in due time.**
+**Please note, that `TREX` is currently under development.  More information will be added in due time.**
 
 ---
 
