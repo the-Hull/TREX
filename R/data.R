@@ -78,7 +78,7 @@
 #' @format Provides a data.frame with 4024 rows and 10 columns.
 #' \describe{
 #'   \item{Study}{Study from which the data originates (see Flo et al. 2019) (\code{character})}
-#'   \item{Method}{Heat-based sap flow measurement method (TD = Thermal Dissipation) (\code{as.character})}
+#'   \item{Method}{Heat-based sap flow measurement method (TD = Thermal Dissipation) (\code{character})}
 #'   \item{Genus}{Monitored genus (\code{character})}
 #'   \item{Species}{Monitored species (\code{character})}
 #'   \item{Calibration.material}{Description on the calibration method that was used,
@@ -95,10 +95,10 @@
 #'
 #' @references Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
 #' A synthesis of bias and uncertainty in sap flow methods.
-#' Agricultural and Forest Meteorology 271:362-374 \url{doi: 10.1016/j.agrformet.2019.03.012}
+#' Agricultural and Forest Meteorology 271:362-374. \url{doi: 10.1016/j.agrformet.2019.03.012}
 #'
 #' Granier A. 1985. Une nouvelle methode pour la measure du flux de seve brute dans le tronc des arbres.
-#' Annales des Sciences Forestieres 42:193–200 \url{doi: 10.1051/forest:19850204}
+#' Annales des Sciences Forestieres 42:193–200. \url{doi: 10.1051/forest:19850204}
 #'
 #' @name cal.data
 "cal.data"

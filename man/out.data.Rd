@@ -83,7 +83,7 @@ A named list of \code{data.frame} objects,
 }
 \description{
 Generates relevant output from the sap flux density (\eqn{SFD}) values.
-This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol m^{-2} s^{-1}}{mmol m-2 s-1}) and crown conductance values
+This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol~m^{-2}s^{-1}}{mmol m-2 s-1}) and crown conductance values
 (\eqn{G_{C}}{Gc} (Meinzer \emph{et al.} 2013, Pappas \emph{et al.} 2018, Peters \emph{et al.} 2018); an analogue to stomatal conductance) in an easily exportable format.
 Additionally, the function can perform environmental filtering on \eqn{F_{d}}{Fd} and \eqn{G_{C}}{Gc} and model \eqn{G_{C}}{Gc} sensitivity to vapour pressure deficit (\eqn{VPD}).
 The user can choose between in- (\code{method = “env.filt”}) or excluding (\code{method = “stat”}) environmental filtering

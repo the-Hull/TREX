@@ -19,9 +19,9 @@
 #'
 #' @description Tests if the structure of the input matches the requirements of \code{TREX} functions
 #'  and specifies the time zone. The input has to be presented in one of two different \code{data.frame} formats.
-#'  i) Timestamp format: including a 1) timestamp of the measurements column (\code{as.character}), and
+#'  i) Timestamp format: including a 1) timestamp of the measurements column (\code{character}), and
 #'  2) value of \eqn{\Delta}V (or \eqn{\Delta}T; [\code{as.numeric}]). ii) DOY format: including a 1) year of measurements column \code{as.integer},
-#'  2) day of the year (DOY) of measurement (\code{as.integer}), 3) hour of the measurement (\code{as.character}), and
+#'  2) day of the year (DOY) of measurement (\code{as.integer}), 3) hour of the measurement (\code{character}), and
 #'  4) value of \eqn{\Delta}V (or \eqn{\Delta}T; [\code{as.numeric}]). TREX functions are applied on time series obtained from a set of
 #'  thermal dissipation probes. This includes the option where the thermal dissipation method (TDM) is
 #'  used with only a reference and heating probe, or when including addition reference probes (see \code{ref.add}).
