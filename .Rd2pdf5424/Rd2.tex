@@ -1,0 +1,1653 @@
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `TREX'}}
+\par\bigskip{\large \today}
+\end{center}
+\begin{description}
+\raggedright{}
+\inputencoding{utf8}
+\item[Title]\AsIs{TRree sap flow EXtractor}
+\item[Version]\AsIs{0.0.0.9000}
+\item[Description]\AsIs{Performs data assimilation, processing and analyses on sap flow data obtained
+with the thermal dissipation method (TDM). The package includes functions for gap filling
+time-series data, detecting outliers, calculating data-processing uncertainties and
+generating uniform data output and visualisation. The package is designed to deal with
+large quantities of data and to apply commonly used data-processing methods. The functions
+have been validated on data collected from different tree species across
+the northern hemisphere (Peters et al. 2018 <doi: 10.1111/nph.15241>).}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[LazyData]\AsIs{true}
+\item[URL]\AsIs{}\url{https://the-hull.github.io/TREX/}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/the-Hull/TREX/issues}\AsIs{}
+\item[Encoding]\AsIs{UTF-8}
+\item[Depends]\AsIs{R (>= 3.5.0)}
+\item[Imports]\AsIs{chron,
+zoo,
+solaR,
+stats,
+graphics,
+lubridate,
+utils,
+grDevices,
+lhs,
+doParallel,
+foreach,
+tibble,
+dplyr,
+sensitivity,
+randtoolbox,
+boot,
+doSNOW,
+msm,
+parallel,
+magrittr}
+\item[RoxygenNote]\AsIs{6.1.1}
+\item[Suggests]\AsIs{shiny,
+DT,
+plotly}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{agg.data}{Aggregation of time-series data}{agg.data}
+%
+\begin{Description}\relax
+Aggregation of time-series data and start/end time selection.
+This function provides the option to select the temporal step size
+for aggregation of a single time series origination from an \code{\LinkA{is.trex}{is.trex}}-compliant object.
+Additionally, the user can define the start and end time of the series and select
+the function used for aggregation.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+agg.data(input,
+ time.agg = 60*24,
+ start = "2012-07-28 00:00",
+ end = "2012-10-29 00:00",
+ FUN = "mean",
+ unit = 60,
+ na.rm = TRUE,
+ df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant time series from \code{tdm\_cal.sfd} outputs
+(e.g., \code{X\$sfd.mw\$sfd}).
+
+\item[\code{time.agg}] Numeric, the aggregation time in minutes (default = 60).
+
+\item[\code{start}] Character string, the start time for the series. Format has
+to be provided in "UTC" (e.g. "2012-05-28 00:00" or Year-Month-Day Hour:Minute).
+Starting time should not be earlier than the start of the series.
+If not provided the entire series is considered.
+
+\item[\code{end}] character string, the end time for the series.
+Format has to be provided in "UTC" (e.g. "2012-06-28 00:50" or Year-Month-Day Hour:Minute).
+Starting time should be earlier than the end time and the end time should not exceed the
+length of the series.  If not provided the entire series is considered.
+
+\item[\code{FUN}] Quoted function name to compute the summary statistics which can be
+applied to all data subsets (see aggregate; including "sum", "mean",
+"median", "sd", "se", "min", "max").
+
+\item[\code{unit}] Numeric, the minutes in which a velocity unity is provided
+(e.g., \eqn{cm^3 cm^{-2} h^{-1} = 60}{}) for summation (\code{FUN = “sum”}; default = 60).
+
+\item[\code{na.rm}] Logical; if \code{TRUE} missing values are removed (default = \code{TRUE}).
+
+\item[\code{df}] Logical; if \code{TRUE}, output is provided in a \code{data.frame} format
+with a timestamp and a value column. If \code{FALSE}, output
+is provided as a zoo vector object (default = \code{FALSE}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Time series are often derived at variable resolutions.
+This function provides the option to aggregate (homogenize) time steps with
+standard \code{FUN} statistics. When applying this function to calculate
+summed sap flow values (e.g., \eqn{cm^3 cm^{-2} d^{-1}}{}) one needs
+to include the velocity unit, as the summation is dependent upon the minimum timestep
+of the time series (e.g., \eqn{cm^3 cm^{-2} h^{-1}}{}, \code{unit = 60}).
+\end{Details}
+%
+\begin{Value}
+A zoo object or data.frame in the appropriate format for other functionalities.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+#aggregate SFD values to mean hourly and daily sums
+
+raw   <- example.data(type="doy")
+
+input <- is.trex(raw,tz="GMT",time.format="%H:%M",
+                  solar.time=TRUE,long.deg=7.7459,ref.add=FALSE,df=FALSE)
+
+input[which(input<0.4)]<-NA
+
+k.input<-tdm_dt.max(dt.steps(input,time.int=15,
+               max.gap=180,decimals=10),methods=c("mw"))
+
+sfd.input<-tdm_cal.sfd(k.input,make.plot=FALSE,
+                  df=FALSE,wood="Coniferous")$sfd.mw$sfd
+
+# means
+output.1hmean <- agg.data(sfd.input,
+                       time.agg=60,
+                       start="2012-07-28 00:00",
+                       end="2012-08-29 00:00",
+                       FUN="mean",
+                       na.rm=TRUE,
+                       df=FALSE)
+output.6hmean <- agg.data(sfd.input,
+                         time.agg=60*6,
+                         start="2012-07-28 00:00",
+                         end="2012-08-29 00:00",
+                         FUN="mean",
+                         na.rm=TRUE,
+                         df=FALSE)
+plot(output.1hmean,col="cyan")
+lines(output.6hmean,col="black")
+
+# daily sums
+output.dsum<-agg.data(sfd.input,
+                      time.agg=60*24,
+                      start="2012-07-28 00:00",
+                      end="2012-10-29 00:00",
+                      FUN="sum",
+                      unit=60,
+                      na.rm=TRUE,
+                      df=FALSE)
+plot(output.dsum)
+points(output.dsum,pch=16)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{cal.data}{Calibration Measurements}{cal.data}
+\keyword{datasets}{cal.data}
+%
+\begin{Description}\relax
+Returns raw calibration experiment data obtained from literature,
+with \emph{K} values combined with gravimetrically determined sap flux density,
+as detailed in Flo \emph{et al.} (2019).
+The \code{data.frame} contains 22 studies with 37 different species. The data is used
+within the \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}} function to calculate sap flux density.
+Description on the genus, species, calibration material, wood porosity and diameter
+of the stem is provided in Flo \emph{et al.} (2019).
+The presented data is open for public use.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cal.data
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+Provides a data.frame with 4024 rows and 10 columns.
+\begin{description}
+
+\item[Study] Study from which the data originates (see Flo et al. 2019) (\code{character})
+\item[Method] Heat-based sap flow measurement method (TD = Thermal Dissipation) (\code{character})
+\item[Genus] Monitored genus (\code{character})
+\item[Species] Monitored species (\code{character})
+\item[Calibration.material] Description on the calibration method that was used,
+including stem segment, whole plant and whole plant without roots (\code{character})
+\item[Wood.porosity] Wood structure type of the examined species, including coniferous, diffuse-porous, ring-porous and monocots (\code{character})
+\item[Diameter] Diameter at breast height of the calibration subject (in cm) (\code{numeric})
+\item[k] Proportional difference between \eqn{\Delta T}{} and \eqn{\Delta T_{max}}{} measured
+by the thermal dissipation probes (unitless; \code{numeric})
+\item[SFD] Sap flux density measured gravimetrically (in \eqn{cm^3 cm^{-2} h^{-1}}{}; \code{numeric})
+\item[Granier] Sap flux density calculated according to Granier et al. 1985 using k
+(in \eqn{cm^3 cm^{-2} h^{-1}}{}; using \eqn{43.84 k^{1.231}}{}) (\code{numeric})
+
+\end{description}
+\end{Format}
+%
+\begin{Details}\relax
+Currently included studies are given below; individual labels (quoted) can be applied in \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}} (argument "study"):
+
+\begin{itemize}
+
+\item{} Braun and Schmid 1999
+\item{} Cabibel et al. 1991
+\item{} Cain 2009
+\item{} Chan 2015
+\item{} Fuchs et al. 2017
+\item{} Granier 1985
+\item{} Gutierrez \& Santiago 2005
+\item{} Herbst et al. 2007
+\item{} Liu et al. 2008
+\item{} Lu 2002
+\item{} Lu and Chacko 1998
+\item{} Oliveira et al. 2006
+\item{} Paudel et al. 2013
+\item{} Rubilar et al. 2016
+\item{} Schmidt-walter et al. 2014
+\item{} Sperling et al. 2012
+\item{} Sugiura et al. 2009
+\item{} Sun et al. 2012
+\item{} Vellame et al. 2009
+\item{} Hubbard et al. 2010
+\item{} Peters et al. 2017
+\item{} Steppe et al. 2010
+
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{References}\relax
+Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
+A synthesis of bias and uncertainty in sap flow methods.
+Agricultural and Forest Meteorology 271:362-374. \url{doi: 10.1016/j.agrformet.2019.03.012}
+
+Granier A. 1985. Une nouvelle methode pour la measure du flux de seve brute dans le tronc des arbres.
+Annales des Sciences Forestieres 42:193–200. \url{doi: 10.1051/forest:19850204}
+\end{References}
+\inputencoding{utf8}
+\HeaderA{dt.steps}{Determine temporal resolution}{dt.steps}
+%
+\begin{Description}\relax
+Performs minimum time step standardization,
+gap filling and start/end time selection. This function
+provides the option to select the minimum temporal step size of an
+\code{\LinkA{is.trex}{is.trex}} object. Additionally, the user can define the
+start and end time of the series and select the minimum size under
+which gaps should be filled, using linear interpolation.
+
+Time series have different temporal resolutions.
+This function provides the option to standardize the minimum time step by
+either performing a linear interpolation when the requested time step
+is smaller than the minimum time step of the series or average values when
+the requested time step is larger than the minimum time step of the series.
+Before this process, the entire time series is converted to a one-minute time
+step by applying a linear interpolation (excluding gap \eqn{periods > \code{max.gap}}{}).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+dt.steps(input, start,
+       end, time.int = 10, max.gap = 60,
+       decimals = 10, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant (output) object
+
+\item[\code{start}] Character string providing the start time for the series.
+Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
+Year-Month-Day Hour:Minute). Starting time should not be earlier
+than the start of the series.
+
+\item[\code{end}] Character string providing the start time for the series.
+Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
+Year-Month-Day Hour:Minute). End time should be earlier than
+the end time and not later than that of the series.
+
+\item[\code{time.int}] Numeric value providing the number of minutes for the
+minimum time step. When \code{time.int} is smaller than the minimum time step
+of the series, a linear interpolation is applied. If \code{time.int} is
+larger than the minimum time step of the series values are average
+(after performing a linear interpolation to obtain a one-minute resolution).
+
+\item[\code{max.gap}] Numeric value providing the maximum size of a gap in minutes,
+which can be filled by performing a linear interpolation.
+
+\item[\code{decimals}] Integer value defining the number of decimals of the output
+(default = 10).
+
+\item[\code{df}] Logical; if \code{TRUE}, output is provided in a \code{data.frame}
+format with a timestamp and a value (\eqn{\Delta T}{} or \eqn{\Delta V}{}) column.
+If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{zoo} object or \code{data.frame} in the appropriate
+format for further processing.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+input <- is.trex(example.data(type="doy"),
+           tz="GMT",time.format="%H:%M", solar.time=TRUE,
+           long.deg=7.7459,ref.add=FALSE)
+in.ts <- dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
+                   time.int=60,max.gap=120,decimals=6,df=FALSE)
+plot(in.ts)
+head(in.ts)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{example.data}{Generate example TDM input data}{example.data}
+%
+\begin{Description}\relax
+This function returns a \code{data.frame} containing standard TDM (thermal dissipation method)
+measurements provided in two different formats. The data is obtained from \code{tdm.data}
+where \eqn{\Delta V}{} measurements are given for Norway spruce (\emph{Picea abies} Karts.)
+growing in a valley in the Swiss Alps. See \code{\LinkA{tdm.data}{tdm.data}} for additional details.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+example.data(type = "timestamp")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{type}] Character string, indicating whether the example data should be
+displayed with a timestamp (default = \code{“timestamp”})
+or separate year, day of day (\code{“doy”}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+This dataset can be applied for testing the functions provided in \code{TREX}.
+\end{Details}
+%
+\begin{Value}
+A \code{data.frame} containing TDM measurements according to a specific type.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# get example data
+input_data <- example.data(type = "timestamp")
+input_data <- example.data(type = "doy")
+head(input_data)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{gap.fill}{Gap filling by linear interpolation}{gap.fill}
+%
+\begin{Description}\relax
+Fills gaps by linear interpolation between observations.
+This function provides the option to define the minimum window under which gaps should
+be filled, using linear interpolation.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+gap.fill(input, max.gap = 60, decimals = 10, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] an \code{\LinkA{is.trex}{is.trex}}-compliant object.
+
+\item[\code{max.gap}] Numeric value providing the maximum size of a gap in minutes,
+which can be filled by performing a linear interpolation.
+
+\item[\code{decimals}] Integer value defining the number of decimals of the output (default = 10).
+
+\item[\code{df}] Logical; if \code{TRUE}, output is provided in a \code{data.frame}
+format with a timestamp and a value (\eqn{\Delta T}{} or \eqn{\Delta V}{}) column.
+If \code{FALSE}, output is provided as a \code{zoo} object (default = FALSE).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{zoo} object or \code{data.frame} in the appropriate format for further processing.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# fill two hour gaps
+raw   <- example.data(type = "doy")
+input <-
+  is.trex(
+    raw,
+    tz = "GMT",
+    time.format = "%H:%M",
+    solar.time = TRUE,
+    long.deg = 7.7459,
+    ref.add = FALSE,
+    df = FALSE)
+
+# create gaps in data
+input[which(input < 0.4 | input > 0.82)] <- NA
+fill_120 <- gap.fill(
+  input = input,
+  max.gap = 120,
+  decimals = 10,
+  df = FALSE)
+fill_15 <- gap.fill(
+  input = input,
+  max.gap = 15,
+  decimals = 10,
+  df = FALSE)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{is.trex}{Testing and preparing input data}{is.trex}
+%
+\begin{Description}\relax
+Tests if the structure of the input matches the requirements of \code{TREX} functions
+and specifies the time zone. The input has to be presented in one of two different \code{data.frame} formats.
+i) Timestamp format: including a 1) timestamp of the measurements column (\code{character}), and
+2) value of \eqn{\Delta V}{} (or \eqn{\Delta T}{}; [\code{as.numeric}]). ii) DOY format: including a 1) year of measurements column \code{as.integer},
+2) day of the year (DOY) of measurement (\code{as.integer}), 3) hour of the measurement (\code{character}), and
+4) value of \eqn{\Delta V}{} (or \eqn{\Delta T}{}; [\code{as.numeric}]). TREX functions are applied on time series obtained from a set of
+thermal dissipation probes. This includes the option where the thermal dissipation method (TDM) is
+used with only a reference and heating probe, or when including addition reference probes (see \code{ref.add}).
+These reference probe measurements can be added to the DOY or timestamp format in \eqn{\Delta V}{} (or \eqn{\Delta T}{}) (\code{as.numeric})
+labelled \code{ref1}, \code{ref2}, etc. (depending on the number of reference probes). For this function the following
+column names have to be present within the \code{data.frame}: "timestamp” or "year” \& "doy” \& "hour” = indicators
+of time and "value” = TDM measurements (option "ref1”, "ref2, ..., refn = reference probes).
+After specifying the time zone (\code{tz}), one can select whether to standardize the temporal series to solar
+time (see \code{solar.time}) by providing the longitude in decimal degrees at which the measurements were
+obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
+be either provided in a \code{zoo} format (df = \code{FALSE}) or \code{data.frame} (\code{df = TRUE}; default is \code{FALSE}).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+is.trex(data, tz = 'UTC', time.format = '%m/%d/%y %H:%M:%S',
+  solar.time = TRUE, long.deg = 7.7459,
+   ref.add = FALSE, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{data}] A \code{data.frame} in either timestamp format or doy format.
+
+\item[\code{tz}] Character string, indicates the time zone in which the measurements have been recorded.
+
+\item[\code{time.format}] Character string, indicates the format of the timestamp.
+
+\item[\code{solar.time}] Logical; if \code{TRUE}, time is converted to solar time,
+depending upon the location where the measurements have been taken.
+If \code{FALSE}, the output is provided in "UTC" (default = \code{FALSE}).
+
+\item[\code{long.deg}] Numeric, longitude in decimal degrees East to perform the solar time
+conversion. Only required when \code{solar.time=TRUE}.
+
+\item[\code{ref.add}] Logical; if \code{TRUE}, additional probes provided within data
+are considered. The \eqn{\Delta T}{} values are then corrected by subtracting
+the \eqn{\Delta T}{} measured between the reference probes from the \eqn{\Delta}{}
+T measured between the heated and unheated probe (default = \code{FALSE}).
+
+\item[\code{df}] Logical; if \code{TRUE}, output is provided in a \code{data.frame} format with
+a timestamp and a value (\eqn{\Delta T}{} or \eqn{\Delta V}{}) column.
+If \code{FALSE}, output is provided as a \code{zoo} object (default = \code{FALSE}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+To prevent errors occurring in subsequent \code{TREX} functions, it is advised to run this function
+for checking the data structure and preparing it for further analyses. For the specific time zone see
+\url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{\LinkA{OlsonNames}{OlsonNames}()}.
+The format of the timestamp has to be provided according to \url{https://www.stat.berkeley.edu/~s133/dates.html}.
+For the method behind the solar time conversion, see the solar package (\url{https://cran.r-project.org/web/packages/solaR/}).
+The longitude has to be provided in positive decimal degrees for study sites East from the Greenwich meridian and negative for sites to the West.
+\end{Details}
+%
+\begin{Value}
+A zoo object or data.frame in the appropriate format for other functionalities.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+#validating and structuring example data
+raw   <- example.data(type="doy")
+input <- is.trex(raw,tz="GMT",time.format="%H:%M",
+    solar.time=TRUE,long.deg=7.7459,
+    ref.add=FALSE,df=FALSE)
+head(raw)
+str(input)
+head(input)
+plot(input)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{out.data}{Generation of TDM output}{out.data}
+%
+\begin{Description}\relax
+Generates relevant output from the sap flux density (\eqn{SFD}{}) values.
+This function provides both \eqn{F_{d}}{} (\eqn{SFD}{} expressed in \eqn{mmol~m^{-2}s^{-1}}{}) and crown conductance values
+(\eqn{G_{C}}{}; Meinzer \emph{et al.} 2013, Pappas \emph{et al.} 2018, Peters \emph{et al.} 2018); an analogue to stomatal conductance) in an easily exportable format.
+Additionally, the function can perform environmental filtering on \eqn{F_{d}}{} and \eqn{G_{C}}{} and model \eqn{G_{C}}{} sensitivity to vapour pressure deficit (\eqn{VPD}{}).
+The user can choose between in- (\code{method = “env.filt”}) or excluding (\code{method = “stat”}) environmental filtering
+on the \eqn{G_{C}}{} and adjust the filter threshold manually.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+out.data(input, vpd.input, sr.input, prec.input, peak.hours = c(10:14),
+  low.sr = 150, peak.sr = 300, vpd.cutoff = 0.5, prec.lim = 1,
+  method = "env.filt", max.quant = 1, make.plot = TRUE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant time series from \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}} outputs
+(e.g., \code{X\$sfd.mw\$sfd})
+
+\item[\code{vpd.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object an individual series of \eqn{VPD}{} in \eqn{kPa}{} (see \code{\LinkA{vpd}{vpd}}).
+The extent and temporal resolution should be equal to input.
+Use \code{\LinkA{dt.steps}{dt.steps}} to correct if needed.
+
+\item[\code{sr.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object of an individual series of solar irradiance
+(e.g. either PAR or global radiation; see \code{\LinkA{sr}{sr}}).
+The extent and temporal resolution should be equal to input. Use \code{\LinkA{dt.steps}{dt.steps}} to correct if needed.
+This data is only needed when applying the \code{“env.filt”} method.
+
+\item[\code{prec.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object of daily precipitation in \eqn{mm~d^{-1}}{} (see \code{\LinkA{preci}{preci}}).
+The extent should be equal to input with a daily temporal resolution.
+Use \code{\LinkA{dt.steps}{dt.steps}} to correct if needed.
+This data is only needed when applying the \code{“env.filt”} method.
+
+\item[\code{peak.hours}] Numeric vector with hours which should be considered as peak-of-the-day hours
+(default = \code{c(10:14)}).
+This variable is only needed when the \code{“stat”} method is selected.
+
+\item[\code{low.sr}] Numeric threshold value in the unit of the \code{sr.input} time-series (e.g., \eqn{W~m^{-2}}{})
+to exclude cloudy days which impact \eqn{G_{C}}{} (default = 150  \eqn{W~m^{-2}}{}).
+This variable is only needed when the \code{“env.filt”} method is selected.
+
+\item[\code{peak.sr}] Numeric threshold value in the unit of the sr.input time-series (e.g.,  \eqn{W~m^{-2}}{})
+to exclude hours which are not considered as peak-of-the-day hours (default = 300  \eqn{W~m^{-2}}{}).
+This variable is only needed when the “\code{env.filt”} method is selected.
+
+\item[\code{vpd.cutoff}] Numeric threshold value in \eqn{kPa}{} for peak-of-the-day mean \eqn{VPD}{} to eliminate unrealistic
+and extremely high values of \eqn{G_{C}}{} due to low \eqn{VPD}{} values or high values of \eqn{G_{C}}{} (default = 0.5 \eqn{kPa}{}).
+
+\item[\code{prec.lim}] Numeric threshold value in \eqn{mm~d^{-1}}{}  for daily precipitation to remove rainy days (default = 1 mm d-1).
+This variable is only needed when \code{“env.filt”} method is selected.
+
+\item[\code{method}] Character string indicating whether precipitation and solar irradiance data should be used
+to determined peak-of-the-day \eqn{G_{C}}{} values and filter the daily \eqn{G_{C}}{} values (“env.filt”)
+or not (“stat”; default). When \code{“env.filt”} is selected, \code{input}, \code{vpd.input}, \code{sr.input}, \code{prec.input},
+\code{peak.sr}, \code{low.sr}, \code{vpd.cutoff} and \code{prec.lim} have to be provided.
+When \code{“stat”} is selected only \code{input}, \code{vpd.input} and \code{peak.hours}.
+
+\item[\code{max.quant}] Numeric, defining the quantile of the \eqn{G_{C}}{} data which should be considered as GC.max (default = 1).
+
+\item[\code{make.plot}] Logical; if \code{TRUE}, a plot is generated presenting the response of \eqn{G_{C}}{} to \eqn{VPD}{}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Various relevant outputs can be derived from the \eqn{SFD}{} data.
+This function provides the option to recalculate \eqn{SFD}{} to \eqn{F_{d}}{} (expressed in mmol m-2 s-1)
+and crown conductance (according to Pappas \emph{et al.} 2018).
+\eqn{G_{C}}{} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{} (in kPa), assuming that
+i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and
+ii) that the canopy is well coupled to the atmosphere. In order to reduce the effect of stem hydraulic capacitance,
+peak-of-the-day \eqn{G_{C}}{} are solely considered for calculating daily average \eqn{G_{C}}{}.
+Peak-of-the-day conditions are defined by \code{peak.hours} or \code{peak.sr}. Moreover, to analyse the relationship between \eqn{G_{C}}{}
+and environmental measurements (e.g., \eqn{VPD}{}), the daily mean peak-of-the-day \eqn{G_{C}}{} values can be restricted to:
+i) non-cloudy days (see \code{low.sr}), to reduce the impact of low irradiance on \eqn{G_{C}}{},
+ii) non-rainy days (see \code{prec.lim}), as wet leaves are not well coupled to the atmosphere, and
+iii) daily mean peak-of-the-day \eqn{G_{C}}{} great then a threshold (see \code{vpd.cutoff}),
+to eliminate unrealistically high \eqn{G_{C}}{} values due to low \eqn{F_{d}}{} or \eqn{VPD}{} values (when method = \code{“env.filt”}).
+Moreover, the sensitivity of the daily mean peak-of-the-day \eqn{G_{C}}{} to \eqn{VPD}{} is modelled by fitting the following model:
+
+\deqn{G_{C} = \alpha + \beta VPD^{-0.5}}{}
+
+Besides using the raw daily mean peak-of-the-day \eqn{G_{C}}{} values, the function also applies
+a normalization where daily mean peak-of-the-day \eqn{G_{C}}{} is standardized to the maximum conductance (GC.max; see \code{max.quant}).
+\end{Details}
+%
+\begin{Value}
+A named list of \code{data.frame} objects,
+containing the following items:
+
+\begin{description}
+
+\item[raw] A \code{data.frame} containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
+(e.g., “2012-01-01 00:00:00”), year of the data [,“year”], day of year [,“doy”], input solar radiance data [,“sr”],
+daily average radiance data [,“sr”], input vapour pressure deficit data [,“vpd”], isolated peak-of-the-day vapour pressure
+deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in mmol m-2 s-1 [,“fd”],
+crown conductance expressed in \eqn{mmol~m^{-2}~s^{-1}~kPa^{-1}}{} [,“gc”], and the filtered crown conductance [,“gc.filt”]
+
+\item[peak.mean] A \code{data.frame} containing the daily mean crown conductance values.
+Columns include the timestamp [,“timestamp”] (e.g., “2012-01-01”), peak-of-the-day vapour pressure deficit [,“vpd.filt”],
+the filtered crown conductance \eqn{mmol~m^{-2}~s^{-1}~kPa^{-1}}{} [,“gc.filt”],
+and the normalized crown conductance according
+to the maximum crown conductance [,“gc.norm”].
+
+\item[sum.mod] A model summary object (see \code{\LinkA{summary}{summary}()})
+of the model between \eqn{VPD}{} and \eqn{G_{C}}{}.
+
+
+\item[sum.mod.norm] A model summary object (see \code{\LinkA{summary}{summary}()})
+of the model between \eqn{VPD}{} and \eqn{G_{C}}{}/\eqn{GC.max}{}.
+
+
+
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}\relax
+Meinzer, F. C., D. R. Woodruff, D. M. Eissenstat,
+H. S. Lin, T. S. Adams, and K. A. McCulloh. 2013. Above-and belowground controls on water use by
+trees of different wood types in an eastern US deciduous forest.
+Tree Physiology, 33(4):345–356. \url{doi:10.1093/treephys/tpt012}.
+
+Pappas, C. et al. 2018. Boreal tree hydrodynamics: asynchronous, diverging, yet complementary.
+Tree Physiololgy. 38(7):953–964. \url{doi:10.1093/treephys/tpy043}.
+
+Peters, R. L., M. Speich, C. Pappas, A. Kahmen, G. Arx, E. Graf Pannatier,
+K. Steppe, K. Treydte, A. Stritih, and P. Fonti. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature
+alpine conifers, Plant, Cell \& Environment. 42(5):1674-1689. \url{doi:10.1111/pce.13500}.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+#Gc response function
+#Gc response function
+raw   <- is.trex(example.data(type="doy"), tz="GMT",
+                 time.format="%H:%M", solar.time=TRUE,
+                 long.deg=7.7459, ref.add=FALSE)
+
+input <- dt.steps(input=raw, start="2013-05-01 00:00", end="2013-11-01 00:00",
+                   time.int=15, max.gap=60, decimals=10, df=FALSE)
+
+input[which(input<0.2)]<- NA
+input <- tdm_dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
+                 max.days=10, df=FALSE)
+
+output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+
+input<- output.data$sfd.dr$sfd
+
+output<- out.data(input=input, vpd.input=vpd, sr.input=sr, prec.input=preci,
+                  low.sr = 150, peak.sr=300, vpd.cutoff= 0.5, prec.lim=1,
+                  method="env.filt", max.quant=0.99, make.plot=TRUE)
+head(output)
+
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{outlier}{Data cleaning and outlier detection}{outlier}
+%
+\begin{Description}\relax
+This function launches a Shiny application that
+(1) visualizes raw and outlier-free time series interactively
+(using plotly),
+(2) highlights automatically detected outliers,
+(3) allows the user to revise the automatically detected outliers
+and manually include data points, and
+(4) exports the original data and the outlier-free time series in
+an \code{\LinkA{is.trex}{is.trex}}-compliant object that can be further processed.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+outlier()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+Once the application is launched,
+the user can load an \code{.RData} file where a \code{data.frame}
+with the timestamp and sensor data are stored.
+The timestamp in this \code{data.frame} should be of class \code{Date}.
+Many columns can be included (corresponding, for example, to different sensors)
+and the user can select through the application the x and y axes of the interactive time series plots.
+In addition, the user can provide the units of the imported data
+(e.g., degrees \eqn{C}{} or \eqn{mV}{} for \eqn{\Delta T}{} or \eqn{\Delta V}{}, respectively).
+A parameter (alpha) for automatic outlier detection can be supplied.
+More specifically, the automatic identification of outliers is based on a
+two-step procedure:
+i) the Tukey’s method (Tukey, 1977) is applied to detect statistical outliers
+as values falling outside the range
+\eqn{[q_{0.25} - alpha * IQR, q_{0.75} + alpha * IQR]}{},
+where \eqn{IQR}{} is the interquartile range
+(\eqn{q_{0.75} - q_{0.25}}{})
+with \eqn{q_{0.25}}{} denoting the 25\% lower quartile and \eqn{q_{0.75}}{} the
+75\% upper quartile, and alpha is a user-defined parameter
+(default value \code{alpha = 3};
+although visual inspection through the interactive plots allows for adjusting
+alpha and optimizing the automatic detection of outliers),
+and ii) the first difference (or lag-1 differences) of the raw data are calculated
+and data points with lag-1 differences greater
+than the mean of the raw input time series, are excluded.
+
+The function does not return a value, but allows the user
+to write the raw and outlier-free data in a \code{.RData} file to disk, for
+subsequent import via \code{load()}.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# find example file path
+system.file("exdata", "example.RData", package = "TREX", mustWork = TRUE)
+# either copy-paste this into the navigation bar of the file selection window
+# or navigate here manually for selection
+
+# launch shiny application
+outlier()
+
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{preci}{Daily precipitation (raw)}{preci}
+\keyword{datasets}{preci}
+%
+\begin{Description}\relax
+Returns an example dataset of daily precipitation data in \eqn{mm~d^{-1}}{}
+from 2012-2015 originating from weather stations surrounding the Loetschental in the Swiss Alps.
+The data was obtained from the nine nearest weather stations
+(6‐to 43‐km distance to the site, including Adelboden, Blatten, Grächen, Montana, Jungfraujoch,
+Sion, Ulrichen, Visp, and Zermatt; Federal Office of Meteorology and Climatology MeteoSwiss).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+preci
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+Provides an \code{\LinkA{is.trex}{is.trex}}-compliant object with 1415 rows and 1 column.
+
+\begin{description}
+
+\item[index] Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})
+\item[value] Daily precipitation (mm d-1) from local weather stations (\code{numeric})
+
+\end{description}
+\end{Format}
+%
+\begin{References}\relax
+Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+Plant, Cell \& Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
+\end{References}
+\inputencoding{utf8}
+\HeaderA{sr}{Solar radiation measurements (raw)}{sr}
+\keyword{datasets}{sr}
+%
+\begin{Description}\relax
+Returns an example dataset of solar irradiance monitoring from 2012-2015 at 1300 m a.s.l. in the Swiss Alps
+(Loetschental, Switzerland; Peters et al. 2019). Solar irradiance (\eqn{W m^{-2}}{}) was measured with
+15‐min resolution using a microstation (Onset,USA, H21-002 Micro Station)
+and pyranometer (Onset, USA, S‐LIB‐M003) positioned in an open field.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+sr
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+Provides an \code{\LinkA{is.trex}{is.trex}}-compliant object with 135840 rows and 1 column.
+
+\begin{description}
+
+\item[index] Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})
+\item[value] W m-2 values obtained from the site-specific monitoring  (\code{numeric})
+
+\end{description}
+\end{Format}
+%
+\begin{References}\relax
+Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+Plant, Cell \& Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
+\end{References}
+\inputencoding{utf8}
+\HeaderA{tdm.data}{Sap flow measurements}{tdm.data}
+\keyword{datasets}{tdm.data}
+%
+\begin{Description}\relax
+Returns an example thermal dissipation probe (TDM)
+dataset with time stamp (n = 1) and doy-columns (n = 3), a value and a species column.
+TDM \eqn{\Delta V}{} measurements are provided at a 15-minute resolution from 2012-2015 from
+a Norway spruce (\emph{Picea abies} (L.) Karts.) growing at 1300 m a.s.l.
+in the Swiss Alps (Loetschental, Switzerland; see Peters \emph{et al.} 2019).
+The presented data is open for public use.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdm.data
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+Provides a data.frame with 11,6466  rows and 6 columns.
+\begin{description}
+
+\item[timestamp ] Date and time of the measurements (\code{character})
+\item[year] Year of measurements (\code{integer})
+\item[doy] Day of year (\code{integer})
+\item[hour] Hour of the measurements (\code{character})
+\item[value] \eqn{\Delta V}{} values obtained from TDM measurements (\code{numeric})
+\item[species] Monitored species (\code{character})
+
+\end{description}
+\end{Format}
+\inputencoding{utf8}
+\HeaderA{tdm\_cal.sfd}{Calculate sap flux density}{tdm.Rul.cal.sfd}
+%
+\begin{Description}\relax
+The acquired \eqn{K}{} values are calculated to sap flux density
+(\eqn{SFD}{} in \eqn{cm^3 cm^{-2} h^{-1}}{}). As many calibration curves exist
+(see Peters \emph{et al}. 2018; Flo \emph{et al.} 2019), the function provides the option to
+calculate \eqn{SFD}{} using calibration experiment data from the meta-analyses by
+Flo \emph{et al.} (2019; see \code{\LinkA{cal.data}{cal.data}}). Additionally,
+raw calibration data can be provided or parameters \eqn{a}{} and \eqn{b}{}
+for a specific calibration function (\eqn{aK^b}{}) can be provided.
+The algorithm determines for each calibration experiment dataset
+the calibration curve (\eqn{SFD = aK^b}{}) and calculates \eqn{SFD}{} from
+either the mean of all curves and the 95\% confidence interval
+of either all curves, or bootstrapped resampled uncertainty around
+the raw calibration experiment data when one calibration dataset is selected.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdm_cal.sfd(input, genus, species, study, wood, calib, a, b, decimals,
+  make.plot = TRUE, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} vector,
+\code{data.frame}) of \eqn{K}{} values containing a timestamp and a value column.
+
+\item[\code{genus}] Optional, character vector specifying genus-specific calibration
+data that should be used (e.g., \code{c("Picea", "Larix")}). See \code{\LinkA{cal.data}{cal.data}}
+for the specific labels (default = Use all).
+
+\item[\code{species}] Optional, character vector of species specific calibration data that should be used,
+e.g. \code{c("Picea abies")}. See \code{\LinkA{cal.data}{cal.data}} for the specific labels (default = Use all).
+
+\item[\code{study}] Optional character vector of study specific calibration data that
+should be used (e.g., \code{c("Peters et al. 2018"}) ). See \code{\LinkA{cal.data}{cal.data}}
+for the specific labels (default= Use all).
+
+\item[\code{wood}] Optional, character vector of wood type specific calibration
+data that should be used (one of \code{c("Diffuse-porous", "Ring-porous", "Coniferous")}).
+See \code{\LinkA{cal.data}{cal.data}} for the specific labels (default= Use all).
+
+\item[\code{calib}] Optional \code{data.frame} containing raw calibration experiment values.
+Required columns include: \code{[ ,1]} \eqn{K = K}{} values measured with the probe (numeric),
+and [,2] \eqn{SFD =}{} Gravimetrically measured sap flux density (\eqn{cm^3 cm^{-2} h^{-1}}{})) (numeric).
+If not provided, literature values are used.
+
+\item[\code{a}] Optional, numeric value for the calibration curve (\eqn{SFD = aK^b}{}).
+No uncertainty can be calculated when this value is provided.
+
+\item[\code{b}] Optional, numeric value for the calibration curve (\eqn{SFD = aK^b}{}).
+No uncertainty can be calculated when this value is provided.
+
+\item[\code{decimals}] Integer, the number of decimals of the output (default = 10).
+
+\item[\code{make.plot}] Logical; if \code{TRUE}, a plot is generated showing
+the calibration curve with \eqn{K vs sap flux density}{} (\eqn{cm^3 cm^{-2} h^{-1}}{})).
+
+\item[\code{df}] Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
+with a timestamp and a value column. If \code{FALSE}, output
+is provided as a \code{zoo} vector object (default = FALSE).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The function fits a calibration curve (\eqn{SFD = aK^b}{})
+through all selected raw calibration data. If multiple studies are provided,
+multiple calibration curves are fitted. In case a single calibration dataset
+is provided a bootstrap resampling is applied (n = 100) to determined the
+mean and 95\% confidence interval of the fit. When multiple calibration curves
+are requested the mean and 95\% confidence interval is determined on the fitted functions.
+The mean and confidence interval are used to calculate \eqn{SFD}{} from \eqn{K}{}.
+\end{Details}
+%
+\begin{Value}
+A list containing either a \code{zoo} object or \code{data.frame} in the appropriate format
+for other functionalities (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} output specifications), as well as
+all \eqn{SFD}{} values for each method are provided and added to the
+\code{\LinkA{is.trex}{is.trex}}-compliant object (e.g., [['sfd.pd']], [['sfd.mw']])
+if this format was provided as an input, and,
+finally, a \code{data.frame} is provided with the mean and 95\% confidence
+interval of the applied calibration functions (see [['model.ens']]).
+If an individual time series is provided for input with \eqn{K}{} values an alternative output is provided:
+
+\begin{description}
+
+\item[input] K values provided as input.
+\item[sfd.input] \eqn{SFD}{} values calculated for the input according to the mean of the calibration function.
+\item[model.ens] A \code{data.frame} providing the mean and 95\% confidence interval of the applied calibration function.
+\item[out.param] A \code{data.frame} with the coefficients of calibration function.
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}\relax
+Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V, Prendin AL, Schneider L, Baltzer JL,
+Baron-Gafford GA, Dietrich L, Heinrich I, Minor RL, Sonnentag O, Matheny AM, Wightman MG, Steppe K. 2018.
+Quantification of uncertainties in conifer sap flow measured with the thermal dissipation method.
+New Phytologist 219:1283-1299 <doi: 10.1111/nph.15241>
+
+Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
+A synthesis of bias and uncertainty in sap flow methods.
+Agricultural and Forest Meteorology 271:362-374 \url{doi: 10.1016/j.agrformet.2019.03.012}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+#calculating sap flux density
+## Not run: 
+raw   <-is.trex(example.data(type="doy"),
+    tz="GMT",time.format="%H:%M",
+    solar.time=TRUE,long.deg=7.7459,
+    ref.add=FALSE)
+
+input <-dt.steps(input=raw,start="2014-05-08 00:00",
+end="2014-07-25 00:50",
+     time.int=15,max.gap=60,decimals=10,df=FALSE)
+
+input[which(input<0.2)]<-NA
+
+input <-tdm_dt.max(input, methods=c("pd","mw","dr"),
+     det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+
+output.data<-tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,
+wood="Coniferous")
+
+
+str(output.data)
+plot(output.data$sfd.pd$sfd,ylim=c(0,10))
+lines(output.data$sfd.pd$q025,lty=1,col="grey")
+lines(output.data$sfd.pd$q975,lty=1,col="grey")
+lines(output.data$sfd.pd$sfd)
+
+output.data$out.param
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tdm\_damp}{Signal dampening correction}{tdm.Rul.damp}
+%
+\begin{Description}\relax
+When long-term \eqn{K}{} time series (\textasciitilde{}3 years) are provided, one can perform
+a signal dampening correction (when sensors were not re-installed;
+see Peters \emph{et al.} 2018). Applying the signal dampening
+correction requires  visually inspecting the correction curve
+(see \code{make.plot = TRUE}). The correction curve is constructed with
+the day since installation and the day of year (DOY) to account for seasonal changes in \eqn{K}{}
+values. The function returns corrected \eqn{K}{} values and the applied correction curve.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdm_damp(input, k.threshold = 0.05, make.plot = TRUE, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} vector, \code{data.frame}) of \eqn{K}{} values containing
+a timestamp and a value column.
+
+\item[\code{k.threshold}] Numeric, the threshold below which daily maximum \eqn{K}{} values should not be considered (default = 0.05).
+
+\item[\code{make.plot}] Logical; if \code{TRUE}, a plot is generated presenting the correction curve and the \eqn{K}{} time series.
+
+\item[\code{df}] Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
+with a timestamp and a value column. If \code{FALSE}, output
+is provided as a \code{zoo} vector object (default = FALSE).
+
+
+@details The function fits a correction curve for signal dampening (e.g., due to wounding)
+according to Peters \emph{et al.} (2018). A sensor specific function is fitted to daily maximum
+\eqn{K}{} values (considering a minimum cut-off threshold; see \code{k.threshold}). Dependent variables
+for the function include seasonality (DOY) and days since installation (\eqn{t}{}).
+First, seasonal effects are removed by correcting the \eqn{K}{} series (residuals; \eqn{Kresid}{})
+to a second-order polynomial with DOY. These residuals are then used within a
+non-linear model:
+\deqn{K_{resid} = (a + b * t)/(1 + c * t + d * t^{2})}{}
+
+The fitted parameters for \eqn{t}{} (with \eqn{a}{}, \eqn{b}{}, \eqn{c}{} and \eqn{d}{}) are used to
+correct \eqn{K}{} and scale it to the maximum within the first year of installation.
+\strong{Note, that the stability of the fit has to be visually inspected before using the output data}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{zoo} object or \code{data.frame} in the appropriate
+format for other functionalities.
+See \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} output specifications.
+All \eqn{K}{} values for each method are provided when an \code{\LinkA{is.trex}{is.trex}}-object was used as input.
+If an individual time series was provided for input with \eqn{K}{} values an alternative output is given:
+
+\begin{description}
+
+\item[k.cor] corrected \eqn{K}{} values according to the correction curve.
+\item[k] \eqn{K}{} values provided as input.
+\item[damp.mod] \code{data.frame} with the coefficients of the correction curve.
+
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}\relax
+Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V,
+Prendin AL, Schneider L, Baltzer JL, Baron-Gafford GA, Dietrich L, Heinrich I,
+Minor RL, Sonnentag O, Matheny AM, Wightman MG, Steppe K. 2018.
+Quantification of uncertainties in conifer sap flow measured with the thermal
+dissipation method. New Phytologist 219:1283-1299 \url{doi: 10.1111/nph.15241}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+ #correct for dampening of the signal
+raw   <-
+  is.trex(
+    example.data(type = "doy"),
+    tz = "GMT",
+    time.format = "%H:%M",
+    solar.time = TRUE,
+    long.deg = 7.7459,
+    ref.add = FALSE
+  )
+input <-
+  dt.steps(
+    input = raw,
+    time.int = 15,
+    max.gap = 60,
+    decimals = 6,
+    df = FALSE
+  )
+input[which(input < 0.2)] <- NA
+input <-
+  tdm_dt.max(
+    input,
+    methods = c("pd", "mw", "dr"),
+    det.pd = TRUE,
+    interpolate = FALSE,
+    max.days = 10,
+    df = FALSE
+  )
+output.data <- tdm_damp(input,
+                    k.threshold = 0.05,
+                    make.plot = TRUE,
+                    df = FALSE)
+str(output.data)
+head(output.data[["k.dr"]])
+plot(output.data[["k.dr"]], ylab = expression(italic("K")))
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tdm\_dt.max}{Calculate zero-flow conditions}{tdm.Rul.dt.max}
+%
+\begin{Description}\relax
+Determine zero flow conditions (\eqn{\Delta T_{max}}{}; or \eqn{\Delta V_{max}}{})
+according to four methods; namely,
+1) predawn (\code{pd}),
+2) moving-window (\code{mw}),
+3) double regression (\code{dr}),
+and 4) environmental-dependent (\code{ed}) as applied in Peters \emph{et al.} 2018.
+The function can provide (\eqn{\Delta T_{max}}{} values and subsequent \emph{K} values for all methods.
+All outputs are provided in a \code{list} including the input data and calculated outputs.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdm_dt.max(input, methods = c("pd","mw","dr"),
+zero.end = 8*60,
+zero.start =  1*60,
+interpolate = FALSE, det.pd = TRUE,
+max.days = 7,
+ed.window = 2*60,
+vpd.input,
+sr.input,
+sel.max,
+criteria = c(sr = 30, vpd = 0.1, cv = 0.5),
+df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object of \eqn{K}{} values containing
+a timestamp and a value column.
+
+\item[\code{methods}] Character vector of the requested \eqn{\Delta T_{max}}{} methods.
+Options include \code{“pd”} (predawn), \code{“mw”} (moving-window), \code{“dr”} (double regression),
+and \code{“ed”} (environmental-dependent; default= \code{c(“pd”, “mw”, “dr”)}).
+
+\item[\code{zero.end}] Numeric, optionally defines the end of the predawn period.
+Values should be in minutes (e.g. predawn conditions until 08:00 = 8 * 60).
+When not provided, the algorithm will automatically analyse the cyclic behaviour
+of the data and define the day length.
+
+\item[\code{zero.start}] Numeric, optionally defines the beginning of the predawn period.
+Values should be in minutes (e.g., 01:00 = 1*60).
+
+\item[\code{interpolate}] Logical: if \code{TRUE}, detected \eqn{\Delta T_{max}}{} values are linearly
+interpolated. If \code{FALSE}, constant \eqn{\Delta T_{max}}{} values will be selected daily
+(default = \code{FALSE}).
+
+\item[\code{det.pd}] Logical; if \code{TRUE} and no \code{zero.end} and \code{zero.start} values are provided,
+predawn \eqn{\Delta T_{max}}{} will be determined based on cyclic behaviour of the entire
+time-series (default = \code{TRUE}).
+
+\item[\code{max.days}] Numeric, defines the number of days which the \code{mw} and \code{dr}
+methods will consider for their moving windows.
+
+\item[\code{ed.window}] Numeric, defines the length of the period considered for assessing the
+environmental conditions and stable \eqn{\Delta T_{max}}{} values.
+
+\item[\code{vpd.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
+with a timestamp and a value column containing the vapour pressure deficit (\emph{vpd}; in kPa)
+with the same temporal extent and time steps as the input data.
+
+\item[\code{sr.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} time-series or \code{data.frame})
+with a timestamp and a value column the solar radiation data (\emph{sr}; e.g., global radiation or \emph{PAR}).
+
+\item[\code{sel.max}] Optional \code{zoo} time-series or \code{data.frame} with the specified \eqn{\Delta T_{max}}{}.
+This option is included to change predawn \eqn{\Delta T_{max}}{} values selected with the \code{ed} method.
+
+\item[\code{criteria}] Numeric vector, thresholds for the \code{ed} method.
+Thresholds should be provided for all environmental data included in the function
+(e.g. \code{c(sr = 30, vpd = 0.1)}; coefficient of variation, \emph{cv} = 0.5)
+
+\item[\code{df}] Logical; if \code{TRUE}, output is provided in a \code{data.frame}
+format with a timestamp and a value (\eqn{\Delta T}{} or \eqn{\Delta V}{}) column.
+If \code{FALSE}, output is provided as a \code{zoo} object (default = \code{FALSE}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+There are a variety of methods which can be applied to determine zero-flow conditions.
+Zero-flow conditions are required to calculate \eqn{K = (\Delta T_{max} - \Delta T) / \Delta T}{}.
+A detailed description on the methods is provided by Peters \emph{et al.} (2018).
+In short, the \code{pd} method entails the selection of daily maxima occurring prior to sunrise.
+This method assumes that during each night zero-flow conditions are obtained.
+The algorithm either requires specific times within which it searches for a maximum,
+or it analyses the cyclic pattern within the data and defines this time window.
+The \code{mw} method uses these predawn \eqn{\Delta T_{max}}{} values
+and calculates the maximum over a multi-day moving time-window (e.g., 7 days).
+The \code{dr} methods is applied by calculating the mean over predawn \eqn{\Delta T_{max}}{}
+with a specified multi-day window, removing all values below the mean,
+and calculating a second mean over the same multi-day window and uses these values as \eqn{\Delta T_{max}}{}.
+The \code{ed} method selects predawn \eqn{\Delta T_{max}}{} values based upon 2-hour averaged environmental
+conditions prior to the detected time for the predawn \eqn{\Delta T_{max}}{}.
+These environmental conditions include low vapour pressure deficit (in \eqn{kPa}{}) and low solar irradiance
+(e.g., in W m-2). In addition, the coefficient of variation (cv) of predawn \eqn{\Delta T_{max}}{} are scanned for low values to
+ensure the selection of stable zero-flow conditions.
+\end{Details}
+%
+\begin{Value}
+A named \code{list} of \code{zoo} time series or \code{data.frame}
+objects in the appropriate format for further processing.
+List items include:
+\begin{description}
+
+\item[max.pd] \eqn{\Delta T_{max}}{} time series as determined by the \code{pd} method.
+\item[max.mw] \eqn{\Delta T_{max}}{} time series as determined by the \code{mw} method.
+\item[max.dr] \eqn{\Delta T_{max}}{} time series as determined by the \code{dr} method.
+\item[max.ed] \eqn{\Delta T_{max}}{} time series as determined by the \code{ed} method.
+\item[daily\_max.pd] daily predawn \eqn{\Delta T_{max}}{} as determined by \code{pd}.
+\item[daily\_max.mw] daily predawn \eqn{\Delta T_{max}}{} as determined by \code{mw}.
+\item[daily\_max.dr] daily predawn \eqn{\Delta T_{max}}{} as determined by \code{dr}.
+\item[daily\_max.ed] daily predawn \eqn{\Delta T_{max}}{} as determined by \code{ed}.
+\item[all.pd] exact predawn \eqn{\Delta T_{max}}{} values detected with \code{pd}.
+\item[all.ed] exact predawn \eqn{\Delta T_{max}}{} values detected with \code{ed}.
+\item[input] \eqn{\Delta T}{} input data.
+\item[ed.criteria] \code{data.frame} of the applied environmental and variability criteria used within \code{ed}.
+\item[methods] \code{data.frame} of applied methods to detect \eqn{\Delta T_{max}}{}.
+\item[k.pd] \eqn{K}{} values calculated by using the \code{pd} method.
+\item[k.mw] \eqn{K}{} values calculated by using the \code{mw} method.
+\item[k.dr] \eqn{K}{} values calculated by using the \code{dr} method.
+\item[k.ed] \eqn{K}{} values calculated by using the \code{ed} method.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+#perform Delta Tmax calculations
+raw <- is.trex(example.data(type = "doy"),
+     tz = "GMT", time.format = "%H:%M", solar.time = TRUE,
+     long.deg = 7.7459, ref.add = FALSE)
+input <- dt.steps(input = raw, start = "2014-05-08 00:00",
+         end = "2014-07-25 00:50", time.int = 15, max.gap = 60,
+         decimals = 6, df = FALSE)
+input[which(input<0.2)]<- NA
+output.max <- tdm_dt.max(input, methods = c("pd", "mw", "dr"),
+                 det.pd = TRUE, interpolate = FALSE,
+                 max.days = 10, df = FALSE)
+
+str(output.max)
+
+plot(output.max$input, ylab = expression(Delta*italic("V")))
+
+lines(output.max$max.pd, col = "green")
+lines(output.max$max.mw, col = "blue")
+lines(output.max$max.dr, col = "orange")
+
+points(output.max$all.pd, col = "green", pch = 16)
+
+legend("bottomright", c("raw", "max.pd", "max.mw", "max.dr"),
+        lty = 1, col = c("black", "green", "blue", "orange") )
+
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tdm\_hw.cor}{Heartwood correction}{tdm.Rul.hw.cor}
+%
+\begin{Description}\relax
+The function corrects for the proportion of the probe that is installed
+within the non-conductive heartwood according to Clearwater \emph{et al.} (1999).
+The function requires \eqn{\Delta T_{max}}{}, the probe length and the
+sapwood thickness. The correction is applied on the \eqn{\Delta T}{} (or \eqn{\Delta V}{}) values and \eqn{K}{}
+is recalculated accordingly. When an \code{\LinkA{is.trex}{is.trex}}-compliant object is
+provided, the \eqn{K}{} values for each method are determined (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdm_hw.cor (input, dt.max, probe.length = 20,
+            sapwood.thickness = 18, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] A \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} ouput or \code{\LinkA{is.trex}{is.trex}}-compliant object of \eqn{\Delta T }{} (or \eqn{\Delta V}{}) values containing
+a timestamp and a value column.
+
+\item[\code{dt.max}] Optional \code{zoo} object or \code{data.frame} (columns = “timestamp” or “value”)
+containing the \eqn{\Delta T_{max}}{} when no \code{\LinkA{is.trex}{is.trex}}-compliant object is provided.
+
+\item[\code{probe.length}] Numeric, the length of the TDM probes in mm.
+
+\item[\code{sapwood.thickness}] Numeric, the sapwood thickness in mm.
+
+\item[\code{df}] Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
+with a timestamp and a value column. If \code{FALSE}, output
+is provided as a \code{zoo} vector object (default = \code{FALSE}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The function applied the correction provided by Clearwater \emph{et al.} 1999.
+\eqn{\Delta T}{} (or \eqn{\Delta V}{}) was corrected (denoted as \eqn{\Delta T_{sw}}{}) for the proportion of
+the probe that was inserted into the conducting sapwood vs the
+proportion of the probe that was inserted into the nonconductive heartwood
+(\eqn{\gamma}{} in mm mm-1). Together with \eqn{\Delta T_{max}}{}, \eqn{\Delta T}{} was corrected
+according to the following equation:
+\deqn{\Delta T_{sw} = (\Delta T~-~(1~–~\gamma) *  \Delta T_{max}) / \gamma}{}
+
+\eqn{\Delta T_{sw}}{} together with \eqn{\Delta T_{max}}{} is then recalculated to \eqn{K}{}.
+\end{Details}
+%
+\begin{Value}
+A \code{zoo} object or \code{data.frame} in the appropriate
+format for other functionalities. See \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} for output specifications.
+All \eqn{K}{} values for each method are provided when an output
+from \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} was provided.
+If individual time series are provided for \code{input} and \code{tdm\_dt.max} an alternative output is provided:
+
+\begin{description}
+
+
+\item[input] = \eqn{\Delta T}{} input data.
+\item[dt.max]  \eqn{\Delta T_{max}{\Delta Tmax}}{} input data.
+\item[dtsw] Corrected \eqn{\Delta T}{} data.
+\item[k.value] \eqn{K}{} values calculated according to Clearwater et al. (1999).
+\item[settings] data.frame of the applied \code{probe.length} and \code{sapwood.thickness}
+
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}\relax
+Clearwater MJ, Meinzer FC, Andrade JL, Goldstein G, Holbrook NM. 1999.
+Potential errors in measurement of nonuniform sap flow using heat dissipation probes.
+Tree Physiology 19:681–687 \url{doi: 10.1093/treephys/19.10.681}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+#correct for probes being inserted into the heartwood
+raw   <-is.trex(example.data(type="doy"),
+          tz="GMT",time.format="%H:%M",solar.time=TRUE,
+          long.deg=7.7459,ref.add=FALSE)
+input <- dt.steps(input=raw,
+                   start="2014-05-08 00:00",
+                   end="2014-07-25 00:50",
+                  time.int=15,max.gap=60,decimals=6,df=F)
+input[which(input<0.2)]<-NA
+input <-tdm_dt.max(input, methods=c("pd","mw","dr"),
+                 det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+output.data<-tdm_hw.cor(input,probe.length=20,
+                   sapwood.thickness=18,df=FALSE)
+plot(output.data$k.dr,col="orange")
+lines(input$k.dr)
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tdm\_uncertain}{Uncertainty and sensitivity analysis}{tdm.Rul.uncertain}
+%
+\begin{Description}\relax
+Quantifies the induced uncertainty on \eqn{SFD}{} and \eqn{K}{} time series due to the variability
+in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
+analysis to quantify the impact of each individual parameter on three relevant outputs derived from \eqn{SFD}{} and \eqn{K}{}, namely:
+i) the mean daily sum of water use,
+ii) the variability of maximum daily \eqn{SFD}{} or \eqn{K}{} values,
+iii) and the duration of daily sap flow.
+This function provides both the uncertainty and sensitivity indices, as time-series of \eqn{SFD}{} and \eqn{K}{} with the mean,
+standard deviation (\eqn{sd}{}) and confidence interval (CI) due to parameter uncertainty.
+\strong{Users should ensure that no gaps are present within the input data and environmental time series}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdm_uncertain(input, vpd.input, sr.input, method = "pd", n = 2000,
+  zero.end = 8 * 60, range.end = 16, zero.start = 1 * 60,
+  range.start = 16, probe.length = 20, sw.cor = 32.28, sw.sd = 16,
+  log.a_mu = 4.085, log.a_sd = 0.628, b_mu = 1.275, b_sd = 0.262,
+  max.days_min = 1, max.days_max = 7, ed.window_min = 8,
+  ed.window_max = 16, criteria.vpd_min = 0.05,
+  criteria.vpd_max = 0.5, criteria.sr_mean = 30,
+  criteria.sr_range = 30, criteria.cv_min = 0.5, criteria.cv_max = 1,
+  min.sfd = 0.5, min.k = 0, make.plot = TRUE, df = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} object
+
+\item[\code{vpd.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} object,
+\code{data.frame}) containing a timestamp and a vapour pressure deficit
+(\eqn{VPD}{}; in \eqn{kPa}{}) column with the same temporal extent and time steps as the \code{input} object.
+
+\item[\code{sr.input}] An \code{\LinkA{is.trex}{is.trex}}-compliant object (\code{zoo} object,
+\code{data.frame}) a timestamp and a solar radiation data (sr; e.g., global radiation or PAR)
+column with the same temporal extent and time steps as the \code{input} object.
+
+\item[\code{method}] Character, specifies the \eqn{\Delta T_{max}}{} method on which the
+sensitivity and uncertainty analyse are to be performed on (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}).
+Only one method can be selected, including the pre-dawn (\code{"pd"}), moving window (\code{"mw"}),
+double regression (\code{"dr"}) or the environmental dependent (\code{"ed"}) method (default = \code{"pd"}).
+
+\item[\code{n}] Numeric, specifies the number of times the bootstrap resampling procedure is repeated (default = 2000).
+Keep in mind that high values increase processing time.
+
+\item[\code{zero.end}] Numeric, defines the end of the predawn period.
+Values should be in minutes (e.g., predawn conditions until 8:00 = 8*60; default = 8*60).
+
+\item[\code{range.end}] Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
+
+\item[\code{zero.start}] Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
+
+\item[\code{range.start}] Numeric, defines the number of time steps for \code{zero.start} (the minimum time step of the input)
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
+
+\item[\code{probe.length}] Numeric, the length of the TDM probes in mm (see \code{\LinkA{tdm\_hw.cor}{tdm.Rul.hw.cor}}; default = 20 mm).
+
+\item[\code{sw.cor}] Numeric, the sapwood thickness in mm. Default conditions assume the sapwood thickness is equal to a standard probe length (default = 20).
+
+\item[\code{sw.sd}] Numeric, the standard deviation for sampling sapwood thickness sampling from a normal distribution (default = 16 mm;
+defined with a European database on sapwood thickness measurements).
+
+\item[\code{log.a\_mu}] Numeric, value providing the natural logarithm of the calibration parameter \eqn{a}{} (see \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}}; \eqn{SFD = aK^b}{}).
+This value can be obtained from \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}} (see \code{out.param}).
+Default conditions are determined by using all calibration data as described in \code{\LinkA{cal.data}{cal.data}} (default = 4.085).
+
+\item[\code{log.a\_sd}] Numeric, the standard deviation of the \eqn{a}{} parameter (see \code{log.a\_mu}) used within the calibration curve
+for calculating \eqn{SFD}{} (default = 0.628).
+
+\item[\code{b\_mu}] Numeric, the value of the calibration parameter \eqn{b}{} (see \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}}; \eqn{SFD = aK^b}{}).
+This value can be obtained from \code{\LinkA{tdm\_cal.sfd}{tdm.Rul.cal.sfd}} (see \code{out.param}).
+Default conditions are determined by using all calibration data as described in \code{\LinkA{cal.data}{cal.data}} (default = 1.275).
+
+\item[\code{b\_sd}] Numeric, the standard deviation of the \eqn{b}{} parameter (see \code{log.a\_mu}) used within the calibration curve
+for calculating \eqn{SFD}{} (default = 0.262).
+
+\item[\code{max.days\_min}] Numeric, the minimum value for an integer sampling range of \code{max.days}
+(see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{} method).
+As the \code{"mw"} and \code{"dr"} method apply a rolling maximum or mean, the provided value should be an
+uneven number (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; default = 5; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{max.days\_max}] Numeric, the maximum value for an integer sampling range of \code{max.days}
+(see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}} for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{} method).
+As the \code{"mw"} and \code{"dr"} method apply a rolling maximum or mean, the provided value should be an
+uneven number (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; default = 5; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{ed.window\_min}] Numeric, the minimum number of time steps for the \code{ed.window parameter} (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; the minimum time step of the input)
+for which an integer sampling range will be defined (default = 8, assuming a 15-min resolution or a 2 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{ed.window\_max}] Numeric, the maximum number of time steps for the \code{ed.window} sampling range
+(default = 16, assuming a 15-min resolution or a 4 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{criteria.vpd\_min}] Numeric, value in \eqn{kPa}{} defining the minimum for the fixed sampling range to define the vapour pressure deficit (VPD)
+threshold to establish zero-flow conditions (default = 0.05 \eqn{kPa}{}; see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{criteria.vpd\_max}] Numeric, value in \eqn{kPa}{} defining the maximum for the fixed sampling range to define the VPD threshold to establish
+zero-flow conditions (default = 0.5 \eqn{kPa}{}; required for the \code{"ed"}  \eqn{\Delta T_{max}}{} method).
+
+\item[\code{criteria.sr\_mean}] Numeric value defining the mean \code{sr.input} value around which the fixed sampling
+range for the solar irradiance threshold should be established for defining zero-flow conditions
+(see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; default = 30 W m-2; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{criteria.sr\_range}] Numeric, the range (in \%) around \code{criteria.sr\_mean} for establishing the solar irradiance threshold
+(see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; default = 30\%; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{criteria.cv\_min}] Numeric, value (in \%) defining the minimum value for the fixed sampling range to
+determine the coefficient of variation (CV) threshold for establishing zero-flow conditions
+(default = 0.5\%; see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{criteria.cv\_max}] Numeric, value (in \%) defining the maximum value for the fixed sampling range
+to determine the coefficient of variation (CV) threshold for establishing zero-flow conditions
+(default = 1\%; see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{} method).
+
+\item[\code{min.sfd}] Numeric, defines at which \eqn{SFD}{} (\eqn{cm^3 cm^{-2} h^{-1}}{}) zero-flow conditions are expected.
+This parameter is used to define the duration of daily sap flow based on \eqn{SFD}{} (default = \eqn{0.5 cm^3 cm^{-2} h^{-1}}{}).
+
+\item[\code{min.k}] Numeric value defining at which \eqn{K}{} (dimensionless, -) zero-flow are expected.
+This parameter is used to define the duration of daily sap flow based on \eqn{K}{} (default = 0).
+
+\item[\code{make.plot}] Logical; If \code{TRUE}, a plot is generated presenting the sensitivity and uncertainty analyses output (default = \code{TRUE}).
+
+\item[\code{df}] Logical; If \code{TRUE}, output is provided in a \code{data.frame} format with a timestamp and a value column.
+If \code{FALSE}, output is provided as a zoo vector object (default = \code{FALSE}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Uncertainty and sensitivity analysis can be performed on TDM \eqn{\Delta T}{} (or \eqn{\Delta V}{}) measurements.
+The function applies a Monte Carlo simulation approach (repetition defined by \code{n})
+to determine the variability in relevant output variables (defined as uncertainty)
+and quantifies the contribution of each parameter to this uncertainty (defined as sensitivity).
+To generate variability in the selected input parameters a Latin Hypercube Sampling is performed with a default
+or user defined range of parameter values per \eqn{\Delta T_{max}}{} method (see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}()}).
+The sampling algorithm generates multiple sampling distributions, including an integer sampling range (for \code{zero.start},
+\code{zero.end}, \code{max.days}, and \code{ed.window}), a continuous sampling range (criteria for \code{sr}, \code{vpd} and \code{cv}),
+and a normal distribution (for \code{sw.cor} and calibration parameters \code{a} and \code{b}).
+Within this algorithm no within-day interpolations are made between the \eqn{\Delta T_{max}}{} points
+(see \code{\LinkA{tdm\_dt.max}{tdm.Rul.dt.max}}, \code{interpolate = FALSE}). This approach ensures near-random sampling across different
+types of sampling distributions, while avoiding the need for increasing the number of replicates
+(which increases computation time). For the application of this approach one needs to;
+i) select the output of interest,
+ii) identify the relevant input parameters, and
+iii) determine the parameter range and distribution.
+For a given time-series three output variables are considered, calculated as the mean over the entire time-series,
+to be relevant, namely;
+i) mean daily sum of water use (or Sum, expressed in \eqn{cm^3 cm^{-2} d^{-1}}{} for \eqn{SFD}{} and unitless for \eqn{K}{}),
+ii) the variability of maximum \eqn{SFD}{} or \eqn{K}{} values (or CV, expressed as the coefficient of variation in \%
+as this alters climate response correlations), and
+iii) the duration of daily sap flow based on \eqn{SFD}{} or \eqn{K}{} (or Duration, expressed in hours per day dependent on a threshold,
+see \code{min.sfd} and \code{min.k}).
+A minimum threshold to define zero-flow \eqn{SFD}{} or \eqn{K}{} is required for the duration calculation
+as small variations in night-time \eqn{SFD}{} or \eqn{K}{} are present. All data-processing steps
+(starting with \code{"tdm\_"}) are incorporated within the function, excluding \code{\LinkA{tdm\_damp}{tdm.Rul.damp}()}
+due to the need for detailed visual inspection and significantly longer computation time.
+
+For the sensitivity analysis the total overall sensitivity indices are determined according strategy originally proposed by
+Sobol' (1993), considering the improvements applied within the sensitivity R package.
+The method proposed by Sobol’ (1993) is a variance-based sensitivity analysis,
+where sensitivity indices (dimensionless from 0 to 1) indicate the partial variance contribution
+by a given parameter over the total output variance (e.g., Pappas \emph{et al.} 2013).
+This global sensitivity analysis facilitates the identification of key parameters for data-processing
+improvement and highlights methodological limitations. Users should keep in mind that parameter ranges represent
+a very critical component of any sensitivity analysis and should be critically assessed and clearly reported
+for each case and analytical purpose. Moreover, it is advised to run this function on one growing season of input data to reduce processing time.
+\end{Details}
+%
+\begin{Value}
+A named \code{list} of \code{zoo} or \code{data.frame} objects in the appropriate format for other functionalities.
+Items include:
+
+\begin{description}
+
+
+\item[output.data] data.frame containing uncertainty and sensitivity indices for \eqn{SFD}{} and K and the included parameters.
+This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.min"] and lower [,"ci.max"]
+95\% confidence interval.
+
+\item[output.sfd] zoo object or data.frame with the \eqn{SFD}{} time series obtained from the bootstrap resampling.
+This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"CIup"] and lower [,"CIlo"]
+95\% confidence interval.
+
+\item[output.k] zoo object or data.frame with the K time series obtained from the bootstrap resampling.
+This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.max"]
+and lower [,"ci.min"] 95\% confidence interval. 
+
+
+\item[param] a data.frame with an overview of selected parameters used within \code{\LinkA{tdm\_uncertain}{tdm.Rul.uncertain}()} function. 
+
+
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}\relax
+Sobol’ I. 1993. Sensitivity analysis for nonlinear mathematical models.
+Math. Model Comput. Exp. 1:407-414
+
+Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
+Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
+Journal of Geophysical Research 118:505-528 \url{doi: 10.1002/jgrg.20035}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+#perform an uncertainty and sensitivity analysis on "dr" data processing
+raw   <- example.data(type="doy")
+input <- is.trex(raw, tz="GMT", time.format="%H:%M",
+           solar.time=TRUE, long.deg=7.7459, ref.add=FALSE, df=FALSE)
+input<-dt.steps(input,time.int=15,start="2013-04-01 00:00",
+             end="2013-11-01 00:00",max.gap=180,decimals=15)
+output<- tdm_uncertain(input, probe.length=20, method="pd",
+               n=2000,sw.cor=32.28,sw.sd=16,log.a_mu=3.792436,
+               log.a_sd=0.4448937,b_mu=1.177099,b_sd=0.3083603,
+               make.plot=TRUE)
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{TREX}{TREX: TRree sap flow EXtractor.}{TREX}
+\aliasA{TREX-package}{TREX}{TREX.Rdash.package}
+%
+\begin{Description}\relax
+Performs data assimilation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM).
+The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties and,
+generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply commonly
+used data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere
+(Peters et al. 2018 <doi: 10.1111/nph.15241>).
+\end{Description}
+\inputencoding{utf8}
+\HeaderA{vpd}{Vapor pressure deficit measurements (raw)}{vpd}
+\keyword{datasets}{vpd}
+%
+\begin{Description}\relax
+Returns an example dataset of vapour pressure deficit (\eqn{VPD}{}) monitoring from
+2012-2015 at 1300 m a.s.l. in the Swiss Alps (Loetschental, Switzerland; Peters \emph{et al.} 2019).
+Sensors were installed at the site on a central tower (\textasciitilde{}2.5 m above the ground)
+within the canopy to measure air temperature and relative humidity (Onset, USA, U23-002Pro) with a 15‐min resolution.
+Vpd (\eqn{kPa}{} was calculated from the air temperature and relative humidity measurements according to WMO (2008).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+vpd
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+Provides an \code{\LinkA{is.trex}{is.trex}}-compliant object with 135840 rows and 1 column.
+
+\begin{description}
+
+\item[index] Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})
+\item[value] kPa values obtained from the site-specific monitoring (\code{numeric})
+
+\end{description}
+\end{Format}
+%
+\begin{References}\relax
+Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
+Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
+Plant, Cell \& Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
+
+WMO. 2008.Guide to meteorological instruments and methods of observation, appendix 4B, WMO‐No. 8 (CIMO Guide).
+Geneva, Switzerland: World Meteorological Organization.
+\end{References}
+\printindex{}
+\end{document}

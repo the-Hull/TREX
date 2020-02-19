@@ -15,7 +15,7 @@
 #'
 #' @param vpd.input An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 #'   \code{data.frame}) containing a timestamp and a vapour pressure deficit
-#'   (\eqn{VPD}; in kPa) column with the same temporal extent and time steps as the \code{input} object.
+#'   (\eqn{VPD}; in \eqn{kPa}) column with the same temporal extent and time steps as the \code{input} object.
 #'
 #' @param sr.input An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 #'   \code{data.frame}) a timestamp and a solar radiation data (sr; e.g., global radiation or PAR)
@@ -79,11 +79,11 @@
 #' @param ed.window_max Numeric, the maximum number of time steps for the \code{ed.window} sampling range
 #'  (default = 16, assuming a 15-min resolution or a 4 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
-#' @param criteria.vpd_min Numeric, value in kPa defining the minimum for the fixed sampling range to define the vapour pressure deficit (VPD)
-#'  threshold to establish zero-flow conditions (default = 0.05 kPa; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
+#' @param criteria.vpd_min Numeric, value in \eqn{kPa} defining the minimum for the fixed sampling range to define the vapour pressure deficit (VPD)
+#'  threshold to establish zero-flow conditions (default = 0.05 \eqn{kPa}; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
-#' @param criteria.vpd_max Numeric, value in kPa defining the maximum for the fixed sampling range to define the VPD threshold to establish
-#'  zero-flow conditions (default = 0.5 kPa; required for the \code{"ed"}  \eqn{\Delta T_{max}}{\Delta Tmax} method).
+#' @param criteria.vpd_max Numeric, value in \eqn{kPa} defining the maximum for the fixed sampling range to define the VPD threshold to establish
+#'  zero-flow conditions (default = 0.5 \eqn{kPa}; required for the \code{"ed"}  \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
 #' @param criteria.sr_mean Numeric value defining the mean \code{sr.input} value around which the fixed sampling
 #'  range for the solar irradiance threshold should be established for defining zero-flow conditions

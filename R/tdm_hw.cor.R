@@ -27,8 +27,9 @@
 #'  proportion of the probe that was inserted into the nonconductive heartwood
 #'  (\eqn{\gamma} in mm mm-1). Together with \eqn{\Delta T_{max}}{\Delta Tmax}, \eqn{\Delta T} was corrected
 #'  according to the following equation:
-#'  \deqn{\Delta T_{sw} = (\Delta T – (1 – \gamma)  \Delta T_{max}) / \gamma}{\Delta Tsw = (\Delta T – (1 – \gamma)  \Delta Tmax) / \gamma}
-#'  \eqn{\Delta T_{sw}}{\Delta Tsw} together with \eqn{\Delta T_{max}}{\Delta Tmax} was then recalculated to \eqn{K}.
+#'  \deqn{\Delta T_{sw} = (\Delta T~-~(1~–~\gamma) *  \Delta T_{max}) / \gamma}{\Delta Tsw = (\Delta T – (1 – \gamma)  \Delta Tmax) / \gamma}
+#'
+#'  \eqn{\Delta T_{sw}}{\Delta Tsw} together with \eqn{\Delta T_{max}}{\Delta Tmax} is then recalculated to \eqn{K}.
 #'
 #'
 #' @return A \code{zoo} object or \code{data.frame} in the appropriate
