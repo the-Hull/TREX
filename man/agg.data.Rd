@@ -34,21 +34,13 @@ applied to all data subsets (see aggregate; including "sum", "mean",
  "median", "sd", "se", "min", "max").}
 
 \item{unit}{Numeric, the minutes in which a velocity unity is provided
-(e.g., cm3 cm-2 h-1 = 60) for summation (\code{FUN = “sum”}; default = 60).}
+(e.g., \eqn{cm^3 cm^{-2} h^{-1} = 60}{cm3 cm-2 h-1 = 60}) for summation (\code{FUN = “sum”}; default = 60).}
 
-\item{na.rm}{Logical; iff \code{TRUE} missing values are removed (default = \code{TRUE}).}
+\item{na.rm}{Logical; if \code{TRUE} missing values are removed (default = \code{TRUE}).}
 
-\item{df}{Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
- with a timestamp and a value column. If \code{FALSE}, output
- is provided as a zoo vector object (default = \code{FALSE}).
-
- @details
- Time series have different temporal resolutions.
- This function provides the option to aggregate time steps with
- standard \code{FUN} statistics. When applying this function to calculate
- summed sap flow values (e.g., \code{cm^3 cm^{-2} d^{-1}}{cm3 cm-2 d-1}) one needs
- to include the velocity unit, as the summation is dependent upon the minimum timestep
- of the time series (e.g., \code{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}, \code{unit = 60}).}
+\item{df}{Logical; if \code{TRUE}, output is provided in a \code{data.frame} format
+with a timestamp and a value column. If \code{FALSE}, output
+is provided as a zoo vector object (default = \code{FALSE}).}
 }
 \value{
 A zoo object or data.frame in the appropriate format for other functionalities.
@@ -58,7 +50,15 @@ Aggregation of time-series data and start/end time selection.
 This function provides the option to select the temporal step size
 for aggregation of a single time series origination from an \code{\link{is.trex}}-compliant object.
 Additionally, the user can define the start and end time of the series and select
-the mean of aggregating the data.
+the function used for aggregation.
+}
+\details{
+Time series are often derived at variable resolutions.
+ This function provides the option to aggregate (homogenize) time steps with
+ standard \code{FUN} statistics. When applying this function to calculate
+ summed sap flow values (e.g., \eqn{cm^3 cm^{-2} d^{-1}}{cm3 cm-2 d-1}) one needs
+ to include the velocity unit, as the summation is dependent upon the minimum timestep
+ of the time series (e.g., \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}, \code{unit = 60}).
 }
 \examples{
 \dontrun{

@@ -10,7 +10,7 @@
   \item{year}{Year of measurements (\code{integer})}
   \item{doy}{Day of year (\code{integer})}
   \item{hour}{Hour of the measurements (\code{character})}
-  \item{value}{\eqn{\Delta V}(or \eqn{\Delta T}) values obtained from TDM measurements  (\code{numeric})}
+  \item{value}{\eqn{\Delta V} values obtained from TDM measurements (\code{numeric})}
   \item{species}{Monitored species (\code{character})}
 }}
 \usage{

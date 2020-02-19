@@ -1,21 +1,21 @@
 #' Uncertainty and sensitivity analysis
 #'
 #'
-#' @description Quantifies the induced uncertainty on \emph{SFD} and \emph{K} time series due to the variability
+#' @description Quantifies the induced uncertainty on \eqn{SFD} and \eqn{K} time series due to the variability
 #' in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
-#'  analysis to quantify the impact of each individual parameter on three relevant outputs derived from \emph{SFD} and \emph{K}, namely:
+#'  analysis to quantify the impact of each individual parameter on three relevant outputs derived from \eqn{SFD} and \eqn{K}, namely:
 #'   i) the mean daily sum of water use,
-#'   ii) the variability of maximum daily \emph{SFD} or \emph{K} values,
+#'   ii) the variability of maximum daily \eqn{SFD} or \eqn{K} values,
 #'   iii) and the duration of daily sap flow.
-#'  This function provides both the uncertainty and sensitivity indices, as time-series of \emph{SFD} and \emph{K} with the mean,
-#'  standard deviation (\emph{sd}) and confidence interval (CI) due to parameter uncertainty.
+#'  This function provides both the uncertainty and sensitivity indices, as time-series of \eqn{SFD} and \eqn{K} with the mean,
+#'  standard deviation (\eqn{sd}) and confidence interval (CI) due to parameter uncertainty.
 #'  \strong{Users should ensure that no gaps are present within the input data and environmental time series}.
 #'
 #' @param input An \code{\link{is.trex}}-compliant object (\code{zoo} object
 #'
 #' @param vpd.input An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 #'   \code{data.frame}) containing a timestamp and a vapour pressure deficit
-#'   (vpd; in kPa) column with the same temporal extent and time steps as the \code{input} object.
+#'   (\eqn{VPD}; in kPa) column with the same temporal extent and time steps as the \code{input} object.
 #'
 #' @param sr.input An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 #'   \code{data.frame}) a timestamp and a solar radiation data (sr; e.g., global radiation or PAR)
@@ -100,8 +100,8 @@
 #'  to determine the coefficient of variation (CV) threshold for establishing zero-flow conditions
 #'  (default = 1\%; see \code{\link{tdm_dt.max}}; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
-#' @param min.sfd Numeric, defines at which \eqn{SFD} (cm3 cm-2 h-1) zero-flow conditions are expected.
-#'  This parameter is used to define the duration of daily sap flow based on \eqn{SFD} (default = 0.5 cm3 cm-2 h-1).
+#' @param min.sfd Numeric, defines at which \eqn{SFD} (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}) zero-flow conditions are expected.
+#'  This parameter is used to define the duration of daily sap flow based on \eqn{SFD} (default = \eqn{0.5 cm^3 cm^{-2} h^{-1}}{0.5 cm3 cm-2 h-1}).
 #'
 #' @param min.k Numeric value defining at which \eqn{K} (dimensionless, -) zero-flow are expected.
 #'  This parameter is used to define the duration of daily sap flow based on \eqn{K} (default = 0).
@@ -155,11 +155,11 @@
 #'
 #'  \describe{
 #'
-#'    \item{output.data}{data.frame containing uncertainty and sensitivity indices for SFD and K and the included parameters.
+#'    \item{output.data}{data.frame containing uncertainty and sensitivity indices for \eqn{SFD} and K and the included parameters.
 #'         This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.min"] and lower [,"ci.max"]
 #'         95\% confidence interval.}
 #'
-#'    \item{output.sfd}{zoo object or data.frame with the SFD time series obtained from the bootstrap resampling.
+#'    \item{output.sfd}{zoo object or data.frame with the \eqn{SFD} time series obtained from the bootstrap resampling.
 #'               This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"CIup"] and lower [,"CIlo"]
 #'                95\% confidence interval.}
 #'
@@ -180,7 +180,7 @@
 #'
 #'  Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
 #'  Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
-#'   Journal of Geophysical Research 118:505-528 <doi: 10.1002/jgrg.20035>
+#'   Journal of Geophysical Research 118:505-528 \url{doi: 10.1002/jgrg.20035}
 #'
 #' @examples \dontrun{
 #' #perform an uncertainty and sensitivity analysis on "dr" data processing

@@ -1,15 +1,15 @@
 #' Calculate sap flux density
 #'
 #' @description The acquired \eqn{K} values are calculated to sap flux density
-#'  (SFD in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}). As many calibration curves exist
+#'  (\eqn{SFD} in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}). As many calibration curves exist
 #'  (see Peters \emph{et al}. 2018; Flo \emph{et al.} 2019), the function provides the option to
-#'  calculate \eqn{SFD} using all available calibration experiment data
-#'  (see \code{\link{cal.data}}; Flo \emph{et al.} 2019). Additionally,
+#'  calculate \eqn{SFD} using calibration experiment data from the meta-analyses by
+#'  Flo \emph{et al.} (2019; see \code{\link{cal.data}}). Additionally,
 #'  raw calibration data can be provided or parameters \eqn{a} and \eqn{b}
 #'  for a specific calibration function (\eqn{aK^b}) can be provided.
 #'  The algorithm determines for each calibration experiment dataset
 #'  the calibration curve (\eqn{SFD = aK^b}) and calculates \eqn{SFD} from
-#'  either the mean of all curves and the \eqn{95}% confidence interval
+#'  either the mean of all curves and the 95\% confidence interval
 #'  of either all curves, or bootstrapped resampled uncertainty around
 #'  the raw calibration experiment data when one calibration dataset is selected.
 #'
@@ -46,8 +46,8 @@
 #' through all selected raw calibration data. If multiple studies are provided,
 #' multiple calibration curves are fitted. In case a single calibration dataset
 #' is provided a bootstrap resampling is applied (n = 100) to determined the
-#' mean and 95% confidence interval of the fit. When multiple calibration curves
-#' are requested the mean and 95% confidence interval is determined on the fitted functions.
+#' mean and 95\% confidence interval of the fit. When multiple calibration curves
+#' are requested the mean and 95\% confidence interval is determined on the fitted functions.
 #' The mean and confidence interval are used to calculate \eqn{SFD} from \eqn{K}.
 #'
 #' @return A list containing either a \code{zoo} object or \code{data.frame} in the appropriate format
@@ -55,7 +55,7 @@
 #'  all \eqn{SFD} values for each method are provided and added to the
 #'  \code{\link{is.trex}}-compliant object (e.g., [['sfd.pd']], [['sfd.mw']])
 #'  if this format was provided as an input, and,
-#'  finally, a \code{data.frame} is provided with the mean and 95% confidence
+#'  finally, a \code{data.frame} is provided with the mean and 95\% confidence
 #'  interval of the applied calibration functions (see [['model.ens']]).
 #'  If an individual time series is provided for input with \eqn{K} values an alternative output is provided:
 #'
@@ -76,7 +76,7 @@
 #'
 #'  Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
 #'  A synthesis of bias and uncertainty in sap flow methods.
-#'  Agricultural and Forest Meteorology 271:362-374 <doi: 10.1016/j.agrformet.2019.03.012>
+#'  Agricultural and Forest Meteorology 271:362-374 \url{doi: 10.1016/j.agrformet.2019.03.012}
 #'
 #'
 #' @export

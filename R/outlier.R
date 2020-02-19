@@ -1,11 +1,45 @@
-#' Automated and manual outlier detection
+#' Data cleaning and outlier detection
 #'
-#' @description This interactive app allows filtering outlier data via a specified threshold
-#' and by manually clicking on problematic observations. The data must be provided as a
-#' \code{data.frame} saved to disk in \code{.Rda} format.
+#' @description This function launches a Shiny application that
+#'  (1) visualizes raw and outlier-free time series interactively
+#'  (using {plotly}),
+#'  (2) highlights automatically detected outliers,
+#'  (3) allows the user to revise the automatically detected outliers
+#'     and manually include data points, and
+#'  (4) exports the original data and the outlier-free time series in
+#'     an \code{\link{is.trex}}-compliant object that can be further processed.
 #'
 #'
-#' @return Runs an interactive shiny app with option to save output as a \code{.Rda} file
+#' @return Once the application is launched,
+#'  the user can load an \code{.RData} file where a \code{data.frame}
+#'   with the timestamp and sensor data are stored.
+#'   The timestamp in this \code{data.frame} should be of class \code{Date}.
+#'   Many columns can be included (corresponding, for example, to different sensors)
+#'   and the user can select through the application the x and y axes of the interactive time series plots.
+#'   In addition, the user can provide the units of the imported data
+#'   (e.g., degrees \eqn{C} or \eqn{mV} for \eqn{\Delta T} or \eqn{\Delta V}, respectively).
+#'   A parameter (alpha) for automatic outlier detection can be supplied.
+#'   More specifically, the automatic identification of outliers is based on a
+#'   two-step procedure:
+#'     i) the Tukey’s method (Tukey, 1977) is applied to detect statistical outliers
+#'     as values falling outside the range
+#'     \eqn{[q_{0.25} - alpha * IQR, q_{0.75} + alpha * IQR]}{[q0.25 - alpha * IQR, q0.75 + alpha * IQR]},
+#'     where \eqn{IQR} is the interquartile range
+#'     (\eqn{q_{0.75} - q_{0.25}}{q0.75 - q0.25})
+#'     with \eqn{q_{0.25}}{q0.25} denoting the 25\% lower quartile and \eqn{q_{0.75}}{q0.25} the
+#'     75\% upper quartile, and alpha is a user-defined parameter
+#'     (default value \code{alpha = 3};
+#'     although visual inspection through the interactive plots allows for adjusting
+#'     alpha and optimizing the automatic detection of outliers),
+#'     and ii) the first difference (or lag-1 differences) of the raw data are calculated
+#'     and data points with lag-1 differences greater
+#'     than the mean of the raw input time series, are excluded.
+#'
+#'
+#' @return The function does not return a value, but allows the user
+#'  to write the raw and outlier-free data in a \code{.RData} file to disk, for
+#'  subsequent import via \code{load()}.
+
 #' @export
 #' @importFrom magrittr "%>%"
 #'
@@ -15,6 +49,8 @@
 #' system.file("exdata", "example.RData", package = "TREX", mustWork = TRUE)
 #' # either copy-paste this into the navigation bar of the file selection window
 #' # or navigate here manually for selection
+#'
+#' # launch shiny application
 #' outlier()
 #'
 #' }

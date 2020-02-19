@@ -7,7 +7,7 @@
 #'  3) double regression (\code{dr}),
 #'  and 4) environmental-dependent (\code{ed}) as applied in Peters \emph{et al.} 2018.
 #'  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
-#'  All outputs are provided in a \code{list} where users can review the generated outputs and provided input data.
+#'  All outputs are provided in a \code{list} including the input data and calculated outputs.
 #'
 #' @usage tdm_dt.max(input, methods = c("pd","mw","dr"),
 #' zero.end = 8*60,
@@ -324,7 +324,7 @@ tdm_dt.max <-
         difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units = c("hours"))
       segment <-
         round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
-                                                   hour.cycle > 3)])))
+                                                          hour.cycle > 3)])))
       k <- round(((60 * segment) / step.min), 0)
       if ((as.integer(k) %% 2) == 0) {
         k <- k + 1
@@ -426,9 +426,9 @@ tdm_dt.max <-
             next
           }
           max.pd[zoo::index(add.sel[which(add.sel == suppressWarnings(max(add.sel, na.rm =
-                                                                       TRUE)))])] <-
+                                                                            TRUE)))])] <-
             input[zoo::index(add.sel[which(add.sel == suppressWarnings(max(add.sel, na.rm =
-                                                                        TRUE)))])]
+                                                                             TRUE)))])]
         }
         daily_max.pd <-
           suppressWarnings(stats::aggregate(
@@ -527,7 +527,7 @@ tdm_dt.max <-
                          c("hours"))
       segment <-
         round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
-                                                   hour.cycle > 3)])))
+                                                          hour.cycle > 3)])))
       rmean <-
         zoo::zoo(NA, order.by = seq(
           from = zoo::index(daily_max.pd)[1],
@@ -595,6 +595,10 @@ tdm_dt.max <-
       proc.3[which(is.na(proc.3$all.pd) == T), "proc.2"] <- NA
       all.mw <- proc.3$proc.2
       max.mw <- all.mw
+      max.mw <-window(max.mw,start=zoo::index(input)[1],end=zoo::index(input)[length(input)])
+      clip<-zoo::zoo(rep(1,length(input)),order.by=zoo::index(input))
+      clip<-cbind(max.mw,clip)
+      max.mw<-clip[which(clip[,2]==1),1]
 
       for (g in c(1:(length(gaps) - 1))) {
         st.g <-
@@ -650,7 +654,7 @@ tdm_dt.max <-
                          c("hours"))
       segment <-
         round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
-                                                   hour.cycle > 3)])))
+                                                          hour.cycle > 3)])))
       dmean <-
         zoo::zoo(NA, order.by = seq(
           from = zoo::index(daily_max.pd)[1],
@@ -745,6 +749,10 @@ tdm_dt.max <-
       proc.3[which(is.na(proc.3$all.pd) == T), "proc.2"] <- NA
       all.dr <- proc.3$proc.2
       max.dr <- all.dr
+      max.dr<-window(max.dr,start=zoo::index(input)[1],end=zoo::index(input)[length(input)])
+      clip<-zoo::zoo(rep(1,length(input)),order.by=zoo::index(input))
+      clip<-cbind(max.dr,clip)
+      max.dr<-clip[which(clip[,2]==1),1]
 
       for (g in c(1:(length(gaps) - 1))) {
         st.g <-
@@ -896,7 +904,7 @@ tdm_dt.max <-
                            c("hours"))
         segment <-
           round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
-                                                     hour.cycle > 3)])))
+                                                            hour.cycle > 3)])))
 
         k <- round(ed.window / step.min)
         #w
@@ -1095,7 +1103,7 @@ tdm_dt.max <-
           difftime(zoo::index(proc.2)[-1], zoo::index(proc.2)[-length(proc.2)], units = c("hours"))
         segment <-
           round(stats::median(as.numeric(hour.cycle[which(hour.cycle < 24 |
-                                                     hour.cycle > 3)])))
+                                                            hour.cycle > 3)])))
 
         daily_max.ed <-
           suppressWarnings(stats::aggregate(
@@ -1305,6 +1313,3 @@ tdm_dt.max <-
     )
     return(output.data)
   }
-
-
-

@@ -4,7 +4,7 @@
 #' This function provides the option to select the temporal step size
 #' for aggregation of a single time series origination from an \code{\link{is.trex}}-compliant object.
 #' Additionally, the user can define the start and end time of the series and select
-#' the mean of aggregating the data.
+#' the function used for aggregation.
 #'
 #' @usage agg.data(input,
 #'  time.agg = 60*24,
@@ -30,19 +30,19 @@
 #' applied to all data subsets (see aggregate; including "sum", "mean",
 #'  "median", "sd", "se", "min", "max").
 #' @param unit Numeric, the minutes in which a velocity unity is provided
-#'  (e.g., cm3 cm-2 h-1 = 60) for summation (\code{FUN = “sum”}; default = 60).
-#' @param na.rm Logical; iff \code{TRUE} missing values are removed (default = \code{TRUE}).
-#' @param df Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
+#'  (e.g., \eqn{cm^3 cm^{-2} h^{-1} = 60}{cm3 cm-2 h-1 = 60}) for summation (\code{FUN = “sum”}; default = 60).
+#' @param na.rm Logical; if \code{TRUE} missing values are removed (default = \code{TRUE}).
+#' @param df Logical; if \code{TRUE}, output is provided in a \code{data.frame} format
 #'  with a timestamp and a value column. If \code{FALSE}, output
 #'  is provided as a zoo vector object (default = \code{FALSE}).
 #'
-#'  @details
-#'  Time series have different temporal resolutions.
-#'  This function provides the option to aggregate time steps with
+#' @details
+#'  Time series are often derived at variable resolutions.
+#'  This function provides the option to aggregate (homogenize) time steps with
 #'  standard \code{FUN} statistics. When applying this function to calculate
-#'  summed sap flow values (e.g., \code{cm^3 cm^{-2} d^{-1}}{cm3 cm-2 d-1}) one needs
+#'  summed sap flow values (e.g., \eqn{cm^3 cm^{-2} d^{-1}}{cm3 cm-2 d-1}) one needs
 #'  to include the velocity unit, as the summation is dependent upon the minimum timestep
-#'  of the time series (e.g., \code{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}, \code{unit = 60}).
+#'  of the time series (e.g., \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}, \code{unit = 60}).
 #'
 #'
 #' @return A zoo object or data.frame in the appropriate format for other functionalities.

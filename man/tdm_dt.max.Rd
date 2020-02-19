@@ -96,7 +96,7 @@ according to four methods; namely,
  3) double regression (\code{dr}),
  and 4) environmental-dependent (\code{ed}) as applied in Peters \emph{et al.} 2018.
  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
- All outputs are provided in a \code{list} where users can review the generated outputs and provided input data.
+ All outputs are provided in a \code{list} including the input data and calculated outputs.
 }
 \details{
 There are a variety of methods which can be applied to determine zero-flow conditions.

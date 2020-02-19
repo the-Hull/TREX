@@ -23,6 +23,6 @@ Sion, Ulrichen, Visp, and Zermatt; Federal Office of Meteorology and Climatology
 \references{
 Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
 }
 \keyword{datasets}

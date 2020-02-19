@@ -8,7 +8,7 @@
 #' is recalculated accordingly. When an \code{\link{is.trex}}-compliant object is
 #' provided, the \eqn{K} values for each method are determined (see \code{\link{tdm_dt.max}}.
 #'
-#' @param input A \code{\link{tdm_dt.max}} ouput or \code{\link{is.trex}}-compliant object of \eqn{\Delta T }(or \eqn{\Delta V}) values containing
+#' @param input A \code{\link{tdm_dt.max}} ouput or \code{\link{is.trex}}-compliant object of \eqn{\Delta T } (or \eqn{\Delta V}) values containing
 #'  a timestamp and a value column.
 #' @param dt.max Optional \code{zoo} object or \code{data.frame} (columns = “timestamp” or “value”)
 #' containing the \eqn{\Delta T_{max}}{\Delta Tmax} when no \code{\link{is.trex}}-compliant object is provided.
@@ -25,7 +25,7 @@
 #'  \eqn{\Delta T} (or \eqn{\Delta V}) was corrected (denoted as \eqn{\Delta T_{sw}}{\Delta Tsw}) for the proportion of
 #'  the probe that was inserted into the conducting sapwood vs the
 #'  proportion of the probe that was inserted into the nonconductive heartwood
-#'  (\eqn{\gamma} in mm mm-1). Together with\eqn{\Delta T_{max}}{\Delta Tmax}, \eqn{\Delta T} was corrected
+#'  (\eqn{\gamma} in mm mm-1). Together with \eqn{\Delta T_{max}}{\Delta Tmax}, \eqn{\Delta T} was corrected
 #'  according to the following equation:
 #'  \deqn{\Delta T_{sw} = (\Delta T – (1 – \gamma)  \Delta T_{max}) / \gamma}{\Delta Tsw = (\Delta T – (1 – \gamma)  \Delta Tmax) / \gamma}
 #'  \eqn{\Delta T_{sw}}{\Delta Tsw} together with \eqn{\Delta T_{max}}{\Delta Tmax} was then recalculated to \eqn{K}.
@@ -33,9 +33,9 @@
 #'
 #' @return A \code{zoo} object or \code{data.frame} in the appropriate
 #' format for other functionalities. See \code{\link{tdm_dt.max}} for output specifications.
-#' All \eqn{K} values for each method are provided when an
-#' \code{\link{is.trex}}-compliant object was provided.
-#' If individual time series are provided for \code{input} and \code{dt.max} an alternative output is provided:
+#' All \eqn{K} values for each method are provided when an output
+#' from \code{\link{tdm_dt.max}} was provided.
+#' If individual time series are provided for \code{input} and \code{tdm_dt.max} an alternative output is provided:
 #'
 #' \describe{
 #'
@@ -49,7 +49,7 @@
 #'
 #' @references Clearwater MJ, Meinzer FC, Andrade JL, Goldstein G, Holbrook NM. 1999.
 #' Potential errors in measurement of nonuniform sap flow using heat dissipation probes.
-#' Tree Physiology 19:681–687 <doi: 10.1093/treephys/19.10.681>
+#' Tree Physiology 19:681–687 \url{doi: 10.1093/treephys/19.10.681}
 #'
 #'
 #' @export

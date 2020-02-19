@@ -19,7 +19,7 @@
 #'   \item{year}{Year of measurements (\code{integer})}
 #'   \item{doy}{Day of year (\code{integer})}
 #'   \item{hour}{Hour of the measurements (\code{character})}
-#'   \item{value}{\eqn{\Delta V}(or \eqn{\Delta T}) values obtained from TDM measurements  (\code{numeric})}
+#'   \item{value}{\eqn{\Delta V} values obtained from TDM measurements (\code{numeric})}
 #'   \item{species}{Monitored species (\code{character})}
 #' }
 #'
@@ -35,12 +35,13 @@
 #'
 #'
 #' @description Returns raw calibration experiment data obtained from literature,
-#'  with \emph{K} values combined with gravimetrically determined sap flux density.
+#'  with \emph{K} values combined with gravimetrically determined sap flux density,
+#'  as detailed in Flo \emph{et al.} (2019).
 #'  The \code{data.frame} contains 22 studies with 37 different species. The data is used
-#'  within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density. The data
-#'  originates from the manuscript by Flo \emph{et al.} 2019 and provides a
-#'  description on the genus, species, calibration material, wood porosity and diameter
-#'  of the stem. The presented data is open for public use.
+#'  within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density.
+#'  Description on the genus, species, calibration material, wood porosity and diameter
+#'  of the stem is provided in Flo \emph{et al.} (2019).
+#'  The presented data is open for public use.
 #'
 #'
 #'
@@ -88,7 +89,7 @@
 #'          by the thermal dissipation probes (unitless; \code{numeric})}
 #'   \item{SFD}{Sap flux density measured gravimetrically (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; \code{numeric})}
 #'   \item{Granier}{Sap flux density calculated according to Granier et al. 1985 using k
-#'        (in \eqn{cm^{3}}{cm3} cm-2 h-1; using \eqn{43.84 k^{1.231}{k^1.231}}) (\code{numeric})}
+#'        (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; using \eqn{43.84 k^{1.231}}{k^1.231}) (\code{numeric})}
 #' }
 #'
 #'
@@ -126,7 +127,7 @@
 #' @references
 #' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 #' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-#' Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+#' Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
 #'
 #' WMO. 2008.Guide to meteorological instruments and methods of observation, appendix 4B, WMO‐No. 8 (CIMO Guide).
 #'  Geneva, Switzerland: World Meteorological Organization.
@@ -157,7 +158,7 @@
 #' @references
 #' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 #' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-#' Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+#' Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
 #'
 #'
 #' @name sr
@@ -188,7 +189,7 @@
 #' @references
 #' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 #' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-#' Plant, Cell & Environment 42:1674-1689 <doi: 10.1111/pce.13500>
+#' Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
 
 #'
 #' @name preci

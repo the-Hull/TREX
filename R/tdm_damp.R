@@ -1,7 +1,7 @@
 
 #' Signal dampening correction
 #'
-#' @description When long-term \eqn{K} series (~3 years) are provided, one can perform
+#' @description When long-term \eqn{K} time series (~3 years) are provided, one can perform
 #'  a signal dampening correction (when sensors were not re-installed;
 #'  see Peters \emph{et al.} 2018). Applying the signal dampening
 #'  correction requires  visually inspecting the correction curve
@@ -12,7 +12,7 @@
 #' @param input An \code{\link{is.trex}}-compliant object (\code{zoo} vector, \code{data.frame}) of \eqn{K} values containing
 #'  a timestamp and a value column.
 #' @param k.threshold Numeric, the threshold below which daily maximum \eqn{K} values should not be considered (default = 0.05).
-#' @param make.plot Logical; if \code{TRUE}, a plot is generated presenting the correction curve and the \eqn{K} series.
+#' @param make.plot Logical; if \code{TRUE}, a plot is generated presenting the correction curve and the \eqn{K} time series.
 #' @param df Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
 #'  with a timestamp and a value column. If \code{FALSE}, output
 #'  is provided as a \code{zoo} vector object (default = FALSE).
@@ -21,7 +21,7 @@
 #'  @details The function fits a correction curve for signal dampening (e.g., due to wounding)
 #'  according to Peters \emph{et al.} (2018). A sensor specific function is fitted to daily maximum
 #'  \eqn{K} values (considering a minimum cut-off threshold; see \code{k.threshold}). Dependent variables
-#'  for the function include seasonality (DOY) and days since installation (t).
+#'  for the function include seasonality (DOY) and days since installation (\eqn{t}).
 #'  First, seasonal effects are removed by correcting the \eqn{K} series (residuals; \eqn{Kresid})
 #'  to a second-order polynomial with DOY. These residuals are then used within a
 #'  non-linear model:
@@ -48,7 +48,7 @@
 #' Prendin AL, Schneider L, Baltzer JL, Baron-Gafford GA, Dietrich L, Heinrich I,
 #' Minor RL, Sonnentag O, Matheny AM, Wightman MG, Steppe K. 2018.
 #' Quantification of uncertainties in conifer sap flow measured with the thermal
-#' dissipation method. New Phytologist 219:1283-1299 <doi: 10.1111/nph.15241>
+#' dissipation method. New Phytologist 219:1283-1299 \url{doi: 10.1111/nph.15241}
 #'
 #'
 #'

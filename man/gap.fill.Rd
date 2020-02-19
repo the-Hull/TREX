@@ -23,7 +23,7 @@ A \code{zoo} object or \code{data.frame} in the appropriate format for further p
 }
 \description{
 Fills gaps by linear interpolation between observations.
-This function provides the option to define the minimum size under which gaps should
+This function provides the option to define the minimum window under which gaps should
 be filled, using linear interpolation.
 }
 \examples{

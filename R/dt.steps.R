@@ -64,7 +64,6 @@ dt.steps <-
            decimals = 10,
            df = FALSE) {
 
-
     #p= process
     if (attributes(input)$class == "data.frame") {
       #e
@@ -234,6 +233,19 @@ dt.steps <-
       to = ts.end - 1,
       by = (60 * time.int)
     ))), "value"]
+
+    #remove values outside of the range
+    start.input<-zoo::index(na.omit(input))[1]-1
+    start.output<-zoo::index(na.omit(output.data))[1]
+    if(start.input!=start.output){
+      window(output.data,start=start.output,end=start.input)<-NA
+    }
+
+    end.input<-zoo::index(na.omit(input))[length(zoo::index(na.omit(input)))]+1
+    end.output<-zoo::index(na.omit(output.data))[length(zoo::index(na.omit(output.data)))]
+    if(end.input!=end.output){
+      window(output.data,start=end.input,end=end.output)<-NA
+    }
 
     if (df == T) {
       output.data <-

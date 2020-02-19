@@ -2,7 +2,7 @@
 #' Gap filling by linear interpolation
 #'
 #' @description Fills gaps by linear interpolation between observations.
-#' This function provides the option to define the minimum size under which gaps should
+#' This function provides the option to define the minimum window under which gaps should
 #' be filled, using linear interpolation.
 #'
 #' @usage gap.fill(input, max.gap = 60, decimals = 10, df = FALSE)

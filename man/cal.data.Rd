@@ -18,19 +18,20 @@
          by the thermal dissipation probes (unitless; \code{numeric})}
   \item{SFD}{Sap flux density measured gravimetrically (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; \code{numeric})}
   \item{Granier}{Sap flux density calculated according to Granier et al. 1985 using k
-       (in \eqn{cm^{3}}{cm3} cm-2 h-1; using \eqn{43.84 k^{1.231}{k^1.231}}) (\code{numeric})}
+       (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; using \eqn{43.84 k^{1.231}}{k^1.231}) (\code{numeric})}
 }}
 \usage{
 cal.data
 }
 \description{
 Returns raw calibration experiment data obtained from literature,
- with \emph{K} values combined with gravimetrically determined sap flux density.
+ with \emph{K} values combined with gravimetrically determined sap flux density,
+ as detailed in Flo \emph{et al.} (2019).
  The \code{data.frame} contains 22 studies with 37 different species. The data is used
- within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density. The data
- originates from the manuscript by Flo \emph{et al.} 2019 and provides a
- description on the genus, species, calibration material, wood porosity and diameter
- of the stem. The presented data is open for public use.
+ within the \code{\link{tdm_cal.sfd}} function to calculate sap flux density.
+ Description on the genus, species, calibration material, wood porosity and diameter
+ of the stem is provided in Flo \emph{et al.} (2019).
+ The presented data is open for public use.
 }
 \details{
 Currently included studies are given below; individual labels (quoted) can be applied in \code{\link{tdm_cal.sfd}} (argument "study"):
