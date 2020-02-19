@@ -41,7 +41,7 @@ This variable is only needed when the “\code{env.filt”} method is selected.}
 \item{vpd.cutoff}{Numeric threshold value in \eqn{kPa} for peak-of-the-day mean \eqn{VPD} to eliminate unrealistic
 and extremely high values of \eqn{G_{C}}{Gc} due to low \eqn{VPD} values or high values of \eqn{G_{C}}{Gc} (default = 0.5 \eqn{kPa}).}
 
-\item{prec.lim}{Numeric threshold value in \eqn{mm~d^{-1}}{mm d-1}  for daily precipitation to remove rainy days (default = 1 mm d-1).
+\item{prec.lim}{Numeric threshold value in \eqn{mm~d^{-1}}{mm d-1}  for daily precipitation to remove rainy days (default = 1 \eqn{mm~d^{-1}}{mm d-1}).
 This variable is only needed when \code{“env.filt”} method is selected.}
 
 \item{method}{Character string indicating whether precipitation and solar irradiance data should be used
@@ -92,7 +92,7 @@ on the \eqn{G_{C}}{Gc} and adjust the filter threshold manually.
 }
 \details{
 Various relevant outputs can be derived from the \eqn{SFD} data.
-This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in mmol m-2 s-1)
+This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in \eqn{mmol~m^{-2}~s^{-1}}{mmol m-2 s-1})
 and crown conductance (according to Pappas \emph{et al.} 2018).
 \eqn{G_{C}}{Gc} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{GC = Fd / VPD} (in kPa), assuming that
 i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and

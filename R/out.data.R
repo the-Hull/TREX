@@ -31,7 +31,7 @@
 #'  This variable is only needed when the “\code{env.filt”} method is selected.
 #' @param vpd.cutoff Numeric threshold value in \eqn{kPa} for peak-of-the-day mean \eqn{VPD} to eliminate unrealistic
 #'  and extremely high values of \eqn{G_{C}}{Gc} due to low \eqn{VPD} values or high values of \eqn{G_{C}}{Gc} (default = 0.5 \eqn{kPa}).
-#' @param prec.lim Numeric threshold value in \eqn{mm~d^{-1}}{mm d-1}  for daily precipitation to remove rainy days (default = 1 mm d-1).
+#' @param prec.lim Numeric threshold value in \eqn{mm~d^{-1}}{mm d-1}  for daily precipitation to remove rainy days (default = 1 \eqn{mm~d^{-1}}{mm d-1}).
 #'  This variable is only needed when \code{“env.filt”} method is selected.
 #' @param method Character string indicating whether precipitation and solar irradiance data should be used
 #'  to determined peak-of-the-day \eqn{G_{C}}{Gc} values and filter the daily \eqn{G_{C}}{Gc} values (“env.filt”)
@@ -42,7 +42,7 @@
 #' @param make.plot Logical; if \code{TRUE}, a plot is generated presenting the response of \eqn{G_{C}}{Gc} to \eqn{VPD}.
 #'
 #' @details Various relevant outputs can be derived from the \eqn{SFD} data.
-#' This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in mmol m-2 s-1)
+#' This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in \eqn{mmol~m^{-2}~s^{-1}}{mmol m-2 s-1})
 #' and crown conductance (according to Pappas \emph{et al.} 2018).
 #' \eqn{G_{C}}{Gc} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{GC = Fd / VPD} (in kPa), assuming that
 #' i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and

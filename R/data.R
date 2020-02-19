@@ -183,7 +183,7 @@
 #'
 #' \describe{
 #'   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
-#'   \item{value}{Daily precipitation (mm d-1) from local weather stations (\code{numeric})}
+#'   \item{value}{Daily precipitation (\eqn{mm~d^{-1}}{mm d-1}) from local weather stations (\code{numeric})}
 #' }
 #'
 #' @references
