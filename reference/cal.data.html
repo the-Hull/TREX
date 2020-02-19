@@ -37,12 +37,13 @@
 
 <meta property="og:title" content="Calibration Measurements — cal.data" />
 <meta property="og:description" content="Returns raw calibration experiment data obtained from literature,
- with K values combined with gravimetrically determined sap flux density.
+ with K values combined with gravimetrically determined sap flux density,
+ as detailed in Flo et al. (2019).
  The data.frame contains 22 studies with 37 different species. The data is used
- within the tdm_cal.sfd function to calculate sap flux density. The data
- originates from the manuscript by Flo et al. 2019 and provides a
- description on the genus, species, calibration material, wood porosity and diameter
- of the stem. The presented data is open for public use." />
+ within the tdm_cal.sfd function to calculate sap flux density.
+ Description on the genus, species, calibration material, wood porosity and diameter
+ of the stem is provided in Flo et al. (2019).
+ The presented data is open for public use." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,12 +114,13 @@
 
     <div class="ref-description">
     <p>Returns raw calibration experiment data obtained from literature,
- with <em>K</em> values combined with gravimetrically determined sap flux density.
+ with <em>K</em> values combined with gravimetrically determined sap flux density,
+ as detailed in Flo <em>et al.</em> (2019).
  The <code>data.frame</code> contains 22 studies with 37 different species. The data is used
- within the <code><a href='tdm_cal.sfd.html'>tdm_cal.sfd</a></code> function to calculate sap flux density. The data
- originates from the manuscript by Flo <em>et al.</em> 2019 and provides a
- description on the genus, species, calibration material, wood porosity and diameter
- of the stem. The presented data is open for public use.</p>
+ within the <code><a href='tdm_cal.sfd.html'>tdm_cal.sfd</a></code> function to calculate sap flux density.
+ Description on the genus, species, calibration material, wood porosity and diameter
+ of the stem is provided in Flo <em>et al.</em> (2019).
+ The presented data is open for public use.</p>
     </div>
 
     <pre class="usage"><span class='no'>cal.data</span></pre>
@@ -139,7 +141,7 @@
          by the thermal dissipation probes (unitless; <code>numeric</code>)</p></dd>
   <dt>SFD</dt><dd><p>Sap flux density measured gravimetrically (in \(cm^3 cm^{-2} h^{-1}\); <code>numeric</code>)</p></dd>
   <dt>Granier</dt><dd><p>Sap flux density calculated according to Granier et al. 1985 using k
-       (in \(cm^{3}\) cm-2 h-1; using \(43.84 k^{1.231}{k^1.231}\)) (<code>numeric</code>)</p></dd>
+       (in \(cm^3 cm^{-2} h^{-1}\); using \(43.84 k^{1.231}\)) (<code>numeric</code>)</p></dd>
 
 </dl>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>

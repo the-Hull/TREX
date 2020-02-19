@@ -127,7 +127,7 @@ provided, the \(K\) values for each method are determined (see <code><a href='td
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>input</th>
-      <td><p>A <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code> ouput or <code><a href='is.trex.html'>is.trex</a></code>-compliant object of \(\Delta T \)(or \(\Delta V\)) values containing
+      <td><p>A <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code> ouput or <code><a href='is.trex.html'>is.trex</a></code>-compliant object of \(\Delta T \) (or \(\Delta V\)) values containing
 a timestamp and a value column.</p></td>
     </tr>
     <tr>
@@ -155,9 +155,9 @@ is provided as a <code>zoo</code> vector object (default = <code>FALSE</code>).<
 
     <p>A <code>zoo</code> object or <code>data.frame</code> in the appropriate
 format for other functionalities. See <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code> for output specifications.
-All \(K\) values for each method are provided when an
-<code><a href='is.trex.html'>is.trex</a></code>-compliant object was provided.
-If individual time series are provided for <code>input</code> and <code>dt.max</code> an alternative output is provided:</p>
+All \(K\) values for each method are provided when an output
+from <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code> was provided.
+If individual time series are provided for <code>input</code> and <code>tdm_dt.max</code> an alternative output is provided:</p>
 <dl class='dl-horizontal'>
 
  <dt>input</dt><dd><p>= \(\Delta T\) input data.</p></dd>
@@ -175,7 +175,7 @@ If individual time series are provided for <code>input</code> and <code>dt.max</
  \(\Delta T\) (or \(\Delta V\)) was corrected (denoted as \(\Delta T_{sw}\)) for the proportion of
  the probe that was inserted into the conducting sapwood vs the
  proportion of the probe that was inserted into the nonconductive heartwood
- (\(\gamma\) in mm mm-1). Together with\(\Delta T_{max}\), \(\Delta T\) was corrected
+ (\(\gamma\) in mm mm-1). Together with \(\Delta T_{max}\), \(\Delta T\) was corrected
  according to the following equation:
  $$\Delta T_{sw} = (\Delta T – (1 – \gamma)  \Delta T_{max}) / \gamma$$
  \(\Delta T_{sw}\) together with \(\Delta T_{max}\) was then recalculated to \(K\).</p>
@@ -183,7 +183,7 @@ If individual time series are provided for <code>input</code> and <code>dt.max</
 
     <p>Clearwater MJ, Meinzer FC, Andrade JL, Goldstein G, Holbrook NM. 1999.
 Potential errors in measurement of nonuniform sap flow using heat dissipation probes.
-Tree Physiology 19:681–687 &lt;doi: 10.1093/treephys/19.10.681&gt;</p>
+Tree Physiology 19:681–687 <a href='doi: 10.1093/treephys/19.10.681'>doi: 10.1093/treephys/19.10.681</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

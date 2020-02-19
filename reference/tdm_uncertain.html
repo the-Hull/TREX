@@ -36,14 +36,14 @@
 
 
 <meta property="og:title" content="Uncertainty and sensitivity analysis — tdm_uncertain" />
-<meta property="og:description" content="Quantifies the induced uncertainty on SFD and K time series due to the variability
+<meta property="og:description" content="Quantifies the induced uncertainty on \(SFD\) and \(K\) time series due to the variability
 in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
- analysis to quantify the impact of each individual parameter on three relevant outputs derived from SFD and K, namely:
+ analysis to quantify the impact of each individual parameter on three relevant outputs derived from \(SFD\) and \(K\), namely:
   i) the mean daily sum of water use,
-  ii) the variability of maximum daily SFD or K values,
+  ii) the variability of maximum daily \(SFD\) or \(K\) values,
   iii) and the duration of daily sap flow.
- This function provides both the uncertainty and sensitivity indices, as time-series of SFD and K with the mean,
- standard deviation (sd) and confidence interval (CI) due to parameter uncertainty.
+ This function provides both the uncertainty and sensitivity indices, as time-series of \(SFD\) and \(K\) with the mean,
+ standard deviation (\(sd\)) and confidence interval (CI) due to parameter uncertainty.
  Users should ensure that no gaps are present within the input data and environmental time series." />
 <meta name="twitter:card" content="summary" />
 
@@ -114,14 +114,14 @@ in input parameters applied during TDM data processing. Moreover, it applies a g
     </div>
 
     <div class="ref-description">
-    <p>Quantifies the induced uncertainty on <em>SFD</em> and <em>K</em> time series due to the variability
+    <p>Quantifies the induced uncertainty on \(SFD\) and \(K\) time series due to the variability
 in input parameters applied during TDM data processing. Moreover, it applies a global sensitivity
- analysis to quantify the impact of each individual parameter on three relevant outputs derived from <em>SFD</em> and <em>K</em>, namely:
+ analysis to quantify the impact of each individual parameter on three relevant outputs derived from \(SFD\) and \(K\), namely:
   i) the mean daily sum of water use,
-  ii) the variability of maximum daily <em>SFD</em> or <em>K</em> values,
+  ii) the variability of maximum daily \(SFD\) or \(K\) values,
   iii) and the duration of daily sap flow.
- This function provides both the uncertainty and sensitivity indices, as time-series of <em>SFD</em> and <em>K</em> with the mean,
- standard deviation (<em>sd</em>) and confidence interval (CI) due to parameter uncertainty.
+ This function provides both the uncertainty and sensitivity indices, as time-series of \(SFD\) and \(K\) with the mean,
+ standard deviation (\(sd\)) and confidence interval (CI) due to parameter uncertainty.
  <strong>Users should ensure that no gaps are present within the input data and environmental time series</strong>.</p>
     </div>
 
@@ -146,7 +146,7 @@ in input parameters applied during TDM data processing. Moreover, it applies a g
       <th>vpd.input</th>
       <td><p>An <code><a href='is.trex.html'>is.trex</a></code>-compliant object (<code>zoo</code> object,
 <code>data.frame</code>) containing a timestamp and a vapour pressure deficit
-(vpd; in kPa) column with the same temporal extent and time steps as the <code>input</code> object.</p></td>
+(\(VPD\); in kPa) column with the same temporal extent and time steps as the <code>input</code> object.</p></td>
     </tr>
     <tr>
       <th>sr.input</th>
@@ -168,7 +168,7 @@ Keep in mind that high values increase processing time.</p></td>
     </tr>
     <tr>
       <th>zero.end</th>
-      <td><p>Numeric, definies the end of the predawn period.
+      <td><p>Numeric, defines the end of the predawn period.
 Values should be in minutes (e.g., predawn conditions until 8:00 = 8*60; default = 8*60).</p></td>
     </tr>
     <tr>
@@ -178,7 +178,7 @@ for which an integer sampling range will be defined (default = 16, assuming a 15
     </tr>
     <tr>
       <th>zero.start</th>
-      <td><p>Numeric, definies the number of time steps for <code>zero.end</code> (the minimum time step of the input)
+      <td><p>Numeric, defines the number of time steps for <code>zero.end</code> (the minimum time step of the input)
 for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).</p></td>
     </tr>
     <tr>
@@ -280,8 +280,8 @@ to determine the coefficient of variation (CV) threshold for establishing zero-f
     </tr>
     <tr>
       <th>min.sfd</th>
-      <td><p>Numeric, defines at which \(SFD\) (cm3 cm-2 h-1) zero-flow conditions are expected.
-This parameter is used to define the duration of daily sap flow based on \(SFD\) (default = 0.5 cm3 cm-2 h-1).</p></td>
+      <td><p>Numeric, defines at which \(SFD\) (\(cm^3 cm^{-2} h^{-1}\)) zero-flow conditions are expected.
+This parameter is used to define the duration of daily sap flow based on \(SFD\) (default = \(0.5 cm^3 cm^{-2} h^{-1}\)).</p></td>
     </tr>
     <tr>
       <th>min.k</th>
@@ -305,11 +305,11 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  Items include:</p>
 <p></p><dl class='dl-horizontal'>
 
-   <dt>output.data</dt><dd><p>data.frame containing uncertainty and sensitivity indices for SFD and K and the included parameters.
+   <dt>output.data</dt><dd><p>data.frame containing uncertainty and sensitivity indices for \(SFD\) and K and the included parameters.
         This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"ci.min"] and lower [,"ci.max"]
         95% confidence interval.</p></dd>
 
-   <dt>output.sfd</dt><dd><p>zoo object or data.frame with the SFD time series obtained from the bootstrap resampling.
+   <dt>output.sfd</dt><dd><p>zoo object or data.frame with the \(SFD\) time series obtained from the bootstrap resampling.
               This includes the mean uncertainty/sensitivity [,"mean"], standard deviation [,"sd"], upper [,"CIup"] and lower [,"CIlo"]
                95% confidence interval.</p></dd>
 
@@ -368,7 +368,7 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  Math. Model Comput. Exp. 1:407-414</p>
 <p>Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
  Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
-  Journal of Geophysical Research 118:505-528 &lt;doi: 10.1002/jgrg.20035&gt;</p>
+  Journal of Geophysical Research 118:505-528 <a href='doi: 10.1002/jgrg.20035'>doi: 10.1002/jgrg.20035</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

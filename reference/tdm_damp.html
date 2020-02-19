@@ -36,7 +36,7 @@
 
 
 <meta property="og:title" content="Signal dampening correction — tdm_damp" />
-<meta property="og:description" content="When long-term \(K\) series (~3 years) are provided, one can perform
+<meta property="og:description" content="When long-term \(K\) time series (~3 years) are provided, one can perform
  a signal dampening correction (when sensors were not re-installed;
  see Peters et al. 2018). Applying the signal dampening
  correction requires  visually inspecting the correction curve
@@ -112,7 +112,7 @@
     </div>
 
     <div class="ref-description">
-    <p>When long-term \(K\) series (~3 years) are provided, one can perform
+    <p>When long-term \(K\) time series (~3 years) are provided, one can perform
  a signal dampening correction (when sensors were not re-installed;
  see Peters <em>et al.</em> 2018). Applying the signal dampening
  correction requires  visually inspecting the correction curve
@@ -137,7 +137,7 @@ a timestamp and a value column.</p></td>
     </tr>
     <tr>
       <th>make.plot</th>
-      <td><p>Logical; if <code>TRUE</code>, a plot is generated presenting the correction curve and the \(K\) series.</p></td>
+      <td><p>Logical; if <code>TRUE</code>, a plot is generated presenting the correction curve and the \(K\) time series.</p></td>
     </tr>
     <tr>
       <th>df</th>
@@ -148,7 +148,7 @@ a timestamp and a value column.</p></td>
 <p>@details The function fits a correction curve for signal dampening (e.g., due to wounding)
  according to Peters <em>et al.</em> (2018). A sensor specific function is fitted to daily maximum
  \(K\) values (considering a minimum cut-off threshold; see <code>k.threshold</code>). Dependent variables
- for the function include seasonality (DOY) and days since installation (t).
+ for the function include seasonality (DOY) and days since installation (\(t\)).
  First, seasonal effects are removed by correcting the \(K\) series (residuals; \(Kresid\))
  to a second-order polynomial with DOY. These residuals are then used within a
  non-linear model:
@@ -180,7 +180,7 @@ a timestamp and a value column.</p></td>
 Prendin AL, Schneider L, Baltzer JL, Baron-Gafford GA, Dietrich L, Heinrich I,
 Minor RL, Sonnentag O, Matheny AM, Wightman MG, Steppe K. 2018.
 Quantification of uncertainties in conifer sap flow measured with the thermal
-dissipation method. New Phytologist 219:1283-1299 &lt;doi: 10.1111/nph.15241&gt;</p>
+dissipation method. New Phytologist 219:1283-1299 <a href='doi: 10.1111/nph.15241'>doi: 10.1111/nph.15241</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

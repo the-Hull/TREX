@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Automated and manual outlier detection — outlier • TREX</title>
+<title>Data cleaning and outlier detection — outlier • TREX</title>
 
 
 <!-- jquery -->
@@ -35,10 +35,15 @@
 
 
 
-<meta property="og:title" content="Automated and manual outlier detection — outlier" />
-<meta property="og:description" content="This interactive app allows filtering outlier data via a specified threshold
-and by manually clicking on problematic observations. The data must be provided as a
-data.frame saved to disk in .Rda format." />
+<meta property="og:title" content="Data cleaning and outlier detection — outlier" />
+<meta property="og:description" content="This function launches a Shiny application that
+ (1) visualizes raw and outlier-free time series interactively
+ (using plotly),
+ (2) highlights automatically detected outliers,
+ (3) allows the user to revise the automatically detected outliers
+    and manually include data points, and
+ (4) exports the original data and the outlier-free time series in
+    an is.trex-compliant object that can be further processed." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -102,15 +107,20 @@ data.frame saved to disk in .Rda format." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Automated and manual outlier detection</h1>
+    <h1>Data cleaning and outlier detection</h1>
     
     <div class="hidden name"><code>outlier.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This interactive app allows filtering outlier data via a specified threshold
-and by manually clicking on problematic observations. The data must be provided as a
-<code>data.frame</code> saved to disk in <code>.Rda</code> format.</p>
+    <p>This function launches a Shiny application that
+ (1) visualizes raw and outlier-free time series interactively
+ (using plotly),
+ (2) highlights automatically detected outliers,
+ (3) allows the user to revise the automatically detected outliers
+    and manually include data points, and
+ (4) exports the original data and the outlier-free time series in
+    an <code><a href='is.trex.html'>is.trex</a></code>-compliant object that can be further processed.</p>
     </div>
 
     <pre class="usage"><span class='fu'>outlier</span>()</pre>
@@ -118,7 +128,33 @@ and by manually clicking on problematic observations. The data must be provided 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Runs an interactive shiny app with option to save output as a <code>.Rda</code> file</p>
+    <p>Once the application is launched,
+ the user can load an <code>.RData</code> file where a <code>data.frame</code>
+  with the timestamp and sensor data are stored.
+  The timestamp in this <code>data.frame</code> should be of class <code>Date</code>.
+  Many columns can be included (corresponding, for example, to different sensors)
+  and the user can select through the application the x and y axes of the interactive time series plots.
+  In addition, the user can provide the units of the imported data
+  (e.g., degrees \(C\) or \(mV\) for \(\Delta T\) or \(\Delta V\), respectively).
+  A parameter (alpha) for automatic outlier detection can be supplied.
+  More specifically, the automatic identification of outliers is based on a
+  two-step procedure:
+    i) the Tukey’s method (Tukey, 1977) is applied to detect statistical outliers
+    as values falling outside the range
+    \([q_{0.25} - alpha * IQR, q_{0.75} + alpha * IQR]\),
+    where \(IQR\) is the interquartile range
+    (\(q_{0.75} - q_{0.25}\))
+    with \(q_{0.25}\) denoting the 25% lower quartile and \(q_{0.75}\) the
+    75% upper quartile, and alpha is a user-defined parameter
+    (default value <code>alpha = 3</code>;
+    although visual inspection through the interactive plots allows for adjusting
+    alpha and optimizing the automatic detection of outliers),
+    and ii) the first difference (or lag-1 differences) of the raw data are calculated
+    and data points with lag-1 differences greater
+    than the mean of the raw input time series, are excluded.</p>
+<p>The function does not return a value, but allows the user
+ to write the raw and outlier-free data in a <code>.RData</code> file to disk, for
+ subsequent import via <code><a href='https://rdrr.io/r/base/load.html'>load()</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -126,6 +162,8 @@ and by manually clicking on problematic observations. The data must be provided 
 <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"exdata"</span>, <span class='st'>"example.RData"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"TREX"</span>, <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># either copy-paste this into the navigation bar of the file selection window</span>
 <span class='co'># or navigate here manually for selection</span>
+
+<span class='co'># launch shiny application</span>
 <span class='fu'>outlier</span>()
 
 }</div></pre>

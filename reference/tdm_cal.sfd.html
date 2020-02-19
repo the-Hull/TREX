@@ -37,15 +37,15 @@
 
 <meta property="og:title" content="Calculate sap flux density — tdm_cal.sfd" />
 <meta property="og:description" content="The acquired \(K\) values are calculated to sap flux density
- (SFD in \(cm^3 cm^{-2} h^{-1}\)). As many calibration curves exist
+ (\(SFD\) in \(cm^3 cm^{-2} h^{-1}\)). As many calibration curves exist
  (see Peters et al. 2018; Flo et al. 2019), the function provides the option to
- calculate \(SFD\) using all available calibration experiment data
- (see cal.data; Flo et al. 2019). Additionally,
+ calculate \(SFD\) using calibration experiment data from the meta-analyses by
+ Flo et al. (2019; see cal.data). Additionally,
  raw calibration data can be provided or parameters \(a\) and \(b\)
  for a specific calibration function (\(aK^b\)) can be provided.
  The algorithm determines for each calibration experiment dataset
  the calibration curve (\(SFD = aK^b\)) and calculates \(SFD\) from
- either the mean of all curves and the \(95\)
+ either the mean of all curves and the 95% confidence interval
  of either all curves, or bootstrapped resampled uncertainty around
  the raw calibration experiment data when one calibration dataset is selected." />
 <meta name="twitter:card" content="summary" />
@@ -118,15 +118,15 @@
 
     <div class="ref-description">
     <p>The acquired \(K\) values are calculated to sap flux density
- (SFD in \(cm^3 cm^{-2} h^{-1}\)). As many calibration curves exist
+ (\(SFD\) in \(cm^3 cm^{-2} h^{-1}\)). As many calibration curves exist
  (see Peters <em>et al</em>. 2018; Flo <em>et al.</em> 2019), the function provides the option to
- calculate \(SFD\) using all available calibration experiment data
- (see <code><a href='cal.data.html'>cal.data</a></code>; Flo <em>et al.</em> 2019). Additionally,
+ calculate \(SFD\) using calibration experiment data from the meta-analyses by
+ Flo <em>et al.</em> (2019; see <code><a href='cal.data.html'>cal.data</a></code>). Additionally,
  raw calibration data can be provided or parameters \(a\) and \(b\)
  for a specific calibration function (\(aK^b\)) can be provided.
  The algorithm determines for each calibration experiment dataset
  the calibration curve (\(SFD = aK^b\)) and calculates \(SFD\) from
- either the mean of all curves and the \(95\)<!-- % confidence interval -->
+ either the mean of all curves and the 95% confidence interval
  of either all curves, or bootstrapped resampled uncertainty around
  the raw calibration experiment data when one calibration dataset is selected.</p>
     </div>
@@ -206,7 +206,7 @@ is provided as a <code>zoo</code> vector object (default = FALSE).</p></td>
  all \(SFD\) values for each method are provided and added to the
  <code><a href='is.trex.html'>is.trex</a></code>-compliant object (e.g., [['sfd.pd']], [['sfd.mw']])
  if this format was provided as an input, and,
- finally, a <code>data.frame</code> is provided with the mean and 95<!-- % confidence -->
+ finally, a <code>data.frame</code> is provided with the mean and 95% confidence
  interval of the applied calibration functions (see [['model.ens']]).
  If an individual time series is provided for input with \(K\) values an alternative output is provided:</p>
 <p></p><dl class='dl-horizontal'>
@@ -223,8 +223,8 @@ is provided as a <code>zoo</code> vector object (default = FALSE).</p></td>
 through all selected raw calibration data. If multiple studies are provided,
 multiple calibration curves are fitted. In case a single calibration dataset
 is provided a bootstrap resampling is applied (n = 100) to determined the
-mean and 95<!-- % confidence interval of the fit. When multiple calibration curves -->
-are requested the mean and 95<!-- % confidence interval is determined on the fitted functions. -->
+mean and 95% confidence interval of the fit. When multiple calibration curves
+are requested the mean and 95% confidence interval is determined on the fitted functions.
 The mean and confidence interval are used to calculate \(SFD\) from \(K\).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -233,8 +233,8 @@ The mean and confidence interval are used to calculate \(SFD\) from \(K\).</p>
  Quantification of uncertainties in conifer sap flow measured with the thermal dissipation method.
  New Phytologist 219:1283-1299 &lt;doi: 10.1111/nph.15241&gt;</p>
 <p>Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
- A synthesis of bias and uncertainty in sap flow methods. A
- gricultural and Forest Meteorology 271:362-374 &lt;doi: 10.1016/j.agrformet.2019.03.012&gt;</p>
+ A synthesis of bias and uncertainty in sap flow methods.
+ Agricultural and Forest Meteorology 271:362-374 <a href='doi: 10.1016/j.agrformet.2019.03.012'>doi: 10.1016/j.agrformet.2019.03.012</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#calculating sap flux density</span>

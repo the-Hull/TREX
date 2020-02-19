@@ -40,7 +40,7 @@
 This function provides the option to select the temporal step size
 for aggregation of a single time series origination from an is.trex-compliant object.
 Additionally, the user can define the start and end time of the series and select
-the mean of aggregating the data." />
+the function used for aggregation." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -114,7 +114,7 @@ the mean of aggregating the data." />
 This function provides the option to select the temporal step size
 for aggregation of a single time series origination from an <code><a href='is.trex.html'>is.trex</a></code>-compliant object.
 Additionally, the user can define the start and end time of the series and select
-the mean of aggregating the data.</p>
+the function used for aggregation.</p>
     </div>
 
     <pre class="usage"><span class='fu'>agg.data</span>(<span class='no'>input</span>,
@@ -161,30 +161,31 @@ applied to all data subsets (see aggregate; including "sum", "mean",
     <tr>
       <th>unit</th>
       <td><p>Numeric, the minutes in which a velocity unity is provided
-(e.g., cm3 cm-2 h-1 = 60) for summation (<code>FUN = “sum”</code>; default = 60).</p></td>
+(e.g., \(cm^3 cm^{-2} h^{-1} = 60\)) for summation (<code>FUN = “sum”</code>; default = 60).</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
-      <td><p>Logical; iff <code>TRUE</code> missing values are removed (default = <code>TRUE</code>).</p></td>
+      <td><p>Logical; if <code>TRUE</code> missing values are removed (default = <code>TRUE</code>).</p></td>
     </tr>
     <tr>
       <th>df</th>
-      <td><p>Logical; If <code>TRUE</code>, output is provided in a <code>data.frame</code> format
- with a timestamp and a value column. If <code>FALSE</code>, output
- is provided as a zoo vector object (default = <code>FALSE</code>).</p>
-<p>@details
- Time series have different temporal resolutions.
- This function provides the option to aggregate time steps with
- standard <code>FUN</code> statistics. When applying this function to calculate
- summed sap flow values (e.g., <code>cm^3 cm^{-2} d^{-1}</code>cm3 cm-2 d-1) one needs
- to include the velocity unit, as the summation is dependent upon the minimum timestep
- of the time series (e.g., <code>cm^3 cm^{-2} h^{-1}</code>cm3 cm-2 h-1, <code>unit = 60</code>).</p></td>
+      <td><p>Logical; if <code>TRUE</code>, output is provided in a <code>data.frame</code> format
+with a timestamp and a value column. If <code>FALSE</code>, output
+is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A zoo object or data.frame in the appropriate format for other functionalities.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Time series are often derived at variable resolutions.
+ This function provides the option to aggregate (homogenize) time steps with
+ standard <code>FUN</code> statistics. When applying this function to calculate
+ summed sap flow values (e.g., \(cm^3 cm^{-2} d^{-1}\)) one needs
+ to include the velocity unit, as the summation is dependent upon the minimum timestep
+ of the time series (e.g., \(cm^3 cm^{-2} h^{-1}\), <code>unit = 60</code>).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -239,6 +240,7 @@ applied to all data subsets (see aggregate; including "sum", "mean",
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
