@@ -62,12 +62,12 @@ A named list of \code{data.frame} objects,
    \item{raw}{A \code{data.frame} containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
 (e.g., “2012-01-01 00:00:00”), year of the data [,“year”], day of year [,“doy”], input solar radiance data [,“sr”],
  daily average radiance data [,“sr”], input vapour pressure deficit data [,“vpd”], isolated peak-of-the-day vapour pressure
- deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in mmol m-2 s-1 [,“fd”],
- crown conductance expressed in \eqn{mmol~m^{-2}~s^{-1}~kPa^{-1}}{mmol m-2 s-1 kPa-1} [,“gc”], and the filtered crown conductance [,“gc.filt”]}
+ deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in \eqn{mmol~m^{-2}s^{-1}}{mmol m-2 s-1} [,“fd”],
+ crown conductance expressed in \eqn{mmol~m^{-2}s^{-1}~kPa^{-1}}{mmol m-2 s-1 kPa-1} [,“gc”], and the filtered crown conductance [,“gc.filt”]}
 
  \item{peak.mean}{A \code{data.frame} containing the daily mean crown conductance values.
  Columns include the timestamp [,“timestamp”] (e.g., “2012-01-01”), peak-of-the-day vapour pressure deficit [,“vpd.filt”],
-  the filtered crown conductance \eqn{mmol~m^{-2}~s^{-1}~kPa^{-1}}{mmol m-2 s-1 kPa-1} [,“gc.filt”],
+  the filtered crown conductance \eqn{mmol~m^{-2}s^{-1}~kPa^{-1}}{mmol m-2 s-1 kPa-1} [,“gc.filt”],
    and the normalized crown conductance according
    to the maximum crown conductance [,“gc.norm”].}
 
@@ -92,7 +92,7 @@ on the \eqn{G_{C}}{Gc} and adjust the filter threshold manually.
 }
 \details{
 Various relevant outputs can be derived from the \eqn{SFD} data.
-This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in \eqn{mmol~m^{-2}~s^{-1}}{mmol m-2 s-1})
+This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in \eqn{mmol~m^{-2}s^{-1}}{mmol m-2 s-1})
 and crown conductance (according to Pappas \emph{et al.} 2018).
 \eqn{G_{C}}{Gc} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{GC = Fd / VPD} (in kPa), assuming that
 i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and
