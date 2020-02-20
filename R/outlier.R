@@ -149,6 +149,12 @@ outlier <- function(){
             frame2 <- data.frame()
 
 
+
+
+# Define data frame -------------------------------------------------------
+
+
+
             # Plot A -----------------------------------------------------------------------
             output$plotA = plotly::renderPlotly({
 
