@@ -4,8 +4,19 @@
 \alias{tdm_cal.sfd}
 \title{Calculate sap flux density}
 \usage{
-tdm_cal.sfd(input, genus, species, study, wood, calib, a, b, decimals,
-  make.plot = TRUE, df = FALSE)
+tdm_cal.sfd(
+  input,
+  genus,
+  species,
+  study,
+  wood,
+  calib,
+  a,
+  b,
+  decimals,
+  make.plot = TRUE,
+  df = FALSE
+)
 }
 \arguments{
 \item{input}{An \code{\link{is.trex}}-compliant object (\code{zoo} vector,

@@ -4,15 +4,38 @@
 \alias{tdm_uncertain}
 \title{Uncertainty and sensitivity analysis}
 \usage{
-tdm_uncertain(input, vpd.input, sr.input, method = "pd", n = 2000,
-  zero.end = 8 * 60, range.end = 16, zero.start = 1 * 60,
-  range.start = 16, probe.length = 20, sw.cor = 32.28, sw.sd = 16,
-  log.a_mu = 4.085, log.a_sd = 0.628, b_mu = 1.275, b_sd = 0.262,
-  max.days_min = 1, max.days_max = 7, ed.window_min = 8,
-  ed.window_max = 16, criteria.vpd_min = 0.05,
-  criteria.vpd_max = 0.5, criteria.sr_mean = 30,
-  criteria.sr_range = 30, criteria.cv_min = 0.5, criteria.cv_max = 1,
-  min.sfd = 0.5, min.k = 0, make.plot = TRUE, df = FALSE)
+tdm_uncertain(
+  input,
+  vpd.input,
+  sr.input,
+  method = "pd",
+  n = 2000,
+  zero.end = 8 * 60,
+  range.end = 16,
+  zero.start = 1 * 60,
+  range.start = 16,
+  probe.length = 20,
+  sw.cor = 32.28,
+  sw.sd = 16,
+  log.a_mu = 4.085,
+  log.a_sd = 0.628,
+  b_mu = 1.275,
+  b_sd = 0.262,
+  max.days_min = 1,
+  max.days_max = 7,
+  ed.window_min = 8,
+  ed.window_max = 16,
+  criteria.vpd_min = 0.05,
+  criteria.vpd_max = 0.5,
+  criteria.sr_mean = 30,
+  criteria.sr_range = 30,
+  criteria.cv_min = 0.5,
+  criteria.cv_max = 1,
+  min.sfd = 0.5,
+  min.k = 0,
+  make.plot = TRUE,
+  df = FALSE
+)
 }
 \arguments{
 \item{input}{An \code{\link{is.trex}}-compliant object (\code{zoo} object}

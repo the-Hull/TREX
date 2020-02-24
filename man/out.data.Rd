@@ -4,9 +4,20 @@
 \alias{out.data}
 \title{Generation of TDM output}
 \usage{
-out.data(input, vpd.input, sr.input, prec.input, peak.hours = c(10:14),
-  low.sr = 150, peak.sr = 300, vpd.cutoff = 0.5, prec.lim = 1,
-  method = "env.filt", max.quant = 1, make.plot = TRUE)
+out.data(
+  input,
+  vpd.input,
+  sr.input,
+  prec.input,
+  peak.hours = c(10:14),
+  low.sr = 150,
+  peak.sr = 300,
+  vpd.cutoff = 0.5,
+  prec.lim = 1,
+  method = "env.filt",
+  max.quant = 1,
+  make.plot = TRUE
+)
 }
 \arguments{
 \item{input}{An \code{\link{is.trex}}-compliant time series from \code{\link{tdm_cal.sfd}} outputs

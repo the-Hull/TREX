@@ -3,7 +3,6 @@
 \docType{package}
 \name{TREX}
 \alias{TREX}
-\alias{TREX-package}
 \title{TREX: TRree sap flow EXtractor.}
 \description{
 Performs data assimilation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM).

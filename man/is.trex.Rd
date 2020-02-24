@@ -24,8 +24,8 @@ conversion. Only required when \code{solar.time=TRUE}.}
 
 \item{ref.add}{Logical; if \code{TRUE}, additional probes provided within data
 are considered. The \eqn{\Delta T} values are then corrected by subtracting
- the \eqn{\Delta T} measured between the reference probes from the \eqn{\Delta}
-  T measured between the heated and unheated probe (default = \code{FALSE}).}
+ the \eqn{\Delta T} measured between the reference probes from the \eqn{\Delta T}
+ measured between the heated and unheated probe (default = \code{FALSE}).}
 
 \item{df}{Logical; if \code{TRUE}, output is provided in a \code{data.frame} format with
 a timestamp and a value (\eqn{\Delta T} or \eqn{\Delta V}) column.
