@@ -56,7 +56,7 @@
 #'
 #' }
 #'
-outlier_test <- function(){
+outlier <- function(){
 
 
 
