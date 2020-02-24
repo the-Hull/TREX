@@ -125,15 +125,38 @@ in input parameters applied during TDM data processing. Moreover, it applies a g
  <strong>Users should ensure that no gaps are present within the input data and environmental time series</strong>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tdm_uncertain</span>(<span class='no'>input</span>, <span class='no'>vpd.input</span>, <span class='no'>sr.input</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pd"</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>2000</span>,
-  <span class='kw'>zero.end</span> <span class='kw'>=</span> <span class='fl'>8</span> * <span class='fl'>60</span>, <span class='kw'>range.end</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>zero.start</span> <span class='kw'>=</span> <span class='fl'>1</span> * <span class='fl'>60</span>,
-  <span class='kw'>range.start</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>probe.length</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>sw.cor</span> <span class='kw'>=</span> <span class='fl'>32.28</span>, <span class='kw'>sw.sd</span> <span class='kw'>=</span> <span class='fl'>16</span>,
-  <span class='kw'>log.a_mu</span> <span class='kw'>=</span> <span class='fl'>4.085</span>, <span class='kw'>log.a_sd</span> <span class='kw'>=</span> <span class='fl'>0.628</span>, <span class='kw'>b_mu</span> <span class='kw'>=</span> <span class='fl'>1.275</span>, <span class='kw'>b_sd</span> <span class='kw'>=</span> <span class='fl'>0.262</span>,
-  <span class='kw'>max.days_min</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>max.days_max</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>ed.window_min</span> <span class='kw'>=</span> <span class='fl'>8</span>,
-  <span class='kw'>ed.window_max</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>criteria.vpd_min</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>criteria.vpd_max</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>criteria.sr_mean</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-  <span class='kw'>criteria.sr_range</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>criteria.cv_min</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>criteria.cv_max</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>min.sfd</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>min.k</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>make.plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>df</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>tdm_uncertain</span>(
+  <span class='no'>input</span>,
+  <span class='no'>vpd.input</span>,
+  <span class='no'>sr.input</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pd"</span>,
+  <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>2000</span>,
+  <span class='kw'>zero.end</span> <span class='kw'>=</span> <span class='fl'>8</span> * <span class='fl'>60</span>,
+  <span class='kw'>range.end</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>zero.start</span> <span class='kw'>=</span> <span class='fl'>1</span> * <span class='fl'>60</span>,
+  <span class='kw'>range.start</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>probe.length</span> <span class='kw'>=</span> <span class='fl'>20</span>,
+  <span class='kw'>sw.cor</span> <span class='kw'>=</span> <span class='fl'>32.28</span>,
+  <span class='kw'>sw.sd</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>log.a_mu</span> <span class='kw'>=</span> <span class='fl'>4.085</span>,
+  <span class='kw'>log.a_sd</span> <span class='kw'>=</span> <span class='fl'>0.628</span>,
+  <span class='kw'>b_mu</span> <span class='kw'>=</span> <span class='fl'>1.275</span>,
+  <span class='kw'>b_sd</span> <span class='kw'>=</span> <span class='fl'>0.262</span>,
+  <span class='kw'>max.days_min</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>max.days_max</span> <span class='kw'>=</span> <span class='fl'>7</span>,
+  <span class='kw'>ed.window_min</span> <span class='kw'>=</span> <span class='fl'>8</span>,
+  <span class='kw'>ed.window_max</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>criteria.vpd_min</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>criteria.vpd_max</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>criteria.sr_mean</span> <span class='kw'>=</span> <span class='fl'>30</span>,
+  <span class='kw'>criteria.sr_range</span> <span class='kw'>=</span> <span class='fl'>30</span>,
+  <span class='kw'>criteria.cv_min</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>criteria.cv_max</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>min.sfd</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>min.k</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>make.plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>df</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

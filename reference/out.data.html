@@ -119,9 +119,20 @@ The user can choose between in- (<code>method = “env.filt”</code>) or exclud
 on the \(G_{C}\) and adjust the filter threshold manually.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>out.data</span>(<span class='no'>input</span>, <span class='no'>vpd.input</span>, <span class='no'>sr.input</span>, <span class='no'>prec.input</span>, <span class='kw'>peak.hours</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>:<span class='fl'>14</span>),
-  <span class='kw'>low.sr</span> <span class='kw'>=</span> <span class='fl'>150</span>, <span class='kw'>peak.sr</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>vpd.cutoff</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>prec.lim</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"env.filt"</span>, <span class='kw'>max.quant</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>make.plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>out.data</span>(
+  <span class='no'>input</span>,
+  <span class='no'>vpd.input</span>,
+  <span class='no'>sr.input</span>,
+  <span class='no'>prec.input</span>,
+  <span class='kw'>peak.hours</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>:<span class='fl'>14</span>),
+  <span class='kw'>low.sr</span> <span class='kw'>=</span> <span class='fl'>150</span>,
+  <span class='kw'>peak.sr</span> <span class='kw'>=</span> <span class='fl'>300</span>,
+  <span class='kw'>vpd.cutoff</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>prec.lim</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"env.filt"</span>,
+  <span class='kw'>max.quant</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>make.plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,12 +216,12 @@ to determined peak-of-the-day \(G_{C}\) values and filter the daily \(G_{C}\) va
    <dt>raw</dt><dd><p>A <code>data.frame</code> containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
 (e.g., “2012-01-01 00:00:00”), year of the data [,“year”], day of year [,“doy”], input solar radiance data [,“sr”],
  daily average radiance data [,“sr”], input vapour pressure deficit data [,“vpd”], isolated peak-of-the-day vapour pressure
- deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in mmol m-2 s-1 [,“fd”],
- crown conductance expressed in \(mmol~m^{-2}~s^{-1}~kPa^{-1}\) [,“gc”], and the filtered crown conductance [,“gc.filt”]</p></dd>
+ deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in \(mmol~m^{-2}s^{-1}\) [,“fd”],
+ crown conductance expressed in \(mmol~m^{-2}s^{-1}~kPa^{-1}\) [,“gc”], and the filtered crown conductance [,“gc.filt”]</p></dd>
 
  <dt>peak.mean</dt><dd><p>A <code>data.frame</code> containing the daily mean crown conductance values.
  Columns include the timestamp [,“timestamp”] (e.g., “2012-01-01”), peak-of-the-day vapour pressure deficit [,“vpd.filt”],
-  the filtered crown conductance \(mmol~m^{-2}~s^{-1}~kPa^{-1}\) [,“gc.filt”],
+  the filtered crown conductance \(mmol~m^{-2}s^{-1}~kPa^{-1}\) [,“gc.filt”],
    and the normalized crown conductance according
    to the maximum crown conductance [,“gc.norm”].</p></dd>
 
@@ -229,7 +240,7 @@ to determined peak-of-the-day \(G_{C}\) values and filter the daily \(G_{C}\) va
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Various relevant outputs can be derived from the \(SFD\) data.
-This function provides the option to recalculate \(SFD\) to \(F_{d}\) (expressed in \(mmol~m^{-2}~s^{-1}\))
+This function provides the option to recalculate \(SFD\) to \(F_{d}\) (expressed in \(mmol~m^{-2}s^{-1}\))
 and crown conductance (according to Pappas <em>et al.</em> 2018).
 \(G_{C}\) is estimated per unit sapwood area, where \(G_{C} = F_{d} / VPD\) (in kPa), assuming that
 i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and
