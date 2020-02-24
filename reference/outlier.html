@@ -130,10 +130,9 @@
 
     <p>Once the application is launched,
  the user can load an <code>.RData</code> file where a <code>data.frame</code>
-  with the timestamp and sensor data are stored.
-  The timestamp in this <code>data.frame</code> should be of class <code>Date</code>.
-  Many columns can be included (corresponding, for example, to different sensors)
-  and the user can select through the application the x and y axes of the interactive time series plots.
+  with a imestamp and sensor data (multiple sensor columns are supportred).
+  The timestamp in this <code>data.frame</code> should be of class <code>POSIXct</code>.
+  Users can select the x and y axes of the interactive time series plots.
   In addition, the user can provide the units of the imported data
   (e.g., degrees \(C\) or \(mV\) for \(\Delta T\) or \(\Delta V\), respectively).
   A parameter (alpha) for automatic outlier detection can be supplied.
@@ -153,8 +152,10 @@
     and data points with lag-1 differences greater
     than the mean of the raw input time series, are excluded.</p>
 <p>The function does not return a value, but allows the user
- to write the raw and outlier-free data in a <code>.RData</code> file to disk, for
- subsequent import via <code><a href='https://rdrr.io/r/base/load.html'>load()</a></code>.</p>
+ to save a list containing the raw and outlier-free data, as well as
+ the automatically and manually selected outliers in seperate items.
+ This object is exported as a ".Rda" or ".Rdata" file and can be
+ accessed subsequently via <code>load</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
