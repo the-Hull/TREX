@@ -1,18 +1,19 @@
 #' Data cleaning and outlier detection
 #'
-#' @description This function launches a Shiny application that
-#'  (1) visualizes raw and outlier-free time series interactively
-#'  (using {plotly}),
-#'  (2) highlights automatically detected outliers,
-#'  (3) allows the user to revise the automatically detected outliers
-#'     and manually include data points, and
-#'  (4) exports the original data and the outlier-free time series in
-#'     an \code{\link{is.trex}}-compliant object that can be further processed.
+#' @description This function launches a \code{Shiny} application that
+#' (1) visualizes raw and outlier-free time series interactively
+#' (using \code{plotly}),
+#' (2) highlights automatically detected outliers,
+#' (3) allows the user to revise the automatically detected outliers
+#'  and manually include data points, and
+#'  (4) exports the original data, the automatically selected outliers,
+#'   the manually selected outliers, and the outlier-free time series
+#'    in an \code{\link{is.trex}}-compliant object that can be further processed.
 #'
 #'
-#' @return Once the application is launched,
+#' @details Once the application is launched,
 #'  the user can load an \code{.RData} file where a \code{data.frame}
-#'   with a imestamp and sensor data (multiple sensor columns are supportred).
+#'   with a imestamp and sensor data (multiple sensor columns are supported).
 #'   The timestamp in this \code{data.frame} should be of class \code{POSIXct}.
 #'   Users can select the x and y axes of the interactive time series plots.
 #'   In addition, the user can provide the units of the imported data
@@ -30,16 +31,42 @@
 #'     (default value \code{alpha = 3};
 #'     although visual inspection through the interactive plots allows for adjusting
 #'     alpha and optimizing the automatic detection of outliers),
-#'     and ii) the first difference (or lag-1 differences) of the raw data are calculated
+#'     and ii) the lag-1 differences of the raw data are calculated
 #'     and data points with lag-1 differences greater
 #'     than the mean of the raw input time series, are excluded.
+#'  The raw input data from the provided \code{.RData} file are depicted with
+#'  black points in the first plot titled ‘Raw and automatic detection’
+#'  while the automatically detected outliers are also highlighted in this plot in red.
+#'  The user can adjust the parameter \code{alpha} and visually inspect the
+#'  automatically detected outliers in order to achieve the optimal automatic outlier selection.
+#'  This plot allows also interactivity (by hovering the mouse in the upper right corner
+#'  the available interactive tools appear, e.g., zoom in/out).
+#'  Also, the lower subpanel of this plot provides a better overview of the temporal extent
+#'  of the data and allows the user to select narrower time window for a more thorough data inspection.
+#'
+#'  Once the user is satisfied with the automatically selected data points,
+#'  one can proceed to the manual outlier selection.
+#'  The second interactive plot (titled ‘Filtered and manual selection’)
+#'  presents the raw data after removing the automatically detected outliers of the previous step,
+#'   and allows the user to manually select (point, rectangular, and lasso selections are allowed)
+#'    data points. The first selection identifies points to be removed (outliers),
+#'    and their color changes to red. If a point is selected for a second time,
+#'    this will undo its classification as outlier and its color is set back to black (i.e., not an outlier).
+#'   The red-color data points correspond to the selected outliers to be removed from the data,
+#'   in addition to those identified in the automated detection.
 #'
 #'
-#' @return The function does not return a value, but allows the user
-#'  to save a list containing the raw and outlier-free data, as well as
-#'  the automatically and manually selected outliers in seperate items.
-#'  This object is exported as a ".Rda" or ".Rdata" file and can be
-#'  accessed subsequently via \code{load}.
+#' @return The function does not return a value,
+#' but allows the user to save a \code{list} containing the raw and outlier-free data,
+#'  as well as the automatically and manually selected outliers in separate items.
+#'   Once the user is satisfied with the selected outliers,
+#'    the ‘Download Cleaned Time Series’ button will allow to export this \code{list} as a "\code{.Rda}" or
+#'     "\code{.Rdata}" file. This file can be accessed subsequently via \code{\link{load}}.
+#'  The list contained in this file is called \code{trex_outlier_output} and has four \code{data.frames},
+#'   namely \code{series_input} with the raw data, \code{select_auto} with
+#'   the automatically selected outliers, \code{select_manual} with the manually selected outliers,
+#'    and \code{series_cleaned} with the outlier-free time series.
+#'   Each of these data frames has a column with the timestamp and a column for the sensor values.
 
 #' @export
 #' @importFrom magrittr "%>%"
@@ -53,6 +80,34 @@
 #'
 #' # launch shiny application
 #' outlier()
+#'
+#'
+#' ## With full workflow:
+#'
+#' # get an example time series
+#' raw   <- example.data(type="doy")
+#' input <- is.trex(raw, tz="GMT", time.format="%H:%M",
+#'                  solar.time=TRUE, long.deg=7.7459, ref.add=FALSE, df=FALSE)
+#'
+#' # clip a period of interest
+#' input<-dt.steps(input,time.int=60,start="2014-02-01 00:00",
+#'                 end="2014-05-01 00:00",max.gap=180,decimals=15)
+#'
+#' # organise a data.frame
+#' input_df  = data.frame(date = zoo::index(input), data = zoo::coredata(input))
+#'
+#' # save the RData file to e.g. a temp file, or your project root directory
+#'
+#' #temp_file_path <- tempfile()
+#' # save(input_df, file=temp_file_path)
+#'
+#' # project_root_path <- "."
+#' # save(input_df, file=project_root_path)
+#'
+#'
+#' # call the oulier function and navigate to where the "test.RData" is stored
+#' outlier()
+#'
 #'
 #' }
 #'

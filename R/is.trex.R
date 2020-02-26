@@ -33,6 +33,7 @@
 #'  time (see \code{solar.time}) by providing the longitude in decimal degrees at which the measurements were
 #'  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
 #'  be either provided in a \code{zoo} format (df = \code{FALSE}) or \code{data.frame} (\code{df = TRUE}; default is \code{FALSE}).
+#'  \strong{Note, that the output time series is always given in \code{UTC} time zone.}
 #'
 #' @usage is.trex(data, tz = 'UTC', time.format = '\%m/\%d/\%y \%H:\%M:\%S',
 #'   solar.time = TRUE, long.deg = 7.7459,
@@ -79,6 +80,14 @@ is.trex <-
     }
 
 
+    #data<-input
+    #tz="Etc/GMT-1"
+    #time.format="%Y-%m-%d %H:%M:%S"
+    #ref.add=FALSE
+    #df=FALSE
+    #solar.time=F
+    #ref.add=F
+    #type="timestamp"
     #t= test
     #data= example.data(type="timestamp")
     #tz= "GMT"
@@ -206,11 +215,13 @@ is.trex <-
         ))
     } else{
       timestamp <-
-        chron::as.chron(base::as.POSIXct(
+        base::as.POSIXct(
           as.character(data$timestamp),
           format = time.format.orig,
           tz = tz
-        ))
+        )
+
+      timestamp<-format(timestamp,tz="UTC",usetz=TRUE)
     }
 
     #e
@@ -240,13 +251,13 @@ is.trex <-
     }
 
     #p
-    if (length(unique(timestamp)) == length(unique(format(timestamp, "%Y-%m-%d %H:%M")))) {
+    if (length(unique(timestamp)) == length(unique(format(as.character(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"))))) {
       output.data <-
-        zoo::zoo(data$value, order.by = base::as.POSIXct(format(timestamp, "%Y-%m-%d %H:%M")))
+        zoo::zoo(data$value, order.by = base::as.POSIXct(format(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"),tz="UTC"))
     } else{
       agg <-
-        stats::aggregate(output.data, by = format(timestamp, "%Y-%m-%d %H:%M"), mean)
-      output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(zoo::index(agg)))
+        stats::aggregate(output.data, by = format(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"), mean)
+      output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(zoo::index(agg),tz="UTC"))
     }
 
     #o= output

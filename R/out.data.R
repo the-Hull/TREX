@@ -1,62 +1,62 @@
-#' Generation of TDM output
+#' Generating TDM output
 #'
-#' @description Generates relevant output from the sap flux density (\eqn{SFD}) values.
-#' This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol~m^{-2}s^{-1}}{mmol m-2 s-1}) and crown conductance values
-#' (\eqn{G_{C}}{Gc}; Meinzer \emph{et al.} 2013, Pappas \emph{et al.} 2018, Peters \emph{et al.} 2018); an analogue to stomatal conductance) in an easily exportable format.
-#' Additionally, the function can perform environmental filtering on \eqn{F_{d}}{Fd} and \eqn{G_{C}}{Gc} and model \eqn{G_{C}}{Gc} sensitivity to vapour pressure deficit (\eqn{VPD}).
+#' @description Generates relevant outputs from the sap flux density (SFD) values.
+#' This function provides both \eqn{F_{d}}{Fd} (\eqn{SFD} expressed in \eqn{mmol m^{-2} s^{-1}}{mmol m-2 s-1}) and crown conductance values
+#' (\eqn{G_{C}}{Gc}; an analogue to stomatal conductance) in an easily exportable format.
+#' Additionally, the function can perform environmental filtering on \eqn{F_{d}}{Fd} and \eqn{G_{C}}{Gc} and model \eqn{G_{C}}{Gc} sensitivity to vapour pressure deficit (VPD).
 #' The user can choose between in- (\code{method = “env.filt”}) or excluding (\code{method = “stat”}) environmental filtering
 #' on the \eqn{G_{C}}{Gc} and adjust the filter threshold manually.
 #'
 #' @param input An \code{\link{is.trex}}-compliant time series from \code{\link{tdm_cal.sfd}} outputs
 #' (e.g., \code{X$sfd.mw$sfd})
-#' @param vpd.input An \code{\link{is.trex}}-compliant object an individual series of \eqn{VPD} in \eqn{kPa} (see \code{\link{vpd}}).
+#' @param vpd.input An \code{\link{is.trex}}-compliant object an individual series of VPD in kPa (see vpd).
 #' The extent and temporal resolution should be equal to input.
 #' Use \code{\link{dt.steps}} to correct if needed.
 #' @param sr.input  An \code{\link{is.trex}}-compliant object of an individual series of solar irradiance
 #'  (e.g. either PAR or global radiation; see \code{\link{sr}}).
 #'   The extent and temporal resolution should be equal to input. Use \code{\link{dt.steps}} to correct if needed.
-#'   This data is only needed when applying the \code{“env.filt”} method.
-#' @param prec.input An \code{\link{is.trex}}-compliant object of daily precipitation in \eqn{mm~d^{-1}}{mm d-1} (see \code{\link{preci}}).
+#'   This data is only needed when applying the “env.filt” method.
+#' @param prec.input An \code{\link{is.trex}}-compliant object of daily precipitation in mm d-1 (see \code{\link{preci}}).
 #'  The extent should be equal to input with a daily temporal resolution.
 #'   Use \code{\link{dt.steps}} to correct if needed.
-#'   This data is only needed when applying the \code{“env.filt”} method.
+#'   This data is only needed when applying the “env.filt” method.
 #' @param peak.hours Numeric vector with hours which should be considered as peak-of-the-day hours
 #'  (default = \code{c(10:14)}).
-#'  This variable is only needed when the \code{“stat”} method is selected.
-#' @param low.sr Numeric threshold value in the unit of the \code{sr.input} time-series (e.g., \eqn{W~m^{-2}}{W m-2})
-#'  to exclude cloudy days which impact \eqn{G_{C}}{Gc} (default = 150  \eqn{W~m^{-2}}{W m-2}).
-#'   This variable is only needed when the \code{“env.filt”} method is selected.
-#' @param peak.sr Numeric threshold value in the unit of the sr.input time-series (e.g.,  \eqn{W~m^{-2}}{W m-2})
-#'  to exclude hours which are not considered as peak-of-the-day hours (default = 300  \eqn{W~m^{-2}}{W m-2}).
-#'  This variable is only needed when the “\code{env.filt”} method is selected.
-#' @param vpd.cutoff Numeric threshold value in \eqn{kPa} for peak-of-the-day mean \eqn{VPD} to eliminate unrealistic
-#'  and extremely high values of \eqn{G_{C}}{Gc} due to low \eqn{VPD} values or high values of \eqn{G_{C}}{Gc} (default = 0.5 \eqn{kPa}).
-#' @param prec.lim Numeric threshold value in \eqn{mm~d^{-1}}{mm d-1}  for daily precipitation to remove rainy days (default = 1 \eqn{mm~d^{-1}}{mm d-1}).
-#'  This variable is only needed when \code{“env.filt”} method is selected.
+#'  This variable is only needed when the “stat” method is selected.
+#' @param low.sr Numeric threshold value in the unit of the sr.input time-series (e.g., W m-2)
+#'  to exclude cloudy days which impact \eqn{G_{C}}{Gc} (default = 150 W m-2).
+#'   This variable is only needed when the “env.filt” method is selected.
+#' @param peak.sr Numeric threshold value in the unit of the sr.input time-series (e.g., W m-2)
+#'  to exclude hours which are not considered as peak-of-the-day hours (default = 300 W m-2).
+#'  This variable is only needed when the “env.filt” method is selected.
+#' @param vpd.cutoff Numeric threshold value in kPa for peak-of-the-day mean VPD to eliminate unrealistic
+#'  and extremely high values of \eqn{G_{C}}{Gc} due to low VPD values or high values of \eqn{G_{C}}{Gc} (default = 0.5 kPa).
+#' @param prec.lim Numeric threshold value in mm d-1 for daily precipitation to remove rainy days (default = 1 mm d-1).
+#'  This variable is only needed when “env.filt” method is selected.
 #' @param method Character string indicating whether precipitation and solar irradiance data should be used
 #'  to determined peak-of-the-day \eqn{G_{C}}{Gc} values and filter the daily \eqn{G_{C}}{Gc} values (“env.filt”)
 #'   or not (“stat”; default). When \code{“env.filt”} is selected, \code{input}, \code{vpd.input}, \code{sr.input}, \code{prec.input},
 #'    \code{peak.sr}, \code{low.sr}, \code{vpd.cutoff} and \code{prec.lim} have to be provided.
 #'    When \code{“stat”} is selected only \code{input}, \code{vpd.input} and \code{peak.hours}.
 #' @param max.quant Numeric, defining the quantile of the \eqn{G_{C}}{Gc} data which should be considered as GC.max (default = 1).
-#' @param make.plot Logical; if \code{TRUE}, a plot is generated presenting the response of \eqn{G_{C}}{Gc} to \eqn{VPD}.
+#' @param make.plot Logical; if \code{TRUE}, a plot is generated presenting the response of \eqn{G_{C}}{Gc} to VPD.
 #'
-#' @details Various relevant outputs can be derived from the \eqn{SFD} data.
-#' This function provides the option to recalculate \eqn{SFD} to \eqn{F_{d}}{Fd} (expressed in \eqn{mmol~m^{-2}s^{-1}}{mmol m-2 s-1})
+#' @details Various relevant outputs can be derived from the SFD data.
+#' This function provides the option to recalculate SFD to \eqn{F_{d}}{Fd} (expressed in mmol m-2 s-1)
 #' and crown conductance (according to Pappas \emph{et al.} 2018).
 #' \eqn{G_{C}}{Gc} is estimated per unit sapwood area, where \eqn{G_{C} = F_{d} / VPD}{GC = Fd / VPD} (in kPa), assuming that
 #' i) the stem hydraulic capacitance between the height of sensor and the leaves is negligible, and
 #' ii) that the canopy is well coupled to the atmosphere. In order to reduce the effect of stem hydraulic capacitance,
 #' peak-of-the-day \eqn{G_{C}}{Gc} are solely considered for calculating daily average \eqn{G_{C}}{Gc}.
 #' Peak-of-the-day conditions are defined by \code{peak.hours} or \code{peak.sr}. Moreover, to analyse the relationship between \eqn{G_{C}}{Gc}
-#'  and environmental measurements (e.g., \eqn{VPD}), the daily mean peak-of-the-day \eqn{G_{C}}{Gc} values can be restricted to:
+#'  and environmental measurements (e.g., VPD), the daily mean peak-of-the-day \eqn{G_{C}}{Gc} values can be restricted to:
 #'  i) non-cloudy days (see \code{low.sr}), to reduce the impact of low irradiance on \eqn{G_{C}}{Gc},
 #'  ii) non-rainy days (see \code{prec.lim}), as wet leaves are not well coupled to the atmosphere, and
 #'  iii) daily mean peak-of-the-day \eqn{G_{C}}{Gc} great then a threshold (see \code{vpd.cutoff}),
-#'  to eliminate unrealistically high \eqn{G_{C}}{Gc} values due to low \eqn{F_{d}}{Fd} or \eqn{VPD} values (when method = \code{“env.filt”}).
-#'  Moreover, the sensitivity of the daily mean peak-of-the-day \eqn{G_{C}}{Gc} to \eqn{VPD} is modelled by fitting the following model:
+#'  to eliminate unrealistically high \eqn{G_{C}}{Gc} values due to low \eqn{F_{d}}{Fd} or VPD values (when method = \code{“env.filt”}).
+#'  Moreover, the sensitivity of the daily mean peak-of-the-day \eqn{G_{C}}{Gc} to VPD is modelled by fitting the following model:
 #'
-#'   \deqn{G_{C} = \alpha + \beta VPD^{-0.5}}{GC = \alpha + \beta VPD^{-0.5}}
+#'   \deqn{G_{C} = \alpha + \beta VPD^{-0.5}}{GC = \alpha + \beta VPD^(-0.5)}
 #'
 #'   Besides using the raw daily mean peak-of-the-day \eqn{G_{C}}{Gc} values, the function also applies
 #'   a normalization where daily mean peak-of-the-day \eqn{G_{C}}{Gc} is standardized to the maximum conductance (GC.max; see \code{max.quant}).
@@ -70,40 +70,24 @@
 #'    \item{raw}{A \code{data.frame} containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
 #' (e.g., “2012-01-01 00:00:00”), year of the data [,“year”], day of year [,“doy”], input solar radiance data [,“sr”],
 #'  daily average radiance data [,“sr”], input vapour pressure deficit data [,“vpd”], isolated peak-of-the-day vapour pressure
-#'  deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in \eqn{mmol~m^{-2}s^{-1}}{mmol m-2 s-1} [,“fd”],
-#'  crown conductance expressed in \eqn{mmol~m^{-2}s^{-1}~kPa^{-1}}{mmol m-2 s-1 kPa-1} [,“gc”], and the filtered crown conductance [,“gc.filt”]}
+#'  deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in mmol m-2 s-1 [,“fd”],
+#'  crown conductance expressed in mmol m-2 s-1 kPa-1 [,“gc”], and the filtered crown conductance [,“gc.filt”]}
 #'
 #'  \item{peak.mean}{A \code{data.frame} containing the daily mean crown conductance values.
 #'  Columns include the timestamp [,“timestamp”] (e.g., “2012-01-01”), peak-of-the-day vapour pressure deficit [,“vpd.filt”],
-#'   the filtered crown conductance \eqn{mmol~m^{-2}s^{-1}~kPa^{-1}}{mmol m-2 s-1 kPa-1} [,“gc.filt”],
-#'    and the normalized crown conductance according
+#'   the filtered crown conductance mmol m-2 s-1 kPa-1 [,“gc.filt”], and the normalized crown conductance according
 #'    to the maximum crown conductance [,“gc.norm”].}
 #'
 #'   \item{sum.mod}{A model summary object (see \code{\link{summary}()})
-#'    of the model between \eqn{VPD} and \eqn{G_{C}}{Gc}.}
+#'    of the model between VPD and \eqn{G_{C}}{Gc}.}
 #'
 #'
 #'    \item{sum.mod.norm}{A model summary object (see \code{\link{summary}()})
-#'    of the model between \eqn{VPD} and \eqn{G_{C}}{Gc}/\eqn{GC.max}.}
+#'    of the model between VPD and \eqn{G_{C}}{Gc}/\eqn{GC.max}.}
 #'
 #'
 #'
 #' }
-#'
-#' @references
-#' Meinzer, F. C., D. R. Woodruff, D. M. Eissenstat,
-#'  H. S. Lin, T. S. Adams, and K. A. McCulloh. 2013. Above-and belowground controls on water use by
-#'  trees of different wood types in an eastern US deciduous forest.
-#'  Tree Physiology, 33(4):345–356. \url{doi:10.1093/treephys/tpt012}.
-#'
-#'  Pappas, C. et al. 2018. Boreal tree hydrodynamics: asynchronous, diverging, yet complementary.
-#'  Tree Physiololgy. 38(7):953–964. \url{doi:10.1093/treephys/tpy043}.
-#'
-#'  Peters, R. L., M. Speich, C. Pappas, A. Kahmen, G. Arx, E. Graf Pannatier,
-#'  K. Steppe, K. Treydte, A. Stritih, and P. Fonti. 2018.
-#'  Contrasting stomatal sensitivity to temperature and soil drought in mature
-#'  alpine conifers, Plant, Cell & Environment. 42(5):1674-1689. \url{doi:10.1111/pce.13500}.
-
 #'
 #' @export
 #'
@@ -135,6 +119,51 @@
 #'
 out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.sr = 150,
                    peak.sr=300,vpd.cutoff= 0.5,prec.lim=1,method="env.filt",max.quant=1,make.plot=TRUE){
+
+  #t= test
+  #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction")
+  #calib<-read.table("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/R_package/TREX - Construction/cal.data.txt",header=TRUE,sep="\t")
+  #raw   <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
+  #input <-dt.steps(input=raw,start="2013-05-01 00:00",end="2014-11-01 00:00",
+  #                time.int=15,max.gap=60,decimals=10,df=FALSE)
+  #input[which(input<0.2)]<-NA
+  #input <-tdm_dt.max(input, methods=c("dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
+  #output.data<-tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+  #vpd<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Vapour_pressure_deficit.txt",header=TRUE,sep="\t")
+  #sr<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Solar_radiance.txt",header=TRUE,sep="\t")
+  #vpd<-vpd[,c("Date","N13")]
+  #colnames(vpd)<-c("timestamp","value")
+  #sr<-sr[,c("Timestamp","N13")]
+  #colnames(sr)<-c("timestamp","value")
+  #vpd_raw   <-is.trex(vpd,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
+  #vpd.input <-dt.steps(input=vpd_raw,start="2012-01-01 00:00",end="2015-11-15 00:00",
+  #                      time.int=15,max.gap=60,decimals=10,df=FALSE)
+  #sr_raw   <-is.trex(sr,tz="GMT",time.format="(%m/%d/%y %H:%M:%S)",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
+  #sr.input <-dt.steps(input=sr_raw,start="2012-01-01 00:00",end="2015-11-15 00:00",
+  #                     time.int=15,max.gap=60,decimals=10,df=FALSE)
+
+  #input<-(output.data$sfd.dr$sfd)
+  #prec_raw<-read.table("D:/Documents/WSL/06_basic_data/1_database/Environmental_data/All_output_Tier3/Precipitation.txt",header=TRUE,sep="\t")
+  #colnames(prec_raw)<-c("timestamp","value")
+  #prec.in<-is.trex(prec_raw,time.format="%d/%m/%y",tz="UTC")
+  #prec.input<-window(prec.in,
+  #  start=as.POSIXct(as.character(zoo::index(vpd.input)[1]),format="%Y-%m-%d",tz="UTC"),
+  #  end=as.POSIXct(as.character(zoo::index(vpd.input)[length(vpd.input)]),format="%Y-%m-%d",tz="UTC"))
+  #vpd.input<-vpd
+  #method = 'stat'
+  #peak.hours = c(10:14) # hours that are considered as 'peak of the day'
+  #sr.input # kPa time-1
+  #vpd.input # kPa time-1
+  #prec.input # mm d-1
+  #low.sr = 150
+  #peak.sr= 300
+  #vpd.cutoff= 0.5 # kPa
+  #prec.lim= 1
+  #max.quant= 0.9
+  #make.plot=T
+  #prec.input<-preci
+  #sr.input<-sr
+  #vpd.input<-vpd
 
 
   #f= small functions
@@ -205,8 +234,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(vpd.input)[1])=="(NA NA)"|is.na(zoo::index(vpd.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
   }
-
-  if(attributes(vpd.input)$class!="zoo")stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
+  if(zoo::index(vpd.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
 
   if(attributes(sr.input)$class=="data.frame"){
     #e
@@ -219,7 +247,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(sr.input)[1])=="(NA NA)"|is.na(zoo::index(sr.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for sr.input.")
   }
-  if(attributes(sr.input)$class!="zoo")stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
+  if(zoo::index(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
 
   if(method=="stat"){
     #d
@@ -243,7 +271,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(prec.input)[1])=="(NA NA)"|is.na(zoo::index(prec.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
   }
-  if(attributes(prec.input)$class!="zoo")stop("Invalid input data, prec.input must be a zoo file (use is.trex).")
+  if(zoo::index(prec.input)==FALSE)stop("Invalid input data, prec.input must be a zoo file (use is.trex).")
 
   #e
   if(method=="env.filt"){
@@ -304,9 +332,9 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #aggregate to daily values
     sfd_df<-stats::window(sfd_df,start=zoo::index(sfd_df[which(is.na(sfd_df$sfd)==F),])[1],end=zoo::index(sfd_df[which(is.na(sfd_df$sfd)==F),])[nrow(sfd_df[which(is.na(sfd_df$sfd)==F),])])
     sfd_df_peak_daily = stats::aggregate(sfd_df[,],
-                                         mean,
-                                         na.rm=T,
-                                         by=list(as.Date(zoo::index(sfd_df))))
+                                  mean,
+                                  na.rm=T,
+                                  by=list(as.Date(zoo::index(sfd_df))))
     sfd_df_peak_daily[which(sfd_df_peak_daily$sr.input=="NaN"),"sr.input"]<-NA
     sfd_df_peak_daily[which(sfd_df_peak_daily$sr_day=="NaN"),"sr_day"]<-NA
     sfd_df_peak_daily[which(sfd_df_peak_daily$prec_day=="NaN"),"prec_day"]<-NA
@@ -334,9 +362,9 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     sr_df$doy_y= as.numeric(paste(sr_df$doy,sr_df$y,sep=""))
     #sr_df = zoo::zoo(sr_df,order.by=zoo::index(sr.input))
     sr_df_daily = stats::aggregate(sr_df$sr.input,
-                                   mean,
-                                   na.rm=T,
-                                   by=list(sr_df$doy_y))
+                            mean,
+                            na.rm=T,
+                            by=list(sr_df$doy_y))
     add2<-data.frame(sr=as.numeric(sr_df_daily$x),doy_y=as.numeric(sr_df_daily$Group.1))
     adding<-merge(add,add2,by="doy_y")
     sr_day<-zoo::zoo(adding$sr,order.by=base::as.POSIXct(adding$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))
@@ -356,9 +384,9 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     ##4. aggregate to daily values
     sfd_df<-stats::window(sfd_df,start=zoo::index(sfd_df[which(is.na(sfd_df$sfd)==F),])[1],end=zoo::index(sfd_df[which(is.na(sfd_df$sfd)==F),])[nrow(sfd_df[which(is.na(sfd_df$sfd)==F),])])
     sfd_df_peak_daily = stats::aggregate(sfd_df[,],
-                                         mean,
-                                         na.rm=T,
-                                         by=list(as.Date(zoo::index(sfd_df))))
+                                  mean,
+                                  na.rm=T,
+                                  by=list(as.Date(zoo::index(sfd_df))))
   }
   sfd_df_peak_daily<-zoo::fortify.zoo(sfd_df_peak_daily)
   sfd_df_peak_daily[which(sfd_df_peak_daily$gc_fil=="NaN"),"gc_filt"]<-NA
@@ -437,8 +465,8 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     graphics::lines(seq(round((min(df$x)),2),round(max(df$x),2),0.1),stats::predict(mod,newdata=newdat),col="black",lwd=7)
     graphics::lines(seq(round((min(df$x)),2),round(max(df$x),2),0.1),stats::predict(mod,newdata=newdat),col="orange",lwd=5)
     graphics::legend("topright",c(expression(italic("G")[C]*" = "*italic(alpha)*" + "*italic(beta)*" VPD"^-0.5),
-                                  substitute(paste(italic(alpha)," = ", Alpha, " mmol "," ",m^-2," ",s^-1," ",kPa^-1*"       "),list(Alpha=(Alpha))),
-                                  substitute(paste(italic(beta)," = ", Beta, " ",kPa^0.5),list(Beta=(Beta)))),bty="n")
+                        substitute(paste(italic(alpha)," = ", Alpha, " mmol "," ",m^-2," ",s^-1," ",kPa^-1*"       "),list(Alpha=(Alpha))),
+                        substitute(paste(italic(beta)," = ", Beta, " ",kPa^0.5),list(Beta=(Beta)))),bty="n")
     graphics::mtext(side=2,expression(italic(G)[C]*" ("*"mmol "*m^-2*" "*s^-1*" "*kPa^-1*")"),padj=-3.5)
     graphics::mtext(side=1,expression(VPD*" (kPa)"),padj=3,outer=T)
   }
@@ -458,3 +486,10 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
   names(output.data)<-c("raw","peak.mean","sum.mod",'sum.mod.norm')
   return(output.data)
 }
+
+
+
+
+
+
+
