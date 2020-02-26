@@ -37,13 +37,14 @@
 
 <meta property="og:title" content="Data cleaning and outlier detection — outlier" />
 <meta property="og:description" content="This function launches a Shiny application that
- (1) visualizes raw and outlier-free time series interactively
- (using plotly),
- (2) highlights automatically detected outliers,
- (3) allows the user to revise the automatically detected outliers
-    and manually include data points, and
- (4) exports the original data and the outlier-free time series in
-    an is.trex-compliant object that can be further processed." />
+(1) visualizes raw and outlier-free time series interactively
+(using plotly),
+(2) highlights automatically detected outliers,
+(3) allows the user to revise the automatically detected outliers
+ and manually include data points, and
+ (4) exports the original data, the automatically selected outliers,
+  the manually selected outliers, and the outlier-free time series
+   in an is.trex-compliant object that can be further processed." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,14 +114,15 @@
     </div>
 
     <div class="ref-description">
-    <p>This function launches a Shiny application that
- (1) visualizes raw and outlier-free time series interactively
- (using plotly),
- (2) highlights automatically detected outliers,
- (3) allows the user to revise the automatically detected outliers
-    and manually include data points, and
- (4) exports the original data and the outlier-free time series in
-    an <code><a href='is.trex.html'>is.trex</a></code>-compliant object that can be further processed.</p>
+    <p>This function launches a <code>Shiny</code> application that
+(1) visualizes raw and outlier-free time series interactively
+(using <code>plotly</code>),
+(2) highlights automatically detected outliers,
+(3) allows the user to revise the automatically detected outliers
+ and manually include data points, and
+ (4) exports the original data, the automatically selected outliers,
+  the manually selected outliers, and the outlier-free time series
+   in an <code><a href='is.trex.html'>is.trex</a></code>-compliant object that can be further processed.</p>
     </div>
 
     <pre class="usage"><span class='fu'>outlier</span>()</pre>
@@ -128,9 +130,22 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>The function does not return a value,
+but allows the user to save a <code>list</code> containing the raw and outlier-free data,
+ as well as the automatically and manually selected outliers in separate items.
+  Once the user is satisfied with the selected outliers,
+   the ‘Download Cleaned Time Series’ button will allow to export this <code>list</code> as a "<code>.Rda</code>" or
+    "<code>.Rdata</code>" file. This file can be accessed subsequently via <code><a href='https://rdrr.io/r/base/load.html'>load</a></code>.
+ The list contained in this file is called <code>trex_outlier_output</code> and has four <code>data.frames</code>,
+  namely <code>series_input</code> with the raw data, <code>select_auto</code> with
+  the automatically selected outliers, <code>select_manual</code> with the manually selected outliers,
+   and <code>series_cleaned</code> with the outlier-free time series.
+  Each of these data frames has a column with the timestamp and a column for the sensor values.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
     <p>Once the application is launched,
  the user can load an <code>.RData</code> file where a <code>data.frame</code>
-  with a imestamp and sensor data (multiple sensor columns are supportred).
+  with a imestamp and sensor data (multiple sensor columns are supported).
   The timestamp in this <code>data.frame</code> should be of class <code>POSIXct</code>.
   Users can select the x and y axes of the interactive time series plots.
   In addition, the user can provide the units of the imported data
@@ -148,14 +163,28 @@
     (default value <code>alpha = 3</code>;
     although visual inspection through the interactive plots allows for adjusting
     alpha and optimizing the automatic detection of outliers),
-    and ii) the first difference (or lag-1 differences) of the raw data are calculated
+    and ii) the lag-1 differences of the raw data are calculated
     and data points with lag-1 differences greater
-    than the mean of the raw input time series, are excluded.</p>
-<p>The function does not return a value, but allows the user
- to save a list containing the raw and outlier-free data, as well as
- the automatically and manually selected outliers in seperate items.
- This object is exported as a ".Rda" or ".Rdata" file and can be
- accessed subsequently via <code>load</code>.</p>
+    than the mean of the raw input time series, are excluded.
+ The raw input data from the provided <code>.RData</code> file are depicted with
+ black points in the first plot titled ‘Raw and automatic detection’
+ while the automatically detected outliers are also highlighted in this plot in red.
+ The user can adjust the parameter <code>alpha</code> and visually inspect the
+ automatically detected outliers in order to achieve the optimal automatic outlier selection.
+ This plot allows also interactivity (by hovering the mouse in the upper right corner
+ the available interactive tools appear, e.g., zoom in/out).
+ Also, the lower subpanel of this plot provides a better overview of the temporal extent
+ of the data and allows the user to select narrower time window for a more thorough data inspection.</p>
+<p>Once the user is satisfied with the automatically selected data points,
+ one can proceed to the manual outlier selection.
+ The second interactive plot (titled ‘Filtered and manual selection’)
+ presents the raw data after removing the automatically detected outliers of the previous step,
+  and allows the user to manually select (point, rectangular, and lasso selections are allowed)
+   data points. The first selection identifies points to be removed (outliers),
+   and their color changes to red. If a point is selected for a second time,
+   this will undo its classification as outlier and its color is set back to black (i.e., not an outlier).
+  The red-color data points correspond to the selected outliers to be removed from the data,
+  in addition to those identified in the automated detection.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -167,12 +196,41 @@
 <span class='co'># launch shiny application</span>
 <span class='fu'>outlier</span>()
 
+
+<span class='co'>## With full workflow:</span>
+
+<span class='co'># get an example time series</span>
+<span class='no'>raw</span>   <span class='kw'>&lt;-</span> <span class='fu'><a href='example.data.html'>example.data</a></span>(<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"doy"</span>)
+<span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span>(<span class='no'>raw</span>, <span class='kw'>tz</span><span class='kw'>=</span><span class='st'>"GMT"</span>, <span class='kw'>time.format</span><span class='kw'>=</span><span class='st'>"%H:%M"</span>,
+                 <span class='kw'>solar.time</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>long.deg</span><span class='kw'>=</span><span class='fl'>7.7459</span>, <span class='kw'>ref.add</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+
+<span class='co'># clip a period of interest</span>
+<span class='no'>input</span><span class='kw'>&lt;-</span><span class='fu'><a href='dt.steps.html'>dt.steps</a></span>(<span class='no'>input</span>,<span class='kw'>time.int</span><span class='kw'>=</span><span class='fl'>60</span>,<span class='kw'>start</span><span class='kw'>=</span><span class='st'>"2014-02-01 00:00"</span>,
+                <span class='kw'>end</span><span class='kw'>=</span><span class='st'>"2014-05-01 00:00"</span>,<span class='kw'>max.gap</span><span class='kw'>=</span><span class='fl'>180</span>,<span class='kw'>decimals</span><span class='kw'>=</span><span class='fl'>15</span>)
+
+<span class='co'># organise a data.frame</span>
+<span class='no'>input_df</span>  <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>date</span> <span class='kw'>=</span> <span class='kw pkg'>zoo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/zoo/man/index.html'>index</a></span>(<span class='no'>input</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw pkg'>zoo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/zoo/man/coredata.html'>coredata</a></span>(<span class='no'>input</span>))
+
+<span class='co'># save the RData file to e.g. a temp file, or your project root directory</span>
+
+<span class='co'>#temp_file_path &lt;- tempfile()</span>
+<span class='co'># save(input_df, file=temp_file_path)</span>
+
+<span class='co'># project_root_path &lt;- "."</span>
+<span class='co'># save(input_df, file=project_root_path)</span>
+
+
+<span class='co'># call the oulier function and navigate to where the "test.RData" is stored</span>
+<span class='fu'>outlier</span>()
+
+
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
