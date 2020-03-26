@@ -11,7 +11,12 @@
 #'    in an \code{\link{is.trex}}-compliant object that can be further processed.
 #'
 #'
-#' @details Once the application is launched,
+#' @details
+#' \strong{Note, that due to the interactive nature of the application, the reactive graphs can become
+#' rather slow in updating. We hence suggest breaking long-time series into smaller chunks
+#' that do not strain the available memory too much. Trial and error is useful here, but we
+#' generally suggest working on a maximum of up to one year at a time.}
+#' Once the application is launched,
 #'  the user can load an \code{.RData} file where a \code{data.frame}
 #'   with a imestamp and sensor data (multiple sensor columns are supported).
 #'   The timestamp in this \code{data.frame} should be of class \code{POSIXct}.
@@ -60,8 +65,8 @@
 #' but allows the user to save a \code{list} containing the raw and outlier-free data,
 #'  as well as the automatically and manually selected outliers in separate items.
 #'   Once the user is satisfied with the selected outliers,
-#'    the ‘Download Cleaned Time Series’ button will allow to export this \code{list} as a "\code{.Rda}" or
-#'     "\code{.Rdata}" file. This file can be accessed subsequently via \code{\link{load}}.
+#'    the ‘Download Cleaned Time Series’ button will allow to export this \code{list} as a "\code{.Rds}"
+#'    file. This file can be subsequently assigned to an object using \code{\link{readRDS}}.
 #'  The list contained in this file is called \code{trex_outlier_output} and has four \code{data.frames},
 #'   namely \code{series_input} with the raw data, \code{select_auto} with
 #'   the automatically selected outliers, \code{select_manual} with the manually selected outliers,
@@ -81,6 +86,9 @@
 #' # launch shiny application
 #' outlier()
 #'
+#' # after saving the output, run e.g.:
+#'
+#' my_cleaned_data <- readRDS("./cleaned_file.Rds")
 #'
 #' ## With full workflow:
 #'
@@ -120,10 +128,7 @@ outlier <- function(){
              call. = FALSE)
     }
 
-    if (!requireNamespace("DT", quietly = TRUE)) {
-        stop("Package \"DT\" needed for this function to work. Please install it.",
-             call. = FALSE)
-    }
+
 
 
     if (!requireNamespace("plotly", quietly = TRUE)) {
@@ -708,7 +713,6 @@ outlier <- function(){
 
                 time_stamp_auto <- plot_df()$AutoDetect$x
 
-                print(time_stamp_auto)
 
 
                 # need to handle time stamps better
@@ -719,7 +723,6 @@ outlier <- function(){
                 all_stamps_to_remove <- c(time_stamp_auto,
                                           time_stamp_manual)
 
-                print(length(all_stamps_to_remove))
 
 
 
@@ -745,8 +748,10 @@ outlier <- function(){
 
             # deal with download
             output$downloadData <- shiny::downloadHandler(
-                filename = paste(strsplit(as.character(input$file), ".RData")[[1]],
-                                 "_Cleaned", ".RData", sep = ""),
+                filename = paste(strsplit(as.character(input$file),
+                                          paste0(".",
+                                                 tools::file_ext(as.character(input$file))))[[1]],
+                                 "_Cleaned", ".Rds", sep = ""),
 
                 content = function(file){
                     OriginalData = data.frame(timestamp=dataInput()[[input$timestamp]],
@@ -762,7 +767,7 @@ outlier <- function(){
                                                 series_cleaned = cleaned_data())
 
 
-                    save(trex_outlier_output, file = file)
+                    saveRDS(trex_outlier_output, file = file)
                 }
 
             )

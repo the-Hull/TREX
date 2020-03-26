@@ -9,7 +9,7 @@
 #'  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
 #'  All outputs are provided in a \code{list} including the input data and calculated outputs.
 #'
-#' @usage tdm_dt.max(input, methods = c("pd","mw","dr"),
+#' @usage tdm_dt.max(input, methods = c("pd","mw","dr", "ed"),
 #' zero.end = 8*60,
 #' zero.start =  1*60,
 #' interpolate = FALSE, det.pd = TRUE,
@@ -188,7 +188,7 @@ tdm_dt.max <-
       if (is.numeric(input$value) == F)
         stop("Invalid input data, values within the data.frame are not numeric.")
       if (is.character(input$timestamp) == F)
-        stop("Invalid input data, timestamp within the data.frame are not numeric.")
+        stop("Invalid input data, timestamp within the data.frame are not character.")
 
       #p
       input <-
@@ -822,7 +822,7 @@ tdm_dt.max <-
           if (is.numeric(vpd.input$value) == F)
             stop("Invalid vpd.input data, values within the data.frame are not numeric.")
           if (is.character(vpd.input$timestamp) == F)
-            stop("Invalid vpd.input data, timestamp within the data.frame are not numeric.")
+            stop("Invalid vpd.input data, timestamp within the data.frame are not character.")
 
           #p
           vpd.input <-
@@ -848,7 +848,7 @@ tdm_dt.max <-
           if (is.numeric(sr.input$value) == F)
             stop("Invalid sr.input data, values within the data.frame are not numeric.")
           if (is.character(sr.input$timestamp) == F)
-            stop("Invalid sr.input data, timestamp within the data.frame are not numeric.")
+            stop("Invalid sr.input data, timestamp within the data.frame are not character.")
 
           #p
           sr.input <-
@@ -1060,7 +1060,7 @@ tdm_dt.max <-
           if (is.numeric(max.pd$value) == F)
             stop("Invalid max.pd data, values within the data.frame are not numeric.")
           if (is.character(max.pd$timestamp) == F)
-            stop("Invalid max.pd data, timestamp within the data.frame are not numeric.")
+            stop("Invalid max.pd data, timestamp within the data.frame are not character.")
 
           #p
           max.pd <-

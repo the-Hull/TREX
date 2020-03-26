@@ -23,8 +23,9 @@
 #' @param time.int Numeric value providing the number of minutes for the
 #'  minimum time step. When \code{time.int} is smaller than the minimum time step
 #'  of the series, a linear interpolation is applied. If \code{time.int} is
-#'  larger than the minimum time step of the series values are average
-#'  (after performing a linear interpolation to obtain a one-minute resolution).
+#'  larger than the minimum time step of the series values are averaged to the chosen
+#'  value of \code{time.int} (after performing a linear interpolation
+#'   to obtain a one-minute resolution).
 #' @param max.gap Numeric value providing the maximum size of a gap in minutes,
 #'  which can be filled by performing a linear interpolation.
 #' @param decimals Integer value defining the number of decimals of the output

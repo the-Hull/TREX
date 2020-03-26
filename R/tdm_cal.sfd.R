@@ -167,8 +167,8 @@ tdm_cal.sfd <-
       stop("Unused argument, make.plot needs to be TRUE|FALSE.")
     if (is.numeric(decimals) == F)
       stop("Unused argument, decimals should be numeric.")
-    if (decimals > 10)
-      stop("Unused argument, decimals should smaller then 10.")
+    if (decimals >= 10)
+      stop("Unused argument, decimals should be smaller then 10.")
 
     if (is.na(a) == F | is.na(b) == F) {
       if (missing(calib) == F) {

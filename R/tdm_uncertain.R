@@ -22,7 +22,7 @@
 #'   column with the same temporal extent and time steps as the \code{input} object.
 #'
 #' @param method Character, specifies the \eqn{\Delta T_{max}}{\Delta Tmax} method on which the
-#'   sensitivity and uncertainty analyse are to be performed on (see \code{\link{tdm_dt.max}}).
+#'   sensitivity and uncertainty analysis are to be performed on (see \code{\link{tdm_dt.max}}).
 #'   Only one method can be selected, including the pre-dawn (\code{"pd"}), moving window (\code{"mw"}),
 #'   double regression (\code{"dr"}) or the environmental dependent (\code{"ed"}) method (default = \code{"pd"}).
 #'

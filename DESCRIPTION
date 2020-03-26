@@ -72,9 +72,9 @@ Imports:
     doSNOW,
     msm,
     parallel,
-    magrittr
-RoxygenNote: 7.0.2
+    magrittr,
+    tools
+RoxygenNote: 7.1.0
 Suggests: 
     shiny,
-    DT,
     plotly
