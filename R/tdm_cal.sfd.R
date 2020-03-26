@@ -123,25 +123,6 @@ tdm_cal.sfd <-
            decimals,
            make.plot = TRUE,
            df = FALSE) {
-    #t= test
-    #raw   <-is.trex(example.data(type="doy"),tz="GMT",time.format="%H:%M",solar.time=TRUE,long.deg=7.7459,ref.add=FALSE)
-    #input <-dt.steps(input=raw,start="2014-05-08 00:00",end="2014-07-25 00:50",
-    #                  time.int=15,max.gap=60,decimals=10,df=F)
-    #input[which(input<0.2)]<-NA
-    #input <-tdm_dt.max(input, methods=c("pd","mw","dr"),det.pd=TRUE,interpolate=FALSE,max.days=10,sr.input=sr.input,vpd.input=vpd.input,
-    #               ed.window=2*60,criteria=c(sr=30,vpd=0.1,cv=0.5),df=FALSE)
-    #input<-input$k.pd
-
-
-    #genus<-unique(calib$Genus)
-    #genus<-"Picea"
-    #species<-unique(calib$Species)
-    #study<-unique(calib$Study)
-    #wood<-unique(calib$Wood)[c(1,2,3,4)]
-    #make.plot<-TRUE
-    #decimals<-6
-    #a<-NA
-    #b<-NA
 
     #d= default conditions
     if (missing(calib)) {
@@ -174,7 +155,7 @@ tdm_cal.sfd <-
       b <- NA
     }
     if (missing(decimals)) {
-      decimals <- 6
+      decimals <- 10
     }
 
     #e=errors
@@ -743,6 +724,7 @@ tdm_cal.sfd <-
               q025 = quant.0.025,
               q975 = quant.0.975
             )
+
           model.ens <-
             merge(data.frame(k = seq(
               0, ceiling(max(k, na.rm = TRUE)), 1 / (10 ^ decimals)
@@ -812,7 +794,6 @@ tdm_cal.sfd <-
               ),
               input$ed.criteria,
               input$methods,
-              #data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness),
               data.frame(
                 timestamp = as.character(zoo::index(input$k.pd)),
                 value = as.numeric(as.character(input$k.pd))
@@ -879,9 +860,6 @@ tdm_cal.sfd <-
       }
 
       #process when calibration data is provided
-      calib <- getExportedValue('TREX', 'cal.data')
-      calib <- calib[which(calib$Study == "Peters et al. 2017"), ]
-      calib <- data.frame(K = calib$k, SFD = calib$SFD)
 
       if (length(which(colnames(calib)[c(1, 2)] %in% c("K", "SFD")))) {
         #e=
@@ -1000,7 +978,7 @@ tdm_cal.sfd <-
                 as.numeric(stats::predict(model.n, newdat = data.frame(k = seq(
                   0, ceiling(max(k, na.rm = TRUE)), 0.001
                 ))))
-            } else{
+            }else{
               n.mod <-
                 cbind(n.mod, as.numeric(stats::predict(model.n, newdat = data.frame(
                   k = seq(0, ceiling(max(
@@ -1233,7 +1211,6 @@ tdm_cal.sfd <-
               ),
               input$ed.criteria,
               input$methods,
-              #data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness),
               data.frame(
                 timestamp = as.character(zoo::index(input$k.pd)),
                 value = as.numeric(as.character(input$k.pd))
@@ -1300,8 +1277,7 @@ tdm_cal.sfd <-
       }
 
       #if a and b are provided
-      #a=42.84
-      #b=1.231
+
 
       if (is.na(a) == F & is.na(b) == F) {
         #e=
@@ -1559,7 +1535,6 @@ tdm_cal.sfd <-
               ),
               input$ed.criteria,
               input$methods,
-              #data.frame(probe.length=probe.length,sapwood.thickness=sapwood.thickness),
               data.frame(
                 timestamp = as.character(zoo::index(input$k.pd)),
                 value = as.numeric(as.character(input$k.pd))
@@ -1654,6 +1629,7 @@ tdm_cal.sfd <-
         }
 
         #o = output
+        out.param<-NA
         output.data <- list(k, sfd.input <- NA, model.ens <- NA, out.param)
 
         names(output.data) <- c("input",
