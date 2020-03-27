@@ -715,13 +715,23 @@ outlier <- function(){
 
 
 
-                # need to handle time stamps better
-                time_stamp_manual <- paste0(selected_data_df$x, ":00")
+                # need to handle time stamps for manual selection
+                # time_stamp_manual <- paste0(selected_data_df$x, ":00")
                 # this fix is not ideal
 
+                time_stamp_formats <- selected_data_df_reactive()$x %>%
+                    lubridate::guess_formats(orders = c("ymd HMS", "ymd HM", "ymd"))
 
-                all_stamps_to_remove <- c(time_stamp_auto,
-                                          time_stamp_manual)
+
+                time_stamp_manual <- selected_data_df_reactive()$x %>%
+                    lubridate::parse_date_time(orders = time_stamp_formats) %>%
+                    lubridate::force_tz(tzone = lubridate::tz(dataInput()[[input$timestamp]]))
+
+
+                all_stamps_to_remove <- c(time_stamp_manual,
+                                          time_stamp_auto)
+
+
 
 
 
@@ -736,10 +746,12 @@ outlier <- function(){
 
 
 
-                filtered_data <- OriginalData[!as.character(OriginalData$x) %in% all_stamps_to_remove, ]
+                filtered_data <- OriginalData[!OriginalData$x %in% all_stamps_to_remove, ]
                 names(filtered_data) <- c(input$timestamp, input$sensor_value)
 
-                return(filtered_data)
+                return(list(cleaned = filtered_data,
+                            stamps_manual = time_stamp_manual,
+                            stamps_auto = time_stamp_auto))
 
 
             })
@@ -762,9 +774,12 @@ outlier <- function(){
 
 
                     trex_outlier_output <- list(series_input = OriginalData,
-                                                select_auto = plot_df()$AutoDetect,
-                                                select_manual = selected_data_df,
-                                                series_cleaned = cleaned_data())
+                                                series_cleaned = cleaned_data()$cleaned,
+                                                selected_data_auto = plot_df()$AutoDetect,
+                                                # selected_time_stamps_auto = cleaned_data()$stamps_auto,
+                                                # selected_time_stamps_manual = cleaned_data()$stamps_manual,
+                                                selected_data_manual = selected_data_df
+                                                )
 
 
                     saveRDS(trex_outlier_output, file = file)
