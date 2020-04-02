@@ -34,7 +34,7 @@
 #' No uncertainty can be calculated when this value is provided.
 #' @param b Optional, numeric value for the calibration curve (\eqn{SFD = aK^b}).
 #' No uncertainty can be calculated when this value is provided.
-#' @param decimals Integer, the number of decimals of the output (default = 10).
+#' @param decimals Integer, the number of decimals of the output (default = 6).
 #' @param make.plot Logical; if \code{TRUE}, a plot is generated showing
 #' the calibration curve with \eqn{K vs sap flux density} (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1})).
 #' @param df Logical; If \code{TRUE}, output is provided in a \code{data.frame} format
@@ -155,7 +155,7 @@ tdm_cal.sfd <-
       b <- NA
     }
     if (missing(decimals)) {
-      decimals <- 10
+      decimals <- 6
     }
 
     #e=errors

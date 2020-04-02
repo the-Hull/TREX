@@ -48,7 +48,7 @@ No uncertainty can be calculated when this value is provided.}
 \item{b}{Optional, numeric value for the calibration curve (\eqn{SFD = aK^b}).
 No uncertainty can be calculated when this value is provided.}
 
-\item{decimals}{Integer, the number of decimals of the output (default = 10).}
+\item{decimals}{Integer, the number of decimals of the output (default = 6).}
 
 \item{make.plot}{Logical; if \code{TRUE}, a plot is generated showing
 the calibration curve with \eqn{K vs sap flux density} (\eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1})).}
