@@ -106,7 +106,7 @@
 #' input <- tdm_dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
 #'                  max.days=10, df=FALSE)
 #'
-#' output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+#' output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous", decimals = 6)
 #'
 #' input<- output.data$sfd.dr$sfd
 #'
@@ -209,7 +209,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
   }
 
   #e= errors
-  if(zoo::is.zoo(input)==F)stop("Invalid input data, use a zoo file from is.trex or a zoo vector containing numeric values (tz= UTC).")
+  if(zoo::is.zoo(input)==F)stop("Invalid input data, use a zoo object from is.trex or a zoo vector containing numeric values (tz= UTC).")
   if(is.numeric(input)==F)stop("Invalid input data, values within the vector are not numeric.")
 
   #w= warnings
@@ -234,7 +234,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(vpd.input)[1])=="(NA NA)"|is.na(zoo::index(vpd.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
   }
-  if(zoo::index(vpd.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
+  if(zoo::is.zoo(vpd.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo object (use is.trex).")
 
   if(attributes(sr.input)$class=="data.frame"){
     #e
@@ -247,7 +247,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(sr.input)[1])=="(NA NA)"|is.na(zoo::index(sr.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for sr.input.")
   }
-  if(zoo::index(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
+  if(zoo::is.zoo(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo object (use is.trex).")
 
   if(method=="stat"){
     #d
@@ -271,7 +271,7 @@ out.data<-function(input,vpd.input,sr.input,prec.input,peak.hours=c(10:14),low.s
     #e
     if(as.character(zoo::index(prec.input)[1])=="(NA NA)"|is.na(zoo::index(prec.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
   }
-  if(zoo::index(prec.input)==FALSE)stop("Invalid input data, prec.input must be a zoo file (use is.trex).")
+  if(zoo::is.zoo(prec.input)==FALSE)stop("Invalid input data, prec.input must be a zoo object (use is.trex).")
 
   #e
   if(method=="env.filt"){

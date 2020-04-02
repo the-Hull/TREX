@@ -136,7 +136,7 @@ input[which(input<0.2)]<- NA
 input <- tdm_dt.max(input, methods=c("dr"), det.pd=TRUE, interpolate=FALSE,
                  max.days=10, df=FALSE)
 
-output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous")
+output.data<- tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,wood="Coniferous", decimals = 6)
 
 input<- output.data$sfd.dr$sfd
 

@@ -115,7 +115,7 @@ input <-tdm_dt.max(input, methods=c("pd","mw","dr"),
      det.pd=TRUE,interpolate=FALSE,max.days=10,df=FALSE)
 
 output.data<-tdm_cal.sfd(input,make.plot=TRUE,df=FALSE,
-wood="Coniferous")
+wood="Coniferous", decimals = 6)
 
 
 str(output.data)
