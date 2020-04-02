@@ -4,7 +4,7 @@
 \alias{tdm_dt.max}
 \title{Calculate zero-flow conditions}
 \usage{
-tdm_dt.max(input, methods = c("pd","mw","dr"),
+tdm_dt.max(input, methods = c("pd","mw","dr","ed"),
 zero.end = 8*60,
 zero.start =  1*60,
 interpolate = FALSE, det.pd = TRUE,

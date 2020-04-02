@@ -11,8 +11,8 @@ The function does not return a value,
 but allows the user to save a \code{list} containing the raw and outlier-free data,
  as well as the automatically and manually selected outliers in separate items.
   Once the user is satisfied with the selected outliers,
-   the ‘Download Cleaned Time Series’ button will allow to export this \code{list} as a "\code{.Rda}" or
-    "\code{.Rdata}" file. This file can be accessed subsequently via \code{\link{load}}.
+   the ‘Download Cleaned Time Series’ button will allow to export this \code{list} as a "\code{.Rds}"
+   file. This file can be subsequently assigned to an object using \code{\link{readRDS}}.
  The list contained in this file is called \code{trex_outlier_output} and has four \code{data.frames},
   namely \code{series_input} with the raw data, \code{select_auto} with
   the automatically selected outliers, \code{select_manual} with the manually selected outliers,
@@ -31,6 +31,10 @@ This function launches a \code{Shiny} application that
    in an \code{\link{is.trex}}-compliant object that can be further processed.
 }
 \details{
+\strong{Note, that due to the interactive nature of the application, the reactive graphs can become
+rather slow in updating. We hence suggest breaking long-time series into smaller chunks
+that do not strain the available memory too much. Trial and error is useful here, but we
+generally suggest working on a maximum of up to one year at a time.}
 Once the application is launched,
  the user can load an \code{.RData} file where a \code{data.frame}
   with a imestamp and sensor data (multiple sensor columns are supported).
@@ -85,6 +89,9 @@ system.file("exdata", "example.RData", package = "TREX", mustWork = TRUE)
 # launch shiny application
 outlier()
 
+# after saving the output, run e.g.:
+
+my_cleaned_data <- readRDS("./cleaned_file.Rds")
 
 ## With full workflow:
 

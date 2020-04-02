@@ -4,7 +4,8 @@
 \name{cal.data}
 \alias{cal.data}
 \title{Calibration Measurements}
-\format{Provides a data.frame with 4024 rows and 10 columns.
+\format{
+Provides a data.frame with 4024 rows and 10 columns.
 \describe{
   \item{Study}{Study from which the data originates (see Flo et al. 2019) (\code{character})}
   \item{Method}{Heat-based sap flow measurement method (TD = Thermal Dissipation) (\code{character})}
@@ -19,7 +20,8 @@
   \item{SFD}{Sap flux density measured gravimetrically (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; \code{numeric})}
   \item{Granier}{Sap flux density calculated according to Granier et al. 1985 using k
        (in \eqn{cm^3 cm^{-2} h^{-1}}{cm3 cm-2 h-1}; using \eqn{43.84 k^{1.231}}{k^1.231}) (\code{numeric})}
-}}
+}
+}
 \usage{
 cal.data
 }

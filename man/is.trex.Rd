@@ -51,6 +51,7 @@ Tests if the structure of the input matches the requirements of \code{TREX} func
  time (see \code{solar.time}) by providing the longitude in decimal degrees at which the measurements were
  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
  be either provided in a \code{zoo} format (df = \code{FALSE}) or \code{data.frame} (\code{df = TRUE}; default is \code{FALSE}).
+ \strong{Note, that the output time series is always given in \code{UTC} time zone.}
 }
 \details{
 To prevent errors occurring in subsequent \code{TREX} functions, it is advised to run this function

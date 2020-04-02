@@ -4,12 +4,14 @@
 \name{sr}
 \alias{sr}
 \title{Solar radiation measurements (raw)}
-\format{Provides an \code{\link{is.trex}}-compliant object with 135840 rows and 1 column.
+\format{
+Provides an \code{\link{is.trex}}-compliant object with 135840 rows and 1 column.
 
 \describe{
   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
   \item{value}{W m-2 values obtained from the site-specific monitoring  (\code{numeric})}
-}}
+}
+}
 \usage{
 sr
 }

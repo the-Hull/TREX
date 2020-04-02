@@ -9,7 +9,7 @@
 #'  The function can provide (\eqn{\Delta T_{max}}{\Delta Tmax} values and subsequent \emph{K} values for all methods.
 #'  All outputs are provided in a \code{list} including the input data and calculated outputs.
 #'
-#' @usage tdm_dt.max(input, methods = c("pd","mw","dr", "ed"),
+#' @usage tdm_dt.max(input, methods = c("pd","mw","dr","ed"),
 #' zero.end = 8*60,
 #' zero.start =  1*60,
 #' interpolate = FALSE, det.pd = TRUE,
@@ -131,7 +131,7 @@
 #' }
 tdm_dt.max <-
   function(input,
-           methods = c("pd", "mw", "dr"),
+           methods = c("pd", "mw", "dr", "ed"),
            zero.end = 8 * 60,
            zero.start = 1 * 60,
            interpolate = FALSE,

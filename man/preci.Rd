@@ -4,12 +4,14 @@
 \name{preci}
 \alias{preci}
 \title{Daily precipitation (raw)}
-\format{Provides an \code{\link{is.trex}}-compliant object with 1415 rows and 1 column.
+\format{
+Provides an \code{\link{is.trex}}-compliant object with 1415 rows and 1 column.
 
 \describe{
   \item{index}{Date of the measurements in solar time (“yyyy-mm-dd”) (\code{character})}
   \item{value}{Daily precipitation (\eqn{mm~d^{-1}}{mm d-1}) from local weather stations (\code{numeric})}
-}}
+}
+}
 \usage{
 preci
 }
