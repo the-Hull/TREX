@@ -809,14 +809,14 @@ outlier <- function(){
                                                 series_cleaned = cleaned_data()$cleaned,
 
                                                 selected_data_auto = plot_df()$AutoDetect %>%
-                                                    select(x, y) %>%
+                                                    dplyr::select(x, y) %>%
                                                     setNames(c("timestamp", "value")),
 
                                                 # selected_time_stamps_auto = cleaned_data()$stamps_auto,
                                                 # selected_time_stamps_manual = cleaned_data()$stamps_manual,
 
                                                 selected_data_manual = selected_data_df %>%
-                                                    select(x, y) %>%
+                                                    dplyr::select(x, y) %>%
                                                     setNames(c("timestamp", "value"))
                                                 )
 
