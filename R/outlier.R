@@ -275,7 +275,15 @@ outlier <- function(){
                 # assign(x = "AutoDetect", value = detected[is.na(detected$y1), c("x","y")] , envir = res_env)
 
 
+                time_stamp_formats <- detected$x %>%
+                    lubridate::guess_formats(orders = c("ymd HMS", "ymd HM", "ymd"))
 
+
+                time_stamp_auto <- detected$x %>%
+                    lubridate::parse_date_time(orders = time_stamp_formats) %>%
+                    lubridate::force_tz(tzone = lubridate::tz(dataInput()[[input$timestamp]]))
+
+                detected$x <- time_stamp_auto
 
                 return(list(df = df,
                             AutoDetect = detected[is.na(detected$y1), c("x","y")]))
@@ -600,6 +608,9 @@ outlier <- function(){
 
 
 
+
+
+
                     return(selected_data_df_return[ , c("x", "y")])
 
 
@@ -773,12 +784,40 @@ outlier <- function(){
 
 
 
+                    # quick cleaning of outputs to provide everything in posixct
+                    # refactor this into convenience function, as
+                    # appears 3 times and does same thing
+
+                    time_stamp_formats <- selected_data_df_reactive()$x %>%
+                        lubridate::guess_formats(orders = c("ymd HMS", "ymd HM", "ymd"))
+
+
+                    time_stamp_manual <- selected_data_df_reactive()$x %>%
+                        lubridate::parse_date_time(orders = time_stamp_formats) %>%
+                        lubridate::force_tz(tzone = lubridate::tz(dataInput()[[input$timestamp]]))
+
+
+                    selected_data_df$x <- time_stamp_manual
+
+
+
+
+
+
                     trex_outlier_output <- list(series_input = OriginalData,
+
                                                 series_cleaned = cleaned_data()$cleaned,
-                                                selected_data_auto = plot_df()$AutoDetect,
+
+                                                selected_data_auto = plot_df()$AutoDetect %>%
+                                                    select(x, y) %>%
+                                                    setNames(c("timestamp", "value")),
+
                                                 # selected_time_stamps_auto = cleaned_data()$stamps_auto,
                                                 # selected_time_stamps_manual = cleaned_data()$stamps_manual,
-                                                selected_data_manual = selected_data_df
+
+                                                selected_data_manual = selected_data_df %>%
+                                                    select(x, y) %>%
+                                                    setNames(c("timestamp", "value"))
                                                 )
 
 
