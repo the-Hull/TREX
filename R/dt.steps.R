@@ -13,11 +13,11 @@
 #'
 #' @param input An \code{\link{is.trex}}-compliant (output) object
 #' @param start Character string providing the start time for the series.
-#'  Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
+#'  Format has to be provided in "UTC" (e.g., "2012-05-28 00:00" or
 #'  Year-Month-Day Hour:Minute). Starting time should not be earlier
 #'  than the start of the series.
 #' @param end Character string providing the start time for the series.
-#'  Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
+#'  Format has to be provided in "UTC" (e.g., "2012-06-28 00:50" or
 #'  Year-Month-Day Hour:Minute). End time should be earlier than
 #'  the end time and not later than that of the series.
 #' @param time.int Numeric value providing the number of minutes for the
@@ -64,7 +64,19 @@ dt.steps <-
            max.gap = 60,
            decimals = 10,
            df = FALSE) {
-
+    
+    #test
+    #input=t
+    #length(input)
+    #tail(input)
+    #start=as.character(zoo::index(head(t, 1)))
+    #end=as.character(zoo::index(tail(t, 1)))
+    #time.int=15
+    #max.gap=15
+    #decimals=6
+    #df=FALSE
+    #tz="UTC"
+    
     #p= process
     if (attributes(input)$class == "data.frame") {
       #e
@@ -72,7 +84,7 @@ dt.steps <-
         stop("Invalid input data, values within the data.frame are not numeric.")
       if (is.character(input$timestamp) == F)
         stop("Invalid input data, timestamp within the data.frame are not numeric.")
-
+      
       #p
       input <-
         zoo::zoo(
@@ -80,13 +92,13 @@ dt.steps <-
           order.by = base::as.POSIXct(input$timestamp, format = "%Y-%m-%d %H:%M:%S", tz =
                                         "UTC")
         )
-
+      
       #e
       if (as.character(zoo::index(input)[1]) == "(NA NA)" |
           is.na(zoo::index(input)[1]) == T)
         stop("No timestamp present, time.format is likely incorrect.")
     }
-
+    
     #d= default conditions
     if (missing(start)) {
       start = as.character(zoo::index(input[1]))
@@ -109,7 +121,7 @@ dt.steps <-
     if (df != T &
         df != F)
       stop("Unused argument, df needs to be TRUE|FALSE.")
-
+    
     #e= errors
     if (zoo::is.zoo(input) == F)
       stop(
@@ -130,7 +142,7 @@ dt.steps <-
     if (decimals < 3 |
         decimals > 15)
       stop("Unused argument, decimals can only fall between 3-15.")
-
+    
     #p
     ts.start <-
       as.POSIXct(as.character(base::paste0(start, ":00")),
@@ -140,7 +152,7 @@ dt.steps <-
       as.POSIXct(as.character(base::paste0(end, ":00")),
                  format = "%Y-%m-%d %H:%M:%S",
                  tz = "UTC") + 1
-
+    
     #e
     if (is.na(ts.start) == TRUE)
       stop("Unused argument, start is not in the correct format (%Y-%m-%d %H:%M:%S).")
@@ -150,8 +162,10 @@ dt.steps <-
       stop("Unused argument, start is earlier than start of the timestamp.")
     if (round(as.numeric(zoo::index(input[length(input)]) - ts.end)) < -1)
       stop("Unused argument, end is later than end of the timestamp.")
-
+    
     #p
+    length(stats::window(input, start = ts.start, end = ts.end))
+    length(value)
     value <-
       stats::na.omit(stats::window(input, start = ts.start, end = ts.end))
     value <- (stats::na.omit(value))
@@ -163,21 +177,21 @@ dt.steps <-
         units = c("mins")
       ))
     gap <- c(raw.gap, NA) #minimum gap in minutes
-
+    
     #d
     if (missing(max.gap)) {
       max.gap <- min(raw.gap)
     }
-
+    
     #e
     if (min(gap, na.rm = TRUE) > max.gap)
       stop("Unused argument, min.gap is smaller the minimum timestep.")
-
+    
     #w= warnings
     if (time.int > (60 * 24)) {
       warning("Selected time.int is larger than a day.")
     }
-
+    
     #c
     if (time.int > min(gap, na.rm = TRUE)) {
       #p
@@ -205,7 +219,7 @@ dt.steps <-
         )
       add[which(as.character(add) == "NaN")] <- NA
       proc.1$value <- add
-    } else{
+    }else{
       #p
       gap <- zoo::zoo(gap, order.by = zoo::index(value))
       dummy <-
@@ -215,39 +229,41 @@ dt.steps <-
           by = (60 * time.int)
         ))
       proc.1 <- zoo::cbind.zoo(value, gap, dummy)
+      View(proc.1)
+      
       proc.1[which(is.na(proc.1$value) == F), "dummy"] <- 0
       proc.1$value <- zoo::na.approx(proc.1$value, na.rm = F)
       proc.1$gap <- zoo::na.locf(proc.1$gap, na.rm = F)
       proc.1[which(is.na(proc.1$value) == TRUE), "gap"] <- NA
       proc.1[which(proc.1$dummy == 0), "gap"] <- 0
     }
-
+    
     #p
     proc.1$value <-
       zoo::na.locf(zoo::na.locf(proc.1$value, na.rm = F), fromLast = TRUE)
     proc.1[which(proc.1$gap > max.gap), "value"] <- NA
     proc.1$value <- round(proc.1$value, decimals)
-
+    
     #o= output
     output.data <- proc.1[which(as.character(zoo::index(proc.1)) %in% as.character(seq(
       from = ts.start + 1,
       to = ts.end - 1,
       by = (60 * time.int)
     ))), "value"]
-
+    length(output.data)
     #remove values outside of the range
     start.input<-zoo::index(na.omit(input))[1]-1
     start.output<-zoo::index(na.omit(output.data))[1]
     if(start.input!=start.output){
       window(output.data,start=start.output,end=start.input)<-NA
     }
-
+    
     end.input<-zoo::index(na.omit(input))[length(zoo::index(na.omit(input)))]+1
     end.output<-zoo::index(na.omit(output.data))[length(zoo::index(na.omit(output.data)))]
     if(end.input!=end.output){
       window(output.data,start=end.input,end=end.output)<-NA
     }
-
+    
     if (df == T) {
       output.data <-
         data.frame(timestamp = as.character(zoo::index(output.data)),

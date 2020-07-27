@@ -20,7 +20,7 @@
 #'
 #' @param sr.input An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 #'   \code{data.frame}) a timestamp and a solar radiation data (sr; e.g., global radiation or PAR)
-#'   column with the same temporal extent and time steps as the \code{input} object. 
+#'   column with the same temporal extent and time steps as the \code{input} object.
 #'   This input is required when using the environmental dependent (\code{"ed"}) method.
 #'
 #' @param method Character, specifies the \eqn{\Delta T_{max}}{\Delta Tmax} method on which the
@@ -35,13 +35,13 @@
 #'  Values should be in minutes (e.g., predawn conditions until 8:00 = 8*60; default = 8*60).
 #'
 #' @param range.end Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
-#'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
+#'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range around \code{zero.end}).
 #'
-#' @param zero.start Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
-#'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
+#' @param zero.start  Numeric, defines the start of the predawn period.
+#'  Values should be in minutes (e.g., predawn conditions from 1:00 = 1*60; default = 1*60).
 #'
 #' @param range.start Numeric, defines the number of time steps for \code{zero.start} (the minimum time step of the input)
-#'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).
+#'   for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range around \code{zero.start}).
 #'
 #' @param probe.length Numeric, the length of the TDM probes in mm (see \code{\link{tdm_hw.cor}}; default = 20 mm).
 #'
@@ -67,16 +67,15 @@
 #' @param max.days_min Numeric, the minimum value for an integer sampling range of \code{max.days}
 #'  (see \code{\link{tdm_dt.max}} for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'   As the \code{"mw"} and \code{"dr"} method apply a rolling maximum or mean, the provided value should be an
-#'   uneven number (see \code{\link{tdm_dt.max}}; default = 5; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
+#'   uneven number (see \code{\link{tdm_dt.max}}; default = 15; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
 #' @param max.days_max Numeric, the maximum value for an integer sampling range of \code{max.days}
 #'  (see \code{\link{tdm_dt.max}} for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'   As the \code{"mw"} and \code{"dr"} method apply a rolling maximum or mean, the provided value should be an
-#'   uneven number (see \code{\link{tdm_dt.max}}; default = 15; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
+#'   uneven number (see \code{\link{tdm_dt.max}}; default = 5; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
 #'
 #' @param ed.window_min Numeric, the minimum number of time steps for the \code{ed.window parameter} (see \code{\link{tdm_dt.max}}; the minimum time step of the input)
 #'  for which an integer sampling range will be defined (default = 8, assuming a 15-min resolution or a 2 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
-#'
 #'
 #' @param ed.window_max Numeric, the maximum number of time steps for the \code{ed.window} sampling range
 #'  (default = 16, assuming a 15-min resolution or a 4 hour range; required for the \code{"ed"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
@@ -285,7 +284,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
   days<-as.numeric(floor(difftime(zoo::index(input),as.Date(zoo::index(input)[1]),units="days"))+1)
   
   #w= warnings
-  if(max(days)>365)warning("Input length > 365 days which can significantly recude processing speed.")
+  if(max(days)>365)warning("Input length > 365 days which can significantly reduce processing speed.")
   
   raw.input <- tibble::tibble(
     days = days,
@@ -468,16 +467,16 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
                            sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025,na.rm=T),output_cv$T[,4],stats::quantile(output[,3],probs=0.025,na.rm=T),output_length$T[,4],stats::quantile(output[,4],probs=0.025,na.rm=T)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975,na.rm=T),output_cv$T[,5],stats::quantile(output[,3],probs=0.975,na.rm=T),output_length$T[,5],stats::quantile(output[,4],probs=0.975,na.rm=T))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
                              sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
     
     #figure output
@@ -767,16 +766,16 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
                            sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025,na.rm=T),output_cv$T[,4],stats::quantile(output[,3],probs=0.025,na.rm=T),output_length$T[,4],stats::quantile(output[,4],probs=0.025,na.rm=T)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975,na.rm=T),output_cv$T[,5],stats::quantile(output[,3],probs=0.975,na.rm=T),output_length$T[,5],stats::quantile(output[,4],probs=0.975,na.rm=T))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
                              sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
     
     #figure output
@@ -997,7 +996,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
           }
         }
       }
-      proc.1_2$rmax<-proc.1_2$rmax.r
+      proc.1_2$rmax<-as.numeric(proc.1_2$rmax.r)
       add<-proc.1_2[,c(1,2,3)]
       proc.2<-dplyr::full_join(proc.1,add,by=c("days.agg"="days.add"))
       proc.2[which(proc.2$ddt.max!=proc.2$dt.max|is.na(proc.2$dt.max)==TRUE),"ddt.max"]<-NA
@@ -1080,16 +1079,16 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
                            sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025,na.rm=T),output_cv$T[,4],stats::quantile(output[,3],probs=0.025,na.rm=T),output_length$T[,4],stats::quantile(output[,4],probs=0.025,na.rm=T)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975,na.rm=T),output_cv$T[,5],stats::quantile(output[,3],probs=0.975,na.rm=T),output_length$T[,5],stats::quantile(output[,4],probs=0.975,na.rm=T))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
                              sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
     
     #figure output
@@ -1494,16 +1493,16 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                            factor="SFD",
                            mean=c(output_sum$T[,1],mean(output[,2]),output_cv$T[,1],mean(output[,3]),output_length$T[,1],mean(output[,4])),
                            sd=c(output_sum$T[,3],stats::sd(output[,2]),output_cv$T[,3],stats::sd(output[,3]),output_length$T[,3],stats::sd(output[,4])),
-                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025),output_cv$T[,4],stats::quantile(output[,3],probs=0.025),output_length$T[,4],stats::quantile(output[,4],probs=0.025)),
-                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975),output_cv$T[,5],stats::quantile(output[,3],probs=0.975),output_length$T[,5],stats::quantile(output[,4],probs=0.975))
+                           ci.min=c(output_sum$T[,4],stats::quantile(output[,2],probs=0.025,na.rm=T),output_cv$T[,4],stats::quantile(output[,3],probs=0.025,na.rm=T),output_length$T[,4],stats::quantile(output[,4],probs=0.025,na.rm=T)),
+                           ci.max=c(output_sum$T[,5],stats::quantile(output[,2],probs=0.975,na.rm=T),output_cv$T[,5],stats::quantile(output[,3],probs=0.975,na.rm=T),output_length$T[,5],stats::quantile(output[,4],probs=0.975,na.rm=T))
     )
     output.tot.k<-data.frame(item=c(row.names(output_sum.k$T),"daily.sum",row.names(output_cv.k$T),"max.cv",row.names(output_length.k$T),"length.dur"),
                              class=c(rep("param.sum",length(row.names(output_sum.k$T))),"stat.sum",rep("param.cv",length(row.names(output_cv.k$T))),"stat.cv",rep("param.length",length(row.names(output_length.k$T))),"stat.length"),
                              factor="K",
                              mean=c(output_sum.k$T[,1],mean(output[,5]),output_cv.k$T[,1],mean(output[,6]),output_length.k$T[,1],mean(output[,7])),
                              sd=c(output_sum.k$T[,3],stats::sd(output[,5]),output_cv.k$T[,3],stats::sd(output[,6]),output_length.k$T[,3],stats::sd(output[,7])),
-                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025)),
-                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975))
+                             ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
+                             ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
     
     
