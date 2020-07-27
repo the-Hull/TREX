@@ -2,6 +2,7 @@
 #'
 #' @param data A \code{data.frame} in either timestamp format or doy format.
 #' @param tz Character string, indicates the time zone in which the measurements have been recorded.
+#' @param tz.force Logical; if \code{TRUE}, the time zone is forced to "UTC" or re-labelled yet not shifted in time. "UTC" is required for internal processing (default = \code{FALSE}).
 #' @param time.format Character string, indicates the format of the timestamp.
 #' @param solar.time Logical; if \code{TRUE}, time is converted to solar time,
 #'    depending upon the location where the measurements have been taken.
@@ -27,8 +28,8 @@
 #'  used with only a reference and heating probe, or when including addition reference probes (see \code{ref.add}).
 #'  These reference probe measurements can be added to the DOY or timestamp format in \eqn{\Delta V} (or \eqn{\Delta T}) (\code{as.numeric})
 #'  labelled \code{ref1}, \code{ref2}, etc. (depending on the number of reference probes). For this function the following
-#'  column names have to be present within the \code{data.frame}: "timestamp” or "year” & "doy” & "hour” = indicators
-#'  of time and "value” = TDM measurements (option "ref1”, "ref2, ..., refn = reference probes).
+#'  column names have to be present within the \code{data.frame}: "timestamp" or "year" & "doy" & "hour" = indicators
+#'  of time and "value" = TDM measurements (option "ref1", "ref2, ..., refn = reference probes).
 #'  After specifying the time zone (\code{tz}), one can select whether to standardize the temporal series to solar
 #'  time (see \code{solar.time}) by providing the longitude in decimal degrees at which the measurements were
 #'  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can
@@ -64,22 +65,30 @@
 is.trex <-
   function(data,
            tz = "UTC",
+           tz.force=FALSE,
            time.format = "%m/%d/%y %H:%M:%S",
            solar.time = TRUE,
            long.deg = 7.7459,
            ref.add = FALSE,
            df = FALSE) {
-
-
+    
+    #t
+    #data<-readRDS("D:/Documents/GU - POSTDOC/02_communication/Issues - Chris/mV.rds")
+    #time.format<-"%Y-%m-%d %H:%M:%S"
+    #solar.time=F
+    #df=F
+    #tz="EST"
+    #tz.force=F
+    
     # helpers
     left <-  function(string, char){
       substr(string, 1,char)}
-
+    
     right <-  function (string, char){
       substr(string,nchar(string)-(char-1),nchar(string))
     }
-
-
+    
+    
     #data<-input
     #tz="Etc/GMT-1"
     #time.format="%Y-%m-%d %H:%M:%S"
@@ -96,11 +105,14 @@ is.trex <-
     #ref.add=FALSE
     #long.deg=7.7459
     #df= FALSE
-
+    
     #d= default conditions
     if (missing(tz)) {
       tz = "GMT"
       warning("No timezone specified : Using default setting (= GMT/UTC)")
+    }
+    if (missing(tz.force)) {
+      tz.force =F
     }
     if (missing(ref.add)) {
       ref.add = F
@@ -115,10 +127,16 @@ is.trex <-
     if (missing(df)) {
       df = F
     }
-
+    
     #e= errors
     if (length(which(tz %in% base::OlsonNames())) == 0)
       stop("Unused argument, please use a valid time zone.")
+    if (tz.force != T &
+        tz.force != F)
+      stop("Unused argument, tz.force needs to be TRUE|FALSE.")
+    if (tz.force == T &
+        solar.time == T)
+      stop("Unused argument, tz.force and solar.time cannot both be TRUE.")
     if (solar.time != T &
         solar.time != F)
       stop("Unused argument, solar.time needs to be TRUE|FALSE.")
@@ -166,7 +184,7 @@ is.trex <-
           long.deg < -180)
         stop("Unused argument, long.deg needs to be numeric and between -180:180.")
     }
-
+    
     #c= conversions
     time.format.orig <- NA
     if (type == "timestamp") {
@@ -196,12 +214,12 @@ is.trex <-
       data$timestamp <- timestamp
       data <- data[, -which(colnames(data) %in% c("year", "doy", "hour"))]
     }
-
+    
     #w= warnings
     if (length(which(base::duplicated(data$timestamp) == T)) != 0) {
       warning("Double timestamp present, daylight saving could be present within the timestamp.")
     }
-
+    
     #p= process
     if (solar.time == T) {
       timestamp <-
@@ -220,10 +238,18 @@ is.trex <-
           format = time.format.orig,
           tz = tz
         )
-
-      timestamp<-format(timestamp,tz="UTC",usetz=TRUE)
-    }
-
+      
+      timestamp_orig<-timestamp
+      timestamp_test<-format(timestamp_orig,tz="UTC",usetz=FALSE)
+      timestamp_test2<-format(timestamp_orig,tz=tz,usetz=FALSE)
+      timestamp<-format(timestamp_orig,tz="UTC",usetz=TRUE)
+      
+      if(tz.force==T){
+        hours_shift<-as.numeric(difftime(timestamp_test2[1],timestamp_test[1]))
+        timestamp<-base::as.POSIXct(timestamp)+(hours_shift*60*60)
+      }
+      }
+    
     #e
     if (as.character(timestamp[1]) == "(NA NA)" |
         is.na(timestamp[1]) == T)
@@ -234,7 +260,7 @@ is.trex <-
         "Double timestamp present, either due to errors in the timestamp or issues with daylight saving (change tz)."
       )
     }
-
+    
     #p
     if (ref.add == T) {
       if (length(which(left(colnames(data), 3) == "ref")) == 1) {
@@ -249,17 +275,21 @@ is.trex <-
       }
       data <- data.frame(timestamp = data$timestamp, value = value)
     }
-
+    
     #p
-    if (length(unique(timestamp)) == length(unique(format(as.character(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"))))) {
+    if (length(unique(timestamp)) == length(unique(left(timestamp,16)))) {
+      #  output.data <-
+      #  zoo::zoo(data$value, order.by = base::as.POSIXct(format(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"),tz="UTC"))
       output.data <-
-        zoo::zoo(data$value, order.by = base::as.POSIXct(format(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"),tz="UTC"))
-    } else{
-      agg <-
-        stats::aggregate(output.data, by = format(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"), mean)
+        zoo::zoo(data$value, order.by = base::as.POSIXct(paste0(left(timestamp,16),":00"),tz="UTC"))
+     } else{
+       #output.data <-
+       #  zoo::zoo(data$value, order.by = base::as.POSIXct(format(as.character(timestamp), "%Y-%m-%d %H:%M"),tz="UTC"))
+       agg <-
+        stats::aggregate(output.data, by = base::as.POSIXct(paste0(left(timestamp,16),":00"),tz="UTC"), mean)
       output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(zoo::index(agg),tz="UTC"))
     }
-
+    
     #o= output
     if (df == T) {
       output.data <-
