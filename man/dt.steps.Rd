@@ -12,12 +12,12 @@ dt.steps(input, start,
 \item{input}{An \code{\link{is.trex}}-compliant (output) object}
 
 \item{start}{Character string providing the start time for the series.
-Format has to be provided in “UTC” (e.g., “2012-05-28 00:00” or
+Format has to be provided in "UTC" (e.g., "2012-05-28 00:00" or
 Year-Month-Day Hour:Minute). Starting time should not be earlier
 than the start of the series.}
 
 \item{end}{Character string providing the start time for the series.
-Format has to be provided in “UTC” (e.g., “2012-06-28 00:50” or
+Format has to be provided in "UTC" (e.g., "2012-06-28 00:50" or
 Year-Month-Day Hour:Minute). End time should be earlier than
 the end time and not later than that of the series.}
 

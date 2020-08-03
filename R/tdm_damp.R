@@ -97,13 +97,13 @@ tdm_damp <- function(input,
                      k.threshold = 0.05,
                      make.plot = TRUE,
                      df = FALSE) {
-  
+
   #test
   #input<-K_out
   #k.threshold = 0.01
   #make.plot = TRUE
   #df = FALSE
-  
+
   #d= default conditions
   if (missing(make.plot)) {
     make.plot <- F
@@ -114,7 +114,7 @@ tdm_damp <- function(input,
   if (missing(k.threshold)) {
     k.threshold <- 0.05
   }
-  
+
   #e= errors
   if (df != T &
       df != F)
@@ -147,24 +147,24 @@ tdm_damp <- function(input,
       )
     )) != 17)
     stop("Invalid input data, data not originating from tdm_dt.max().")
-    
+
     #p= process
     meth <- input[["methods"]]
     #input[["damp.mod.pd"]]<-NA
     #input[["damp.mod.mw"]]<-NA
     #input[["damp.mod.dr"]]<-NA
     #input[["damp.mod.ed"]]<-NA
-    
+
     for (i in c(1:length(meth))) {
       k <- input[[paste0("k.", meth[i])]]
-      
+
       if (attributes(k)$class == "data.frame") {
         #e
         if (is.numeric(k$value) == F)
           stop("Invalid input data, values within the data.frame are not numeric.")
         if (is.character(k$timestamp) == F)
           stop("Invalid input data, timestamp within the data.frame are not numeric.")
-        
+
         #p
         k <-
           zoo::zoo(
@@ -172,7 +172,7 @@ tdm_damp <- function(input,
             order.by = base::as.POSIXct(k$timestamp, format = "%Y-%m-%d %H:%M:%S", tz =
                                           "UTC")
           )
-        
+
         #e
         if (as.character(zoo::index(k)[1]) == "(NA NA)" |
             is.na(zoo::index(k)[1]) == T)
@@ -182,7 +182,7 @@ tdm_damp <- function(input,
         if (is.numeric(k) == F)
           stop("Invalid input data, zoo object does not contain numeric data.")
       }
-      
+
       day.max          <-
         suppressWarnings(stats::aggregate(k, by = list(as.Date(zoo::index(
           k
@@ -194,11 +194,11 @@ tdm_damp <- function(input,
       length.date      <- length(day.max)
       zoo.date         <- zoo::index(day.max)
       day.max[which(day.max < k.threshold)] <- NA
-      
+
       #e
       if (length(stats::na.omit(day.max)) / test.lenght * 100 < 25)
         stop("Unused argument, k. threshold removed over 75% of all data points.")
-      
+
       #p
       doy <-
         zoo::zoo(as.numeric(strftime(zoo::index(day.max), format = "%j")), order.by =
@@ -209,7 +209,7 @@ tdm_damp <- function(input,
       model.doy <- stats::lm(day.max ~ doy + I(doy ^ 2), data = proc.1)
       proc.1$year <- as.numeric(substr(as.character(zoo::index(proc.1)), 1, 4))
       proc.1$day.max.cor <- NA
-      
+
       for (y in c(1:length(unique(proc.1$year)))) {
         scaled    <-
           proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"] / stats::quantile(proc.1[which(proc.1$year ==
@@ -295,7 +295,7 @@ tdm_damp <- function(input,
           }
         }
       }
-      
+
       #p
       proc.2 <-
         ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * run_test) / (
@@ -303,7 +303,7 @@ tdm_damp <- function(input,
                                                                                             2)
         ))
       proc.2 <- zoo::zoo(proc.2, order.by = zoo.date)
-      
+
       #e
       stab <- diff(proc.2, na.rm = TRUE)
       stab[which(stab < 0)] <- 1
@@ -318,11 +318,11 @@ tdm_damp <- function(input,
           "Fitting error, no stable model fit was found for the dampening correction, use make.plot to visually inspect the validity of the fit."
         )
       }
-      
+
       #g= graphics
       if (make.plot == TRUE) {
-        par(mfrow=c(2,1))
-        par(mar=c(5,5,1,5))
+        graphics::par(mfrow=c(2,1))
+        graphics::par(mar=c(5,5,1,5))
         graphics::plot(
           proc.1$run,
           base::scale(proc.1$day.max, center = TRUE, scale = FALSE),
@@ -375,7 +375,7 @@ tdm_damp <- function(input,
         )
         graphics::box()
       }
-      
+
       #p
       proc.orig <-
         ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * proc.1$run) / (
@@ -406,7 +406,7 @@ tdm_damp <- function(input,
                                                                                               unique(proc.3$year)[1]), "k"], na.rm = TRUE))[1]
       proc.3$k_cor <-
         proc.3$frac * as.numeric(as.character((proc.3[first.max, "k"] / proc.3[first.max, "frac"])))
-      
+
       #g= graphics
       if (make.plot == TRUE) {
         graphics::plot(
@@ -433,12 +433,12 @@ tdm_damp <- function(input,
         )
         graphics::box()
       }
-      
+
       #o
       #input[[paste0("damp.mod.",meth[i])]]<-stats::coef(model_nls)
       input[[paste0("k.", meth[i])]] <- proc.3$k_cor
     }
-    
+
     if (df == T) {
       output.data <-
         list(
@@ -492,14 +492,14 @@ tdm_damp <- function(input,
             timestamp = as.character(zoo::index(input[["ed.criteria"]])),
             value = as.numeric(as.character(input[["ed.criteria"]]))
           ),
-          
+
           data.frame(
             timestamp = as.character(zoo::index(input[["methods"]])),
             value = as.numeric(as.character(input[["methods"]]))
           ),
-          
-          
-          
+
+
+
           data.frame(
             timestamp = as.character(zoo::index(input[["k.pd"]])),
             value = as.numeric(as.character(input[["k.pd"]]))
@@ -517,7 +517,7 @@ tdm_damp <- function(input,
             value = as.numeric(as.character(input[["k.ed"]]))
           )#,
           # input[["damp.mod.pd"]],input[["damp.mod.mw"]],input[["damp.mod.dr"]],input[["damp.mod.ed"]]
-          
+
         )
       names(output.data) <- c(
         "max.pd",
@@ -568,7 +568,7 @@ tdm_damp <- function(input,
         stop("Invalid input data, values within the data.frame are not numeric.")
       if (is.character(k$timestamp) == F)
         stop("Invalid input data, timestamp within the data.frame are not numeric.")
-      
+
       #p
       k <-
         zoo::zoo(
@@ -576,7 +576,7 @@ tdm_damp <- function(input,
           order.by = base::as.POSIXct(k$timestamp, format = "%Y-%m-%d %H:%M:%S", tz =
                                         "UTC")
         )
-      
+
       #e
       if (as.character(zoo::index(k)[1]) == "(NA NA)" |
           is.na(zoo::index(k)[1]) == T)
@@ -586,7 +586,7 @@ tdm_damp <- function(input,
       if (is.numeric(k) == F)
         stop("Invalid input data, zoo object does not contain numeric data.")
     }
-    
+
     day.max          <-
       suppressWarnings(stats::aggregate(k, by = list(as.Date(zoo::index(
         k
@@ -598,11 +598,11 @@ tdm_damp <- function(input,
     length.date      <- length(day.max)
     zoo.date         <- zoo::index(day.max)
     day.max[which(day.max < k.threshold)] <- NA
-    
+
     #e
     if (length(stats::na.omit(day.max)) / test.lenght * 100 < 25)
       stop("Unused argument, k. threshold removed over 75% of all data points.")
-    
+
     #p
     doy <-
       zoo::zoo(as.numeric(strftime(zoo::index(day.max), format = "%j")), order.by =
@@ -614,7 +614,7 @@ tdm_damp <- function(input,
     model.doy <- stats::lm(day.max ~ doy + I(doy ^ 2), data = proc.1)
     proc.1$year <- as.numeric(substr(as.character(zoo::index(proc.1)), 1, 4))
     proc.1$day.max.cor <- NA
-    
+
     for (y in c(1:length(unique(proc.1$year)))) {
       scaled    <-
         proc.1[which(proc.1$year == unique(proc.1$year)[y]), "day.max"] / stats::quantile(proc.1[which(proc.1$year ==
@@ -700,8 +700,8 @@ tdm_damp <- function(input,
         }
       }
     }
-    
-    
+
+
     #p
     proc.2 <-
       ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * run_test) / (
@@ -714,9 +714,9 @@ tdm_damp <- function(input,
     #    1 + stats::coef(model_nls)[3] * c(1:length.date) + stats::coef(model_nls)[4] * (c(1:length.date) ^
     #                                                                                      2)
     #  ))
-    
+
     proc.2 <- zoo::zoo(proc.2, order.by = zoo.date)
-    
+
     #e
     stab <- diff(proc.2, na.rm = TRUE)
     stab[which(stab < 0)] <- 1
@@ -731,11 +731,11 @@ tdm_damp <- function(input,
         "Fitting error, no stable model fit was found for the dampening correction, use make.plot to visually inspect the validity of the fit."
       )
     }
-    
+
     #g= graphics
     if (make.plot == TRUE) {
-      par(mfrow=c(2,1))
-      par(mar=c(5,5,1,5))
+      graphics::par(mfrow=c(2,1))
+      graphics::par(mar=c(5,5,1,5))
       graphics::plot(
         proc.1$run,
         base::scale(proc.1$day.max, center = TRUE, scale = FALSE),
@@ -787,7 +787,7 @@ tdm_damp <- function(input,
       )
       graphics::box()
     }
-    
+
     #p
     proc.orig <-
       ((stats::coef(model_nls)[1] + stats::coef(model_nls)[2] * proc.1$run) / (
@@ -814,7 +814,7 @@ tdm_damp <- function(input,
                                                                                             unique(proc.3$year)[1]), "k"], na.rm = TRUE))[1]
     proc.3$k_cor <-
       proc.3$frac * as.numeric(as.character((proc.3[first.max, "k"] / proc.3[first.max, "frac"])))
-    
+
     #g= graphics
     if (make.plot == TRUE) {
       graphics::plot(
@@ -840,7 +840,7 @@ tdm_damp <- function(input,
       )
       graphics::box()
     }
-    
+
     #o
     if (df == F) {
       output.data <- list(proc.3$k_cor, proc.3$k, stats::coef(model_nls))

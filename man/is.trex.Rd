@@ -4,7 +4,7 @@
 \alias{is.trex}
 \title{Testing and preparing input data}
 \usage{
-is.trex(data, tz = 'UTC', time.format = '\%m/\%d/\%y \%H:\%M:\%S',
+is.trex(data, tz = 'UTC', tz.force = FALSE, time.format = '\%m/\%d/\%y \%H:\%M:\%S',
   solar.time = TRUE, long.deg = 7.7459,
    ref.add = FALSE, df = FALSE)
 }
@@ -12,6 +12,8 @@ is.trex(data, tz = 'UTC', time.format = '\%m/\%d/\%y \%H:\%M:\%S',
 \item{data}{A \code{data.frame} in either timestamp format or doy format.}
 
 \item{tz}{Character string, indicates the time zone in which the measurements have been recorded.}
+
+\item{tz.force}{Logical; if \code{TRUE}, the time zone is forced to "UTC" or re-labelled yet not shifted in time. "UTC" is required for internal processing (default = \code{FALSE}).}
 
 \item{time.format}{Character string, indicates the format of the timestamp.}
 
@@ -45,8 +47,8 @@ Tests if the structure of the input matches the requirements of \code{TREX} func
  used with only a reference and heating probe, or when including addition reference probes (see \code{ref.add}).
  These reference probe measurements can be added to the DOY or timestamp format in \eqn{\Delta V} (or \eqn{\Delta T}) (\code{as.numeric})
  labelled \code{ref1}, \code{ref2}, etc. (depending on the number of reference probes). For this function the following
- column names have to be present within the \code{data.frame}: "timestamp” or "year” & "doy” & "hour” = indicators
- of time and "value” = TDM measurements (option "ref1”, "ref2, ..., refn = reference probes).
+ column names have to be present within the \code{data.frame}: "timestamp" or "year" & "doy" & "hour" = indicators
+ of time and "value" = TDM measurements (option "ref1", "ref2, ..., refn = reference probes).
  After specifying the time zone (\code{tz}), one can select whether to standardize the temporal series to solar
  time (see \code{solar.time}) by providing the longitude in decimal degrees at which the measurements were
  obtained (in \code{long.deg}). All timestamps within the function are rounded to minute resolution and output can

@@ -36,7 +36,7 @@
 #'  be either provided in a \code{zoo} format (df = \code{FALSE}) or \code{data.frame} (\code{df = TRUE}; default is \code{FALSE}).
 #'  \strong{Note, that the output time series is always given in \code{UTC} time zone.}
 #'
-#' @usage is.trex(data, tz = 'UTC', time.format = '\%m/\%d/\%y \%H:\%M:\%S',
+#' @usage is.trex(data, tz = 'UTC', tz.force = FALSE, time.format = '\%m/\%d/\%y \%H:\%M:\%S',
 #'   solar.time = TRUE, long.deg = 7.7459,
 #'    ref.add = FALSE, df = FALSE)
 #'
@@ -71,7 +71,7 @@ is.trex <-
            long.deg = 7.7459,
            ref.add = FALSE,
            df = FALSE) {
-    
+
     #t
     #data<-readRDS("D:/Documents/GU - POSTDOC/02_communication/Issues - Chris/mV.rds")
     #time.format<-"%Y-%m-%d %H:%M:%S"
@@ -79,16 +79,16 @@ is.trex <-
     #df=F
     #tz="EST"
     #tz.force=F
-    
+
     # helpers
     left <-  function(string, char){
       substr(string, 1,char)}
-    
+
     right <-  function (string, char){
       substr(string,nchar(string)-(char-1),nchar(string))
     }
-    
-    
+
+
     #data<-input
     #tz="Etc/GMT-1"
     #time.format="%Y-%m-%d %H:%M:%S"
@@ -105,7 +105,7 @@ is.trex <-
     #ref.add=FALSE
     #long.deg=7.7459
     #df= FALSE
-    
+
     #d= default conditions
     if (missing(tz)) {
       tz = "GMT"
@@ -127,7 +127,7 @@ is.trex <-
     if (missing(df)) {
       df = F
     }
-    
+
     #e= errors
     if (length(which(tz %in% base::OlsonNames())) == 0)
       stop("Unused argument, please use a valid time zone.")
@@ -184,7 +184,7 @@ is.trex <-
           long.deg < -180)
         stop("Unused argument, long.deg needs to be numeric and between -180:180.")
     }
-    
+
     #c= conversions
     time.format.orig <- NA
     if (type == "timestamp") {
@@ -214,12 +214,12 @@ is.trex <-
       data$timestamp <- timestamp
       data <- data[, -which(colnames(data) %in% c("year", "doy", "hour"))]
     }
-    
+
     #w= warnings
     if (length(which(base::duplicated(data$timestamp) == T)) != 0) {
       warning("Double timestamp present, daylight saving could be present within the timestamp.")
     }
-    
+
     #p= process
     if (solar.time == T) {
       timestamp <-
@@ -238,18 +238,18 @@ is.trex <-
           format = time.format.orig,
           tz = tz
         )
-      
+
       timestamp_orig<-timestamp
       timestamp_test<-format(timestamp_orig,tz="UTC",usetz=FALSE)
       timestamp_test2<-format(timestamp_orig,tz=tz,usetz=FALSE)
       timestamp<-format(timestamp_orig,tz="UTC",usetz=TRUE)
-      
+
       if(tz.force==T){
         hours_shift<-as.numeric(difftime(timestamp_test2[1],timestamp_test[1]))
         timestamp<-base::as.POSIXct(timestamp)+(hours_shift*60*60)
       }
       }
-    
+
     #e
     if (as.character(timestamp[1]) == "(NA NA)" |
         is.na(timestamp[1]) == T)
@@ -260,7 +260,7 @@ is.trex <-
         "Double timestamp present, either due to errors in the timestamp or issues with daylight saving (change tz)."
       )
     }
-    
+
     #p
     if (ref.add == T) {
       if (length(which(left(colnames(data), 3) == "ref")) == 1) {
@@ -275,7 +275,7 @@ is.trex <-
       }
       data <- data.frame(timestamp = data$timestamp, value = value)
     }
-    
+
     #p
     if (length(unique(timestamp)) == length(unique(left(timestamp,16)))) {
       #  output.data <-
@@ -289,7 +289,7 @@ is.trex <-
         stats::aggregate(output.data, by = base::as.POSIXct(paste0(left(timestamp,16),":00"),tz="UTC"), mean)
       output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(zoo::index(agg),tz="UTC"))
     }
-    
+
     #o= output
     if (df == T) {
       output.data <-

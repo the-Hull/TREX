@@ -42,11 +42,13 @@ tdm_uncertain(
 
 \item{vpd.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 \code{data.frame}) containing a timestamp and a vapour pressure deficit
-(\eqn{VPD}; in \eqn{kPa}) column with the same temporal extent and time steps as the \code{input} object.}
+(\eqn{VPD}; in \eqn{kPa}) column with the same temporal extent and time steps as the \code{input} object.
+This input is required when using the environmental dependent (\code{"ed"}) method.}
 
 \item{sr.input}{An \code{\link{is.trex}}-compliant object (\code{zoo} object,
 \code{data.frame}) a timestamp and a solar radiation data (sr; e.g., global radiation or PAR)
-column with the same temporal extent and time steps as the \code{input} object.}
+column with the same temporal extent and time steps as the \code{input} object.
+This input is required when using the environmental dependent (\code{"ed"}) method.}
 
 \item{method}{Character, specifies the \eqn{\Delta T_{max}}{\Delta Tmax} method on which the
 sensitivity and uncertainty analysis are to be performed on (see \code{\link{tdm_dt.max}}).
@@ -60,13 +62,13 @@ Keep in mind that high values increase processing time.}
 Values should be in minutes (e.g., predawn conditions until 8:00 = 8*60; default = 8*60).}
 
 \item{range.end}{Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
-for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).}
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range around \code{zero.end}).}
 
-\item{zero.start}{Numeric, defines the number of time steps for \code{zero.end} (the minimum time step of the input)
-for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).}
+\item{zero.start}{Numeric, defines the start of the predawn period.
+Values should be in minutes (e.g., predawn conditions from 1:00 = 1*60; default = 1*60).}
 
 \item{range.start}{Numeric, defines the number of time steps for \code{zero.start} (the minimum time step of the input)
-for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).}
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range around \code{zero.start}).}
 
 \item{probe.length}{Numeric, the length of the TDM probes in mm (see \code{\link{tdm_hw.cor}}; default = 20 mm).}
 
@@ -92,7 +94,7 @@ for calculating \eqn{SFD} (default = 0.262).}
 \item{max.days_min}{Numeric, the minimum value for an integer sampling range of \code{max.days}
 (see \code{\link{tdm_dt.max}} for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
  As the \code{"mw"} and \code{"dr"} method apply a rolling maximum or mean, the provided value should be an
- uneven number (see \code{\link{tdm_dt.max}}; default = 5; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).}
+ uneven number (see \code{\link{tdm_dt.max}}; default = 15; required for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).}
 
 \item{max.days_max}{Numeric, the maximum value for an integer sampling range of \code{max.days}
 (see \code{\link{tdm_dt.max}} for the \code{"mw"} and \code{"dr"} \eqn{\Delta T_{max}}{\Delta Tmax} method).
@@ -203,7 +205,7 @@ Uncertainty and sensitivity analysis can be performed on TDM \eqn{\Delta T} (or 
 
  For the sensitivity analysis the total overall sensitivity indices are determined according strategy originally proposed by
  Sobol' (1993), considering the improvements applied within the {sensitivity} R package.
- The method proposed by Sobol’ (1993) is a variance-based sensitivity analysis,
+ The method proposed by Sobol' (1993) is a variance-based sensitivity analysis,
  where sensitivity indices (dimensionless from 0 to 1) indicate the partial variance contribution
  by a given parameter over the total output variance (e.g., Pappas \emph{et al.} 2013).
  This global sensitivity analysis facilitates the identification of key parameters for data-processing
@@ -227,7 +229,7 @@ output<- tdm_uncertain(input, probe.length=20, method="pd",
 
 }
 \references{
-Sobol’ I. 1993. Sensitivity analysis for nonlinear mathematical models.
+Sobol' I. 1993. Sensitivity analysis for nonlinear mathematical models.
  Math. Model Comput. Exp. 1:407-414
 
  Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
