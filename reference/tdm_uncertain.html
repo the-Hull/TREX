@@ -177,13 +177,15 @@ in input parameters applied during TDM data processing. Moreover, it applies a g
       <th>vpd.input</th>
       <td><p>An <code><a href='is.trex.html'>is.trex</a></code>-compliant object (<code>zoo</code> object,
 <code>data.frame</code>) containing a timestamp and a vapour pressure deficit
-(\(VPD\); in \(kPa\)) column with the same temporal extent and time steps as the <code>input</code> object.</p></td>
+(\(VPD\); in \(kPa\)) column with the same temporal extent and time steps as the <code>input</code> object.
+This input is required when using the environmental dependent (<code>"ed"</code>) method.</p></td>
     </tr>
     <tr>
       <th>sr.input</th>
       <td><p>An <code><a href='is.trex.html'>is.trex</a></code>-compliant object (<code>zoo</code> object,
 <code>data.frame</code>) a timestamp and a solar radiation data (sr; e.g., global radiation or PAR)
-column with the same temporal extent and time steps as the <code>input</code> object.</p></td>
+column with the same temporal extent and time steps as the <code>input</code> object.
+This input is required when using the environmental dependent (<code>"ed"</code>) method.</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -205,17 +207,17 @@ Values should be in minutes (e.g., predawn conditions until 8:00 = 8*60; default
     <tr>
       <th>range.end</th>
       <td><p>Numeric, defines the number of time steps for <code>zero.end</code> (the minimum time step of the input)
-for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).</p></td>
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range around <code>zero.end</code>).</p></td>
     </tr>
     <tr>
       <th>zero.start</th>
-      <td><p>Numeric, defines the number of time steps for <code>zero.end</code> (the minimum time step of the input)
-for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).</p></td>
+      <td><p>Numeric, defines the start of the predawn period.
+Values should be in minutes (e.g., predawn conditions from 1:00 = 1*60; default = 1*60).</p></td>
     </tr>
     <tr>
       <th>range.start</th>
       <td><p>Numeric, defines the number of time steps for <code>zero.start</code> (the minimum time step of the input)
-for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range).</p></td>
+for which an integer sampling range will be defined (default = 16, assuming a 15-min resolution or a 2 hour range around <code>zero.start</code>).</p></td>
     </tr>
     <tr>
       <th>probe.length</th>
@@ -257,7 +259,7 @@ for calculating \(SFD\) (default = 0.262).</p></td>
       <td><p>Numeric, the minimum value for an integer sampling range of <code>max.days</code>
 (see <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code> for the <code>"mw"</code> and <code>"dr"</code> \(\Delta T_{max}\) method).
  As the <code>"mw"</code> and <code>"dr"</code> method apply a rolling maximum or mean, the provided value should be an
- uneven number (see <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code>; default = 5; required for the <code>"mw"</code> and <code>"dr"</code> \(\Delta T_{max}\) method).</p></td>
+ uneven number (see <code><a href='tdm_dt.max.html'>tdm_dt.max</a></code>; default = 15; required for the <code>"mw"</code> and <code>"dr"</code> \(\Delta T_{max}\) method).</p></td>
     </tr>
     <tr>
       <th>max.days_max</th>
@@ -386,7 +388,7 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  due to the need for detailed visual inspection and significantly longer computation time.</p>
 <p>For the sensitivity analysis the total overall sensitivity indices are determined according strategy originally proposed by
  Sobol' (1993), considering the improvements applied within the sensitivity R package.
- The method proposed by Sobol’ (1993) is a variance-based sensitivity analysis,
+ The method proposed by Sobol' (1993) is a variance-based sensitivity analysis,
  where sensitivity indices (dimensionless from 0 to 1) indicate the partial variance contribution
  by a given parameter over the total output variance (e.g., Pappas <em>et al.</em> 2013).
  This global sensitivity analysis facilitates the identification of key parameters for data-processing
@@ -395,7 +397,7 @@ If <code>FALSE</code>, output is provided as a zoo vector object (default = <cod
  for each case and analytical purpose. Moreover, it is advised to run this function on one growing season of input data to reduce processing time.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Sobol’ I. 1993. Sensitivity analysis for nonlinear mathematical models.
+    <p>Sobol' I. 1993. Sensitivity analysis for nonlinear mathematical models.
  Math. Model Comput. Exp. 1:407-414</p>
 <p>Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
  Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.

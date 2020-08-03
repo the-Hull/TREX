@@ -50,8 +50,8 @@
  used with only a reference and heating probe, or when including addition reference probes (see ref.add).
  These reference probe measurements can be added to the DOY or timestamp format in \(\Delta V\) (or \(\Delta T\)) (as.numeric)
  labelled ref1, ref2, etc. (depending on the number of reference probes). For this function the following
- column names have to be present within the data.frame: &quot;timestamp” or &quot;year” &amp;amp; &quot;doy” &amp;amp; &quot;hour” = indicators
- of time and &quot;value” = TDM measurements (option &quot;ref1”, &quot;ref2, ..., refn = reference probes).
+ column names have to be present within the data.frame: &quot;timestamp&quot; or &quot;year&quot; &amp;amp; &quot;doy&quot; &amp;amp; &quot;hour&quot; = indicators
+ of time and &quot;value&quot; = TDM measurements (option &quot;ref1&quot;, &quot;ref2, ..., refn = reference probes).
  After specifying the time zone (tz), one can select whether to standardize the temporal series to solar
  time (see solar.time) by providing the longitude in decimal degrees at which the measurements were
  obtained (in long.deg). All timestamps within the function are rounded to minute resolution and output can
@@ -140,8 +140,8 @@
  used with only a reference and heating probe, or when including addition reference probes (see <code>ref.add</code>).
  These reference probe measurements can be added to the DOY or timestamp format in \(\Delta V\) (or \(\Delta T\)) (<code>as.numeric</code>)
  labelled <code>ref1</code>, <code>ref2</code>, etc. (depending on the number of reference probes). For this function the following
- column names have to be present within the <code>data.frame</code>: "timestamp” or "year” &amp; "doy” &amp; "hour” = indicators
- of time and "value” = TDM measurements (option "ref1”, "ref2, ..., refn = reference probes).
+ column names have to be present within the <code>data.frame</code>: "timestamp" or "year" &amp; "doy" &amp; "hour" = indicators
+ of time and "value" = TDM measurements (option "ref1", "ref2, ..., refn = reference probes).
  After specifying the time zone (<code>tz</code>), one can select whether to standardize the temporal series to solar
  time (see <code>solar.time</code>) by providing the longitude in decimal degrees at which the measurements were
  obtained (in <code>long.deg</code>). All timestamps within the function are rounded to minute resolution and output can
@@ -149,7 +149,7 @@
  <strong>Note, that the output time series is always given in <code>UTC</code> time zone.</strong></p>
     </div>
 
-    <pre class="usage"><span class='fu'>is.trex</span>(<span class='no'>data</span>, <span class='kw'>tz</span> <span class='kw'>=</span> <span class='st'>'UTC'</span>, <span class='kw'>time.format</span> <span class='kw'>=</span> <span class='st'>'%m/%d/%y %H:%M:%S'</span>,
+    <pre class="usage"><span class='fu'>is.trex</span>(<span class='no'>data</span>, <span class='kw'>tz</span> <span class='kw'>=</span> <span class='st'>'UTC'</span>, <span class='kw'>tz.force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>time.format</span> <span class='kw'>=</span> <span class='st'>'%m/%d/%y %H:%M:%S'</span>,
   <span class='kw'>solar.time</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>long.deg</span> <span class='kw'>=</span> <span class='fl'>7.7459</span>,
    <span class='kw'>ref.add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>df</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
@@ -163,6 +163,10 @@
     <tr>
       <th>tz</th>
       <td><p>Character string, indicates the time zone in which the measurements have been recorded.</p></td>
+    </tr>
+    <tr>
+      <th>tz.force</th>
+      <td><p>Logical; if <code>TRUE</code>, the time zone is forced to "UTC" or re-labelled yet not shifted in time. "UTC" is required for internal processing (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>time.format</th>

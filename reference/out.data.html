@@ -44,7 +44,7 @@
 This function provides both \(F_{d}\) (\(SFD\) expressed in \(mmol m^{-2} s^{-1}\)) and crown conductance values
 (\(G_{C}\); an analogue to stomatal conductance) in an easily exportable format.
 Additionally, the function can perform environmental filtering on \(F_{d}\) and \(G_{C}\) and model \(G_{C}\) sensitivity to vapour pressure deficit (VPD).
-The user can choose between in- (method = “env.filt”) or excluding (method = “stat”) environmental filtering
+The user can choose between in- (method = &quot;env.filt&quot;) or excluding (method = &quot;stat&quot;) environmental filtering
 on the \(G_{C}\) and adjust the filter threshold manually." />
 
 
@@ -123,7 +123,7 @@ on the \(G_{C}\) and adjust the filter threshold manually." />
 This function provides both \(F_{d}\) (\(SFD\) expressed in \(mmol m^{-2} s^{-1}\)) and crown conductance values
 (\(G_{C}\); an analogue to stomatal conductance) in an easily exportable format.
 Additionally, the function can perform environmental filtering on \(F_{d}\) and \(G_{C}\) and model \(G_{C}\) sensitivity to vapour pressure deficit (VPD).
-The user can choose between in- (<code>method = “env.filt”</code>) or excluding (<code>method = “stat”</code>) environmental filtering
+The user can choose between in- (<code>method = "env.filt"</code>) or excluding (<code>method = "stat"</code>) environmental filtering
 on the \(G_{C}\) and adjust the filter threshold manually.</p>
     </div>
 
@@ -161,32 +161,32 @@ Use <code><a href='dt.steps.html'>dt.steps</a></code> to correct if needed.</p><
       <td><p>An <code><a href='is.trex.html'>is.trex</a></code>-compliant object of an individual series of solar irradiance
 (e.g. either PAR or global radiation; see <code><a href='sr.html'>sr</a></code>).
  The extent and temporal resolution should be equal to input. Use <code><a href='dt.steps.html'>dt.steps</a></code> to correct if needed.
- This data is only needed when applying the “env.filt” method.</p></td>
+ This data is only needed when applying the "env.filt" method.</p></td>
     </tr>
     <tr>
       <th>prec.input</th>
       <td><p>An <code><a href='is.trex.html'>is.trex</a></code>-compliant object of daily precipitation in mm d-1 (see <code><a href='preci.html'>preci</a></code>).
 The extent should be equal to input with a daily temporal resolution.
  Use <code><a href='dt.steps.html'>dt.steps</a></code> to correct if needed.
- This data is only needed when applying the “env.filt” method.</p></td>
+ This data is only needed when applying the "env.filt" method.</p></td>
     </tr>
     <tr>
       <th>peak.hours</th>
       <td><p>Numeric vector with hours which should be considered as peak-of-the-day hours
 (default = <code><a href='https://rdrr.io/r/base/c.html'>c(10:14)</a></code>).
-This variable is only needed when the “stat” method is selected.</p></td>
+This variable is only needed when the "stat" method is selected.</p></td>
     </tr>
     <tr>
       <th>low.sr</th>
       <td><p>Numeric threshold value in the unit of the sr.input time-series (e.g., W m-2)
 to exclude cloudy days which impact \(G_{C}\) (default = 150 W m-2).
- This variable is only needed when the “env.filt” method is selected.</p></td>
+ This variable is only needed when the "env.filt" method is selected.</p></td>
     </tr>
     <tr>
       <th>peak.sr</th>
       <td><p>Numeric threshold value in the unit of the sr.input time-series (e.g., W m-2)
 to exclude hours which are not considered as peak-of-the-day hours (default = 300 W m-2).
-This variable is only needed when the “env.filt” method is selected.</p></td>
+This variable is only needed when the "env.filt" method is selected.</p></td>
     </tr>
     <tr>
       <th>vpd.cutoff</th>
@@ -196,15 +196,15 @@ and extremely high values of \(G_{C}\) due to low VPD values or high values of \
     <tr>
       <th>prec.lim</th>
       <td><p>Numeric threshold value in mm d-1 for daily precipitation to remove rainy days (default = 1 mm d-1).
-This variable is only needed when “env.filt” method is selected.</p></td>
+This variable is only needed when "env.filt" method is selected.</p></td>
     </tr>
     <tr>
       <th>method</th>
       <td><p>Character string indicating whether precipitation and solar irradiance data should be used
-to determined peak-of-the-day \(G_{C}\) values and filter the daily \(G_{C}\) values (“env.filt”)
- or not (“stat”; default). When <code>“env.filt”</code> is selected, <code>input</code>, <code>vpd.input</code>, <code>sr.input</code>, <code>prec.input</code>,
+to determined peak-of-the-day \(G_{C}\) values and filter the daily \(G_{C}\) values ("env.filt")
+ or not ("stat"; default). When <code>"env.filt"</code> is selected, <code>input</code>, <code>vpd.input</code>, <code>sr.input</code>, <code>prec.input</code>,
   <code>peak.sr</code>, <code>low.sr</code>, <code>vpd.cutoff</code> and <code>prec.lim</code> have to be provided.
-  When <code>“stat”</code> is selected only <code>input</code>, <code>vpd.input</code> and <code>peak.hours</code>.</p></td>
+  When <code>"stat"</code> is selected only <code>input</code>, <code>vpd.input</code> and <code>peak.hours</code>.</p></td>
     </tr>
     <tr>
       <th>max.quant</th>
@@ -221,16 +221,16 @@ to determined peak-of-the-day \(G_{C}\) values and filter the daily \(G_{C}\) va
     <p>A named list of <code>data.frame</code> objects,
  containing the following items:</p>
 <dl'>
-   <dt>raw</dt><dd><p>A <code>data.frame</code> containing the input data and filtered values. Columns include the timestamp [,“timestamp”]
-(e.g., “2012-01-01 00:00:00”), year of the data [,“year”], day of year [,“doy”], input solar radiance data [,“sr”],
- daily average radiance data [,“sr”], input vapour pressure deficit data [,“vpd”], isolated peak-of-the-day vapour pressure
- deficit values [,“vpd.filt”], input daily precipitation [,“prec.day”], sap flux density expressed in mmol m-2 s-1 [,“fd”],
- crown conductance expressed in mmol m-2 s-1 kPa-1 [,“gc”], and the filtered crown conductance [,“gc.filt”]</p></dd>
+   <dt>raw</dt><dd><p>A <code>data.frame</code> containing the input data and filtered values. Columns include the timestamp [,"timestamp"]
+(e.g., "2012-01-01 00:00:00"), year of the data [,"year"], day of year [,"doy"], input solar radiance data [,"sr"],
+ daily average radiance data [,"sr"], input vapour pressure deficit data [,"vpd"], isolated peak-of-the-day vapour pressure
+ deficit values [,"vpd.filt"], input daily precipitation [,"prec.day"], sap flux density expressed in mmol m-2 s-1 [,"fd"],
+ crown conductance expressed in mmol m-2 s-1 kPa-1 [,"gc"], and the filtered crown conductance [,"gc.filt"]</p></dd>
 
  <dt>peak.mean</dt><dd><p>A <code>data.frame</code> containing the daily mean crown conductance values.
- Columns include the timestamp [,“timestamp”] (e.g., “2012-01-01”), peak-of-the-day vapour pressure deficit [,“vpd.filt”],
-  the filtered crown conductance mmol m-2 s-1 kPa-1 [,“gc.filt”], and the normalized crown conductance according
-   to the maximum crown conductance [,“gc.norm”].</p></dd>
+ Columns include the timestamp [,"timestamp"] (e.g., "2012-01-01"), peak-of-the-day vapour pressure deficit [,"vpd.filt"],
+  the filtered crown conductance mmol m-2 s-1 kPa-1 [,"gc.filt"], and the normalized crown conductance according
+   to the maximum crown conductance [,"gc.norm"].</p></dd>
 
   <dt>sum.mod</dt><dd><p>A model summary object (see <code><a href='https://rdrr.io/r/base/summary.html'>summary</a>()</code>)
    of the model between VPD and \(G_{C}\).</p></dd>
@@ -258,7 +258,7 @@ Peak-of-the-day conditions are defined by <code>peak.hours</code> or <code>peak.
  i) non-cloudy days (see <code>low.sr</code>), to reduce the impact of low irradiance on \(G_{C}\),
  ii) non-rainy days (see <code>prec.lim</code>), as wet leaves are not well coupled to the atmosphere, and
  iii) daily mean peak-of-the-day \(G_{C}\) great then a threshold (see <code>vpd.cutoff</code>),
- to eliminate unrealistically high \(G_{C}\) values due to low \(F_{d}\) or VPD values (when method = <code>“env.filt”</code>).
+ to eliminate unrealistically high \(G_{C}\) values due to low \(F_{d}\) or VPD values (when method = <code>"env.filt"</code>).
  Moreover, the sensitivity of the daily mean peak-of-the-day \(G_{C}\) to VPD is modelled by fitting the following model:</p>
 <p>$$G_{C} = \alpha + \beta VPD^{-0.5}$$</p>
 <p>Besides using the raw daily mean peak-of-the-day \(G_{C}\) values, the function also applies
