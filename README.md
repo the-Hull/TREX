@@ -18,7 +18,7 @@ The functions have been validated on data collected from different tree species 
 
 ---
 
-## Installation
+## 1. Installation
 
 A development version of `TREX` can be installed and used via
 
@@ -29,7 +29,7 @@ library(TREX)
 
 ```
 
-## Basic use and workflow
+## 2. Basic use and workflow
 
 
 ### Load data
@@ -124,4 +124,11 @@ output<- out.data(input=sfd_data,
 ```
 
 ![](man/figures/output.png)
+
+## 3. More on `TREX`
+
+### Workshops using `TREX`
+
+- **ESA 2020**: `TREX` was introduced and demonstrated in detail in a workshop during the Ecological Society of America's 2020 AGM.
+The workshop description can be found [here](https://deep-tools.netlify.app/talk/esa-2020-rpeters-cpappas/), and all materials on the [dedicated page](https://deep-tools.netlify.app/docs-workshops/esa-workshop2020/02_trex/).
 
