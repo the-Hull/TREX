@@ -4,7 +4,7 @@
 language: r
 sudo: required
 cache: packages
-before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+before_cache: Rscript -e 'remotes::install_cran("textshaping");remotes::install_cran("pkgdown")'
 
 matrix:
   include:
