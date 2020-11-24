@@ -4,6 +4,12 @@
 language: r
 sudo: required
 cache: packages
+before_install:
+  - sudo apt-get -y install libharfbuzz-dev
+  - sudo apt-get -y install libfribidi-dev
+addons:
+  apt:
+    update: true
 before_cache: Rscript -e 'remotes::install_cran("textshaping");remotes::install_cran("pkgdown")'
 
 matrix:
