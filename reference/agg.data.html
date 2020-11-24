@@ -125,14 +125,14 @@ Additionally, the user can define the start and end time of the series and selec
 the function used for aggregation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>agg.data</span>(<span class='no'>input</span>,
- <span class='kw'>time.agg</span> <span class='kw'>=</span> <span class='fl'>60</span>*<span class='fl'>24</span>,
- <span class='kw'>start</span> <span class='kw'>=</span> <span class='st'>"2012-07-28 00:00"</span>,
- <span class='kw'>end</span> <span class='kw'>=</span> <span class='st'>"2012-10-29 00:00"</span>,
- <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='st'>"mean"</span>,
- <span class='kw'>unit</span> <span class='kw'>=</span> <span class='fl'>60</span>,
- <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
- <span class='kw'>df</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>agg.data</span><span class='op'>(</span><span class='va'>input</span>,
+ time.agg <span class='op'>=</span> <span class='fl'>60</span><span class='op'>*</span><span class='fl'>24</span>,
+ start <span class='op'>=</span> <span class='st'>"2012-07-28 00:00"</span>,
+ end <span class='op'>=</span> <span class='st'>"2012-10-29 00:00"</span>,
+ FUN <span class='op'>=</span> <span class='st'>"mean"</span>,
+ unit <span class='op'>=</span> <span class='fl'>60</span>,
+ na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+ df <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -196,52 +196,53 @@ is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
  of the time series (e.g., \(cm^3 cm^{-2} h^{-1}\), <code>unit = 60</code>).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'>#aggregate SFD values to mean hourly and daily sums</span>
 
-<span class='no'>raw</span>   <span class='kw'>&lt;-</span> <span class='fu'><a href='example.data.html'>example.data</a></span>(<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"doy"</span>)
+<span class='va'>raw</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='example.data.html'>example.data</a></span><span class='op'>(</span>type<span class='op'>=</span><span class='st'>"doy"</span><span class='op'>)</span>
 
-<span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span>(<span class='no'>raw</span>,<span class='kw'>tz</span><span class='kw'>=</span><span class='st'>"GMT"</span>,<span class='kw'>time.format</span><span class='kw'>=</span><span class='st'>"%H:%M"</span>,
-                  <span class='kw'>solar.time</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>long.deg</span><span class='kw'>=</span><span class='fl'>7.7459</span>,<span class='kw'>ref.add</span><span class='kw'>=</span><span class='fl'>FALSE</span>,<span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='va'>input</span> <span class='op'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span><span class='op'>(</span><span class='va'>raw</span>,tz<span class='op'>=</span><span class='st'>"GMT"</span>,time.format<span class='op'>=</span><span class='st'>"%H:%M"</span>,
+                  solar.time<span class='op'>=</span><span class='cn'>TRUE</span>,long.deg<span class='op'>=</span><span class='fl'>7.7459</span>,ref.add<span class='op'>=</span><span class='cn'>FALSE</span>,df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='no'>input</span>[<span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span>(<span class='no'>input</span><span class='kw'>&lt;</span><span class='fl'>0.4</span>)]<span class='kw'>&lt;-</span><span class='fl'>NA</span>
+<span class='va'>input</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>&lt;</span><span class='fl'>0.4</span><span class='op'>)</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='cn'>NA</span>
 
-<span class='no'>k.input</span><span class='kw'>&lt;-</span><span class='fu'><a href='tdm_dt.max.html'>tdm_dt.max</a></span>(<span class='fu'><a href='dt.steps.html'>dt.steps</a></span>(<span class='no'>input</span>,<span class='kw'>time.int</span><span class='kw'>=</span><span class='fl'>15</span>,
-               <span class='kw'>max.gap</span><span class='kw'>=</span><span class='fl'>180</span>,<span class='kw'>decimals</span><span class='kw'>=</span><span class='fl'>10</span>),<span class='kw'>methods</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mw"</span>))
+<span class='va'>k.input</span><span class='op'>&lt;-</span><span class='fu'><a href='tdm_dt.max.html'>tdm_dt.max</a></span><span class='op'>(</span><span class='fu'><a href='dt.steps.html'>dt.steps</a></span><span class='op'>(</span><span class='va'>input</span>,time.int<span class='op'>=</span><span class='fl'>15</span>,
+               max.gap<span class='op'>=</span><span class='fl'>180</span>,decimals<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,methods<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mw"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='no'>sfd.input</span><span class='kw'>&lt;-</span><span class='fu'><a href='tdm_cal.sfd.html'>tdm_cal.sfd</a></span>(<span class='no'>k.input</span>,<span class='kw'>make.plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-                  <span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>,<span class='kw'>wood</span><span class='kw'>=</span><span class='st'>"Coniferous"</span>)$<span class='no'>sfd.mw</span>$<span class='no'>sfd</span>
+<span class='va'>sfd.input</span><span class='op'>&lt;-</span><span class='fu'><a href='tdm_cal.sfd.html'>tdm_cal.sfd</a></span><span class='op'>(</span><span class='va'>k.input</span>,make.plot<span class='op'>=</span><span class='cn'>FALSE</span>,
+                  df<span class='op'>=</span><span class='cn'>FALSE</span>,wood<span class='op'>=</span><span class='st'>"Coniferous"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>sfd.mw</span><span class='op'>$</span><span class='va'>sfd</span>
 
 <span class='co'># means</span>
-<span class='no'>output.1hmean</span> <span class='kw'>&lt;-</span> <span class='fu'>agg.data</span>(<span class='no'>sfd.input</span>,
-                       <span class='kw'>time.agg</span><span class='kw'>=</span><span class='fl'>60</span>,
-                       <span class='kw'>start</span><span class='kw'>=</span><span class='st'>"2012-07-28 00:00"</span>,
-                       <span class='kw'>end</span><span class='kw'>=</span><span class='st'>"2012-08-29 00:00"</span>,
-                       <span class='kw'>FUN</span><span class='kw'>=</span><span class='st'>"mean"</span>,
-                       <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
-                       <span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='no'>output.6hmean</span> <span class='kw'>&lt;-</span> <span class='fu'>agg.data</span>(<span class='no'>sfd.input</span>,
-                         <span class='kw'>time.agg</span><span class='kw'>=</span><span class='fl'>60</span>*<span class='fl'>6</span>,
-                         <span class='kw'>start</span><span class='kw'>=</span><span class='st'>"2012-07-28 00:00"</span>,
-                         <span class='kw'>end</span><span class='kw'>=</span><span class='st'>"2012-08-29 00:00"</span>,
-                         <span class='kw'>FUN</span><span class='kw'>=</span><span class='st'>"mean"</span>,
-                         <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
-                         <span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>output.1hmean</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"cyan"</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span>(<span class='no'>output.6hmean</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>)
+<span class='va'>output.1hmean</span> <span class='op'>&lt;-</span> <span class='fu'>agg.data</span><span class='op'>(</span><span class='va'>sfd.input</span>,
+                       time.agg<span class='op'>=</span><span class='fl'>60</span>,
+                       start<span class='op'>=</span><span class='st'>"2012-07-28 00:00"</span>,
+                       end<span class='op'>=</span><span class='st'>"2012-08-29 00:00"</span>,
+                       FUN<span class='op'>=</span><span class='st'>"mean"</span>,
+                       na.rm<span class='op'>=</span><span class='cn'>TRUE</span>,
+                       df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>output.6hmean</span> <span class='op'>&lt;-</span> <span class='fu'>agg.data</span><span class='op'>(</span><span class='va'>sfd.input</span>,
+                         time.agg<span class='op'>=</span><span class='fl'>60</span><span class='op'>*</span><span class='fl'>6</span>,
+                         start<span class='op'>=</span><span class='st'>"2012-07-28 00:00"</span>,
+                         end<span class='op'>=</span><span class='st'>"2012-08-29 00:00"</span>,
+                         FUN<span class='op'>=</span><span class='st'>"mean"</span>,
+                         na.rm<span class='op'>=</span><span class='cn'>TRUE</span>,
+                         df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>output.1hmean</span>,col<span class='op'>=</span><span class='st'>"cyan"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>output.6hmean</span>,col<span class='op'>=</span><span class='st'>"black"</span><span class='op'>)</span>
 
 <span class='co'># daily sums</span>
-<span class='no'>output.dsum</span><span class='kw'>&lt;-</span><span class='fu'>agg.data</span>(<span class='no'>sfd.input</span>,
-                      <span class='kw'>time.agg</span><span class='kw'>=</span><span class='fl'>60</span>*<span class='fl'>24</span>,
-                      <span class='kw'>start</span><span class='kw'>=</span><span class='st'>"2012-07-28 00:00"</span>,
-                      <span class='kw'>end</span><span class='kw'>=</span><span class='st'>"2012-10-29 00:00"</span>,
-                      <span class='kw'>FUN</span><span class='kw'>=</span><span class='st'>"sum"</span>,
-                      <span class='kw'>unit</span><span class='kw'>=</span><span class='fl'>60</span>,
-                      <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
-                      <span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>output.dsum</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>output.dsum</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-}</div></pre>
+<span class='va'>output.dsum</span><span class='op'>&lt;-</span><span class='fu'>agg.data</span><span class='op'>(</span><span class='va'>sfd.input</span>,
+                      time.agg<span class='op'>=</span><span class='fl'>60</span><span class='op'>*</span><span class='fl'>24</span>,
+                      start<span class='op'>=</span><span class='st'>"2012-07-28 00:00"</span>,
+                      end<span class='op'>=</span><span class='st'>"2012-10-29 00:00"</span>,
+                      FUN<span class='op'>=</span><span class='st'>"sum"</span>,
+                      unit<span class='op'>=</span><span class='fl'>60</span>,
+                      na.rm<span class='op'>=</span><span class='cn'>TRUE</span>,
+                      df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>output.dsum</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>output.dsum</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -257,7 +258,7 @@ is provided as a zoo vector object (default = <code>FALSE</code>).</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

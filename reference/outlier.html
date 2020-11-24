@@ -133,7 +133,7 @@
    in an <code><a href='is.trex.html'>is.trex</a></code>-compliant object that can be further processed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>outlier</span>()</pre>
+    <pre class="usage"><span class='fu'>outlier</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -199,32 +199,32 @@ Once the application is launched,
   in addition to those identified in the automated detection.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># find example file path</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"exdata"</span>, <span class='st'>"example.RData"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"TREX"</span>, <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"exdata"</span>, <span class='st'>"example.RData"</span>, package <span class='op'>=</span> <span class='st'>"TREX"</span>, mustWork <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='co'># either copy-paste this into the navigation bar of the file selection window</span>
 <span class='co'># or navigate here manually for selection</span>
 
 <span class='co'># launch shiny application</span>
-<span class='fu'>outlier</span>()
+<span class='fu'>outlier</span><span class='op'>(</span><span class='op'>)</span>
 
 <span class='co'># after saving the output, run e.g.:</span>
 
-<span class='no'>my_cleaned_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(<span class='st'>"./cleaned_file.Rds"</span>)
+<span class='va'>my_cleaned_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='st'>"./cleaned_file.Rds"</span><span class='op'>)</span>
 
 <span class='co'>## With full workflow:</span>
 
 <span class='co'># get an example time series</span>
-<span class='no'>raw</span>   <span class='kw'>&lt;-</span> <span class='fu'><a href='example.data.html'>example.data</a></span>(<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"doy"</span>)
-<span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span>(<span class='no'>raw</span>, <span class='kw'>tz</span><span class='kw'>=</span><span class='st'>"GMT"</span>, <span class='kw'>time.format</span><span class='kw'>=</span><span class='st'>"%H:%M"</span>,
-                 <span class='kw'>solar.time</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>long.deg</span><span class='kw'>=</span><span class='fl'>7.7459</span>, <span class='kw'>ref.add</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>df</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='va'>raw</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='example.data.html'>example.data</a></span><span class='op'>(</span>type<span class='op'>=</span><span class='st'>"doy"</span><span class='op'>)</span>
+<span class='va'>input</span> <span class='op'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span><span class='op'>(</span><span class='va'>raw</span>, tz<span class='op'>=</span><span class='st'>"GMT"</span>, time.format<span class='op'>=</span><span class='st'>"%H:%M"</span>,
+                 solar.time<span class='op'>=</span><span class='cn'>TRUE</span>, long.deg<span class='op'>=</span><span class='fl'>7.7459</span>, ref.add<span class='op'>=</span><span class='cn'>FALSE</span>, df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># clip a period of interest</span>
-<span class='no'>input</span><span class='kw'>&lt;-</span><span class='fu'><a href='dt.steps.html'>dt.steps</a></span>(<span class='no'>input</span>,<span class='kw'>time.int</span><span class='kw'>=</span><span class='fl'>60</span>,<span class='kw'>start</span><span class='kw'>=</span><span class='st'>"2014-02-01 00:00"</span>,
-                <span class='kw'>end</span><span class='kw'>=</span><span class='st'>"2014-05-01 00:00"</span>,<span class='kw'>max.gap</span><span class='kw'>=</span><span class='fl'>180</span>,<span class='kw'>decimals</span><span class='kw'>=</span><span class='fl'>15</span>)
+<span class='va'>input</span><span class='op'>&lt;-</span><span class='fu'><a href='dt.steps.html'>dt.steps</a></span><span class='op'>(</span><span class='va'>input</span>,time.int<span class='op'>=</span><span class='fl'>60</span>,start<span class='op'>=</span><span class='st'>"2014-02-01 00:00"</span>,
+                end<span class='op'>=</span><span class='st'>"2014-05-01 00:00"</span>,max.gap<span class='op'>=</span><span class='fl'>180</span>,decimals<span class='op'>=</span><span class='fl'>15</span><span class='op'>)</span>
 
 <span class='co'># organise a data.frame</span>
-<span class='no'>input_df</span>  <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>date</span> <span class='kw'>=</span> <span class='kw pkg'>zoo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/zoo/man/index.html'>index</a></span>(<span class='no'>input</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw pkg'>zoo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/zoo/man/coredata.html'>coredata</a></span>(<span class='no'>input</span>))
+<span class='va'>input_df</span>  <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>date <span class='op'>=</span> <span class='fu'>zoo</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/zoo/man/index.html'>index</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='fu'>zoo</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/zoo/man/coredata.html'>coredata</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># save the RData file to e.g. a temp file, or your project root directory</span>
 
@@ -236,10 +236,12 @@ Once the application is launched,
 
 
 <span class='co'># call the oulier function and navigate to where the "test.RData" is stored</span>
-<span class='fu'>outlier</span>()
+<span class='fu'>outlier</span><span class='op'>(</span><span class='op'>)</span>
 
 
-}</div></pre>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -255,7 +257,7 @@ Once the application is launched,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
