@@ -2,7 +2,7 @@ citHeader("To cite TREX in publications use:")
 
 bibentry(
   bibtype    = "Article",
-  title    = "Assimilate, Process and Analyse Thermal Dissipation Sap Flow Data Using the {{TREX}} R Package}",
+  title    = "Assimilate, Process and Analyse Thermal Dissipation Sap Flow Data Using the {{TREX}} R Package",
   author   = c(
             person(
                 c('Richard', 'L'),'Peters'),
