@@ -96,7 +96,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -107,7 +107,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/the-Hull/TREX/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -207,31 +207,22 @@ If <code>FALSE</code>, output is provided as a <code>zoo</code> object (default 
  for checking the data structure and preparing it for further analyses. For the specific time zone see
  <a href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</a> or for formatting see <code><a href='https://rdrr.io/r/base/timezones.html'>OlsonNames</a>()</code>.
  The format of the timestamp has to be provided according to <a href='https://www.stat.berkeley.edu/~s133/dates.html'>https://www.stat.berkeley.edu/~s133/dates.html</a>.
- For the method behind the solar time conversion, see the solar package (<a href='https://cran.r-project.org/web/packages/solaR/'>https://cran.r-project.org/web/packages/solaR/</a>).
+ For the method behind the solar time conversion, see the solar package (<a href='https://CRAN.R-project.org/package=solaR'>https://CRAN.R-project.org/package=solaR</a>).
  The longitude has to be provided in positive decimal degrees for study sites East from the Greenwich meridian and negative for sites to the West.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>#validating and structuring example data</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'>#validating and structuring example data</span>
 <span class='va'>raw</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='example.data.html'>example.data</a></span><span class='op'>(</span>type<span class='op'>=</span><span class='st'>"doy"</span><span class='op'>)</span>
 <span class='va'>input</span> <span class='op'>&lt;-</span> <span class='fu'>is.trex</span><span class='op'>(</span><span class='va'>raw</span>,tz<span class='op'>=</span><span class='st'>"GMT"</span>,time.format<span class='op'>=</span><span class='st'>"%H:%M"</span>,
     solar.time<span class='op'>=</span><span class='cn'>TRUE</span>,long.deg<span class='op'>=</span><span class='fl'>7.7459</span>,
     ref.add<span class='op'>=</span><span class='cn'>FALSE</span>,df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>raw</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   year doy  hour value
-#&gt; 1 2012 108 15:00 0.444
-#&gt; 2 2012 108 15:15 0.541
-#&gt; 3 2012 108 15:30 0.560
-#&gt; 4 2012 108 15:45 0.568
-#&gt; 5 2012 108 16:00 0.572
-#&gt; 6 2012 108 16:15 0.545</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ‘zoo’ series from 2012-04-17 15:30:00 to 2015-07-19 17:15:00
-#&gt;   Data: num [1:111792] 0.444 0.541 0.56 0.568 0.572 0.545 0.576 0.578 0.581 0.584 ...
-#&gt;   Index:  POSIXct[1:111792], format: "2012-04-17 15:30:00" "2012-04-17 15:45:00" "2012-04-17 16:00:00" ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 2012-04-17 15:30:00 2012-04-17 15:45:00 2012-04-17 16:00:00 2012-04-17 16:15:00 
-#&gt;               0.444               0.541               0.560               0.568 
-#&gt; 2012-04-17 16:30:00 2012-04-17 16:45:00 
-#&gt;               0.572               0.545 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>
-</div><div class='img'><img src='is.trex-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>input</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

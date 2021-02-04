@@ -92,7 +92,7 @@ step by applying a linear interpolation (excluding gap \(periods &amp;gt; \code{
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -103,7 +103,7 @@ step by applying a linear interpolation (excluding gap \(periods &amp;gt; \code{
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/the-Hull/TREX/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -199,17 +199,15 @@ If <code>FALSE</code>, output is provided as a <code>zoo</code> object (default 
 format for further processing.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>input</span> <span class='op'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span><span class='op'>(</span><span class='fu'><a href='example.data.html'>example.data</a></span><span class='op'>(</span>type<span class='op'>=</span><span class='st'>"doy"</span><span class='op'>)</span>,
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>input</span> <span class='op'>&lt;-</span> <span class='fu'><a href='is.trex.html'>is.trex</a></span><span class='op'>(</span><span class='fu'><a href='example.data.html'>example.data</a></span><span class='op'>(</span>type<span class='op'>=</span><span class='st'>"doy"</span><span class='op'>)</span>,
            tz<span class='op'>=</span><span class='st'>"GMT"</span>,time.format<span class='op'>=</span><span class='st'>"%H:%M"</span>, solar.time<span class='op'>=</span><span class='cn'>TRUE</span>,
            long.deg<span class='op'>=</span><span class='fl'>7.7459</span>,ref.add<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>in.ts</span> <span class='op'>&lt;-</span> <span class='fu'>dt.steps</span><span class='op'>(</span>input<span class='op'>=</span><span class='va'>input</span>,start<span class='op'>=</span><span class='st'>'2012-06-28 00:00'</span>,end<span class='op'>=</span><span class='st'>'2012-07-28 00:00'</span>,
                    time.int<span class='op'>=</span><span class='fl'>60</span>,max.gap<span class='op'>=</span><span class='fl'>120</span>,decimals<span class='op'>=</span><span class='fl'>6</span>,df<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>in.ts</span><span class='op'>)</span>
-</div><div class='img'><img src='dt.steps-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>in.ts</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 2012-06-28 00:00:00 2012-06-28 01:00:00 2012-06-28 02:00:00 2012-06-28 03:00:00 
-#&gt;            0.675742            0.678650            0.681267            0.683267 
-#&gt; 2012-06-28 04:00:00 2012-06-28 05:00:00 
-#&gt;            0.684383            0.685383 </div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>in.ts</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
