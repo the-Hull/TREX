@@ -13,3 +13,6 @@
 ^mkreadme$
 ^\./pkgdown/_pkgdown\.yml$
 ^pkgdown$
+^cran-comments\.md$
+^README\.md$
+^NEWS\.md$

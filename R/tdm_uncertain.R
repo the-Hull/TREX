@@ -181,7 +181,7 @@
 #'
 #'  Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
 #'  Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
-#'   Journal of Geophysical Research 118:505-528 \url{doi: 10.1002/jgrg.20035}
+#'   Journal of Geophysical Research 118:505-528 \doi{10.1002/jgrg.20035}
 #'
 #' @examples \dontrun{
 #' #perform an uncertainty and sensitivity analysis on "dr" data processing
@@ -241,26 +241,26 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
   #min.k<-0
   #n=100
   #make.plot=TRUE
-  
+
   #d= default
   if(missing(method)){method="pd"}
   if(missing(make.plot)){make.plot=F}
   if(missing(df)){df=F}
   if(missing(n)){n=2000}
-  
+
   #p= process
   if(attributes(input)$class=="data.frame"){
     #e
     if(is.numeric(input$value)==F)stop("Invalid input data, values within the data.frame are not numeric.")
     if(is.character(input$timestamp)==F)stop("Invalid input data, timestamp within the data.frame are not numeric.")
-    
+
     #p
     input<-zoo::zoo(input$value,order.by=base::as.POSIXct(input$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))
-    
+
     #e
     if(as.character(zoo::index(input)[1])=="(NA NA)"|is.na(zoo::index(input)[1])==T)stop("No timestamp present, time.format is likely incorrect.")
   }
-  
+
   #e= error
   if(zoo::is.zoo(input)==F)stop("Invalid input data, use a zoo file from is.trex or a zoo vector containing numeric values (tz= UTC).")
   if(is.numeric(input)==F)stop("Invalid input data, values within the vector are not numeric.")
@@ -268,24 +268,24 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
   if(method%in%c("pd","mw","dr","ed")==F)stop("Unused argument, method has to be a character object of either pd, mw, dr or ed.")
   if(length(method)!=1)stop("Unused argument, method can only contain one character object.")
   if(is.numeric(n)==F)stop("Unused argument, n is not numeric.")
-  
+
   #w= warnings
   if(difftime(zoo::index(input[length(input)]),zoo::index(input[1]),units=c("days"))<30){
     warning("Selected input has a temporal extend of <30 days.")
   }
   if(n>2000)warning("Selected n > 2000 which can significantly reduce processing speed.")
-  
+
   #f= small functions
   left = function(string, char){substr(string, 1,char)}
   right = function (string, char){substr(string,nchar(string)-(char-1),nchar(string))}
-  
+
   #convert input to a tibble
   minutes<-as.numeric(left(right(as.character(zoo::index(input)),8),2))*60+as.numeric(left(right(as.character(zoo::index(input)),5),2))
   days<-as.numeric(floor(difftime(zoo::index(input),as.Date(zoo::index(input)[1]),units="days"))+1)
-  
+
   #w= warnings
   if(max(days)>365)warning("Input length > 365 days which can significantly reduce processing speed.")
-  
+
   raw.input <- tibble::tibble(
     days = days,
     days.agg =days,
@@ -295,13 +295,13 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     count = 1,
     gap = 1
   )
-  
+
   #e
   if(nrow(raw.input)==0)stop("Invalid input object, no values are provided within the object.")
-  
+
   length.input <- stats::na.omit(tibble::tibble(days = days,value = as.numeric(as.character(input))))
   raw.input$count<-dplyr::full_join(raw.input,stats::aggregate(length.input, list(length.input$days), FUN=length),by=c("days"="Group.1"))$value.y
-  
+
   #d
   if(missing(zero.start)){zero.start<-1*60}
   if(missing(zero.end)){zero.end<-8*60}
@@ -315,7 +315,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
   if(missing(b_sd)){b_sd<-0.26184}
   if(missing(min.sfd)){min.sfd<-0.05}
   if(missing(min.k)){min.k<-0}
-  
+
   #e
   if(is.numeric(zero.start)==F)stop("Unused argument, zero.start is not numeric.")
   if(is.numeric(zero.end)==F)stop("Unused argument, zero.end is not numeric.")
@@ -331,7 +331,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
   if(is.numeric(min.k)==F)stop("Unused argument, min.k is not numeric.")
   if(min.sfd<0)stop("Unused argument, min.sfd < 0.")
   if(min.k<0)stop("Unused argument, min.k < 0.")
-  
+
   #pd----
   if(method=="pd"){
     #p= processing
@@ -344,7 +344,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,5] <- stats::qnorm(A[,5], mean = b_mu, sd= b_sd)
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b")
     X1<-data.frame(B)
-    
+
     A <- lhs::randomLHS(n,5)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -354,7 +354,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,5] <- stats::qnorm(A[,5], mean = b_mu, sd= b_sd)
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b")
     X2<-data.frame(B)
-    
+
     x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
@@ -365,7 +365,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     pb <- utils::txtProgressBar(max = nrow(B), style = 3)
     progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
-    
+
     output<-foreach(i=c(1:n),.combine="rbind",.packages=c("tibble","dplyr","zoo"),.options.snow = opts)%dopar%{
       utils::setTxtProgressBar(pb, i)
       ze<-zero.end+(B[i,1]*stats::median(diff(minutes)))
@@ -374,7 +374,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
-      
+
       #dt max
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
@@ -393,7 +393,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.2$gap<-stats::ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*stats::median(diff(proc.1$minutes))
       proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
       proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
-      
+
       #HW correction
       #i<-4
       swt<-B[i,3]
@@ -405,12 +405,12 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
         proc.2$k.pd<-((proc.2$ddt.max-((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))/((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))
         proc.2$k.pd[which(proc.2$k.pd<0)]<-0
       }
-      
+
       #still need to consider whether we include dampening
       a<-B[i,4] #48.25036#
       b<- B[i,5] #1.177099#
       proc.2$sfd<-a*proc.2$k.pd^b
-      
+
       #think about relevant output proxies
       d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
@@ -419,7 +419,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
       values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
-      
+
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
       durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
@@ -434,7 +434,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       )
     }
     doParallel::stopImplicitCluster()
-    
+
     #time series output
     number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
@@ -444,24 +444,24 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
     output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
     output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
-    
+
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
       output.k<-zoo::fortify.zoo(output.k)
       colnames(output.sfd)<-c("timestamp","mu","sd","ci.max","ci.min")
       colnames(output.k)<-c("timestamp","mu","sd","ci.max","ci.min")
     }
-    
+
     #o= output
     output<-output[,c(1:7)]
     output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
     output_cv<-sensitivity::tell(x,output[,3])
     output_length<-sensitivity::tell(x,output[,4])
-    
+
     output_sum.k<-sensitivity::tell(x,output[,5])
     output_cv.k<-sensitivity::tell(x,output[,6])
     output_length.k<-sensitivity::tell(x,output[,7])
-    
+
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
@@ -478,7 +478,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                              ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
                              ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
-    
+
     #figure output
     #setwd("D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX")
     #pdf("Figure_SPD_sensitivity_2000_pd.pdf",height=6,width=8)
@@ -536,7 +536,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
       graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
-      
+
       graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
@@ -550,7 +550,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
-      
+
       output.tot.k.gr<-output.tot.k[-which(output.tot.k$item%in%c("a","b")),]
       for(i in c(1:nrow(output.tot.k.gr))){
         #i<-1
@@ -566,7 +566,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                          pch=1,cex=1.5)
       }
     }
-    
+
     output.tot.k.gr<-output.tot.k.gr[-which(left(output.tot.k.gr$class,4)=="stat"),]
     output.tot.gr<-output.tot[-which(left(output.tot$class,4)=="stat"),]
     output.tot.k.gr$analysis<-rep("sensitivity",nrow(output.tot.k.gr))
@@ -574,15 +574,15 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.sen<-output.tot[which(left(output.tot$class,4)=="stat"),]
     output.sen$analysis<-rep("uncertainty",nrow(output.sen))
     output.data<-rbind(output.tot.k.gr,output.tot.gr,output.sen)
-    
+
     #write.table(output.data,"D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/output.sen.pd.txt",col.names=T,row.names=F,sep="\t")
-    
+
     #uncertainty parameters
     param<-data.frame(method=method,start.input=as.character(zoo::index(input)[1]),end.input=as.character(zoo::index(input)[length(input)]),
                       zero.start=zero.start,zero.end=zero.end,range.start=range.start,range.end=range.end,
                       sw.cor=sw.cor,sw.sd=sw.sd,log.a_mu=log.a_mu,log.a_sd=log.a_sd,b_mu=b_mu,b_sd=b_sd,min.sfd=min.sfd,min.k=min.k,n=n)
     if(is.numeric(sw.cor)==F)stop("Unused argument, sw.cor is not numeric.")
-    
+
     output.all<-list(
       output.data,
       output.sfd,
@@ -595,23 +595,23 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
   #----
   #mw----
   if(method=="mw"){
-    
+
     #d
     if(missing(max.days_min)){max.days_min=5}
     if(missing(max.days_min)){max.days_max=15}
-    
+
     #e
     if((max.days_min %% 2)== 0)stop("Unused argument, max.days_min should be uneven.")
     if((max.days_max %% 2)== 0)stop("Unused argument, max.days_max should be uneven.")
     max.days_min<-(max.days_min-1)/2
     max.days_min<-(max.days_max-1)/2
-    
+
     #e
     if(is.numeric(max.days_min)==F)stop("Unused argument, max.days_min is not numeric.")
     if(is.numeric(max.days_max)==F)stop("Unused argument, max.days_max is not numeric.")
     if(max.days_min<0)stop("Unused argument, max.days_min < 0.")
     if(max.days_max<0)stop("Unused argument, max.days_max < 0.")
-    
+
     A <- lhs::randomLHS(n, 6)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -620,10 +620,10 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,4] <- stats::qlnorm(A[,4], meanlog = log.a_mu, sdlog = log.a_sd)
     B[,5] <- stats::qnorm(A[,5], mean = b_mu, sd= b_sd)
     B[,6] <- ceiling(stats::qunif(A[,6], min =max.days_min-1, max = max.days_max))
-    
+
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","max.days")
     X1<-data.frame(B)
-    
+
     A <- lhs::randomLHS(n, 6)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -634,7 +634,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,6] <- ceiling(stats::qunif(A[,6], min =max.days_min-1, max = max.days_max))
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","max.days")
     X2<-data.frame(B)
-    
+
     x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
@@ -653,7 +653,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
-      
+
       #dt max
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
@@ -672,10 +672,10 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.1_2$rmax<-zoo::rollmax(proc.1_2$ddt.max,m.day,align = c("center"),na.rm=TRUE,fill=NA)
       gaps<-proc.1_2[which(is.na(proc.1_2$ddt.max)==TRUE),]
       if(nrow(gaps)!=0){
-        
+
         gaps$NA_value<-c(1,diff(gaps$days.add))
         split<-c(1,gaps[which(gaps$NA_value>1),]$days.add,nrow(proc.1_2))
-        
+
         for(z in c(1:(length(split)-1))){
           proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax,c("extend",NA))
           if(z==length(split)-1){
@@ -691,7 +691,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"ddt.max"]<-proc.2[which(is.na(proc.2$ddt.max)==FALSE),"rmax"]
       proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
       proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
-      
+
       #HW correction
       #i<-4
       swt<-B[i,3]
@@ -703,12 +703,12 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
         proc.2$k.pd<-((proc.2$ddt.max-((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))/((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))
         proc.2$k.pd[which(proc.2$k.pd<0)]<-0
       }
-      
+
       #still need to consider whether we include dampening
       a<-B[i,4]
       b<-B[i,5]
       proc.2$sfd<-a*proc.2$k.pd^b
-      
+
       #think about relevant output proxies
       d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
@@ -717,7 +717,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
       values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
-      
+
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
       durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
@@ -725,7 +725,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       values[values[,2]=="NaN",2]<-NA
       d.sum<-suppressWarnings(stats::aggregate(proc.2$sfd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum[which(d.sum[,2]=="-Inf"),2]<-NA
-      
+
       return(
         c(c(i,mean(values[,2],na.rm=TRUE),(stats::sd(d.sum[,2],na.rm=TRUE)/mean(d.sum[,2],na.rm=TRUE))*100,(mean(durat[,2]*stats::median(diff(proc.2$minutes)))/60),
             mean(values.k[,2],na.rm=TRUE),(stats::sd(d.sum.k[,2],na.rm=TRUE)/mean(d.sum.k[,2],na.rm=TRUE))*100,(mean(durat.k[,2]*stats::median(diff(proc.2$minutes)))/60)),
@@ -733,7 +733,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       )
     }
     doParallel::stopImplicitCluster()
-    
+
     #time series output
     number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
@@ -743,24 +743,24 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
     output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
     output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
-    
+
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
       output.k<-zoo::fortify.zoo(output.k)
       colnames(output.sfd)<-c("timestamp","mu","sd","ci.max","ci.min")
       colnames(output.k)<-c("timestamp","mu","sd","ci.max","ci.min")
     }
-    
+
     #o= output
     output<-output[,c(1:7)]
     output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
     output_cv<-sensitivity::tell(x,output[,3])
     output_length<-sensitivity::tell(x,output[,4])
-    
+
     output_sum.k<-sensitivity::tell(x,output[,5])
     output_cv.k<-sensitivity::tell(x,output[,6])
     output_length.k<-sensitivity::tell(x,output[,7])
-    
+
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
@@ -777,7 +777,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                              ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
                              ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
-    
+
     #figure output
     if(make.plot==T){
       graphics::layout(
@@ -834,7 +834,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
       graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
-      
+
       graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
@@ -848,7 +848,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
-      
+
       output.tot.k.gr<-output.tot.k[-which(output.tot.k$item%in%c("a","b")),]
       for(i in c(1:nrow(output.tot.k.gr))){
         #i<-1
@@ -864,7 +864,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                          pch=1,cex=1.5)
       }
     }
-    
+
     output.tot.k.gr<-output.tot.k.gr[-which(left(output.tot.k.gr$class,4)=="stat"),]
     output.tot.gr<-output.tot[-which(left(output.tot$class,4)=="stat"),]
     output.tot.k.gr$analysis<-rep("sensitivity",nrow(output.tot.k.gr))
@@ -872,7 +872,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.sen<-output.tot[which(left(output.tot$class,4)=="stat"),]
     output.sen$analysis<-rep("uncertainty",nrow(output.sen))
     output.data<-rbind(output.tot.k.gr,output.tot.gr,output.sen)
-    
+
     #uncertainty parameters
     param<-data.frame(method=method,start.input=as.character(zoo::index(input)[1]),end.input=as.character(zoo::index(input)[length(input)]),
                       zero.start=zero.start,zero.end=zero.end,range.start=range.start,range.end=range.end,
@@ -880,7 +880,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                       max.days_max=max.days_max,
                       min.sfd=min.sfd,min.k=min.k,n=n)
     if(is.numeric(sw.cor)==F)stop("Unused argument, sw.cor is not numeric.")
-    
+
     output.all<-list(
       output.data,
       output.sfd,
@@ -896,19 +896,19 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     #d
     if(missing(max.days_min)){max.days_min=5}
     if(missing(max.days_min)){max.days_max=15}
-    
+
     #e
     if((max.days_min %% 2) == 0)stop("Unused argument, max.days_min should be uneven.")
     if((max.days_max %% 2) == 0)stop("Unused argument, max.days_max should be uneven.")
     max.days_min<-(max.days_min-1)/2
     max.days_min<-(max.days_max-1)/2
-    
+
     #e
     if(is.numeric(max.days_min)==F)stop("Unused argument, max.days_min is not numeric.")
     if(is.numeric(max.days_max)==F)stop("Unused argument, max.days_max is not numeric.")
     if(max.days_min<0)stop("Unused argument, max.days_min < 0.")
     if(max.days_max<0)stop("Unused argument, max.days_max < 0.")
-    
+
     A <- lhs::randomLHS(n, 6)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -919,7 +919,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,6] <- ceiling(stats::qunif(A[,6], min =max.days_min-1, max = max.days_max))
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","max.days")
     X1<-data.frame(B)
-    
+
     A <- lhs::randomLHS(n, 6)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -930,7 +930,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,6] <- ceiling(stats::qunif(A[,6], min =max.days_min-1, max = max.days_max))
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","max.days")
     X2<-data.frame(B)
-    
+
     x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
@@ -950,14 +950,14 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
-      
+
       #dt max
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
       if(ze<zs){proc.1[which(proc.1$minutes>ze&minutes<zs),"dt.max"]<-NA
       offset<-(60*24/stats::median(diff(proc.1$minutes)))-ceiling(zs/stats::median(diff(proc.1$minutes)))+1
       proc.1$days.agg<-c(proc.1$days[(offset:length(proc.1$days))],rep(max(proc.1$days),offset-1))}
-      
+
       if(ze==zs)stop(paste("Unused argument, zero.start and zero.end are too close together.",sep=""))
       add<-tibble::tibble(
         days.add = stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
@@ -967,12 +967,12 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.1_2<-dplyr::full_join(add,data.frame(days=c(1:max(add[,1])),rmax=NA),by=c("days.add"="days"))
       proc.1_2<-proc.1_2[order(proc.1_2$days.add),]
       proc.1_2$rmax<-zoo::rollmean(proc.1_2$ddt.max,m.day,align = c("center"),na.pad=TRUE,na.rm=TRUE)
-      
+
       gaps<-proc.1_2[which(is.na(proc.1_2$ddt.max)==TRUE),]
       if(nrow(gaps)!=0){
         gaps$NA_value<-c(1,diff(gaps$days.add))
         split<-c(1,gaps[which(gaps$NA_value>1),]$days.add,nrow(proc.1_2))
-        
+
         for(z in c(1:(length(split)-1))){
           proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax,c("extend",NA))
           if(z==length(split)-1){
@@ -983,12 +983,12 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.1_2$ddt.max.r<-proc.1_2[,"ddt.max"]
       proc.1_2[which(proc.1_2$ddt.max<proc.1_2$rmax),"ddt.max.r"]<-NA
       proc.1_2$rmax.r<-zoo::rollmean(proc.1_2$ddt.max.r,m.day,align = c("center"),na.pad=TRUE,na.rm=TRUE)
-      
+
       gaps<-proc.1_2[which(is.na(proc.1_2$ddt.max)==TRUE),]
       if(nrow(gaps)!=0){
         gaps$NA_value<-c(1,diff(gaps$days.add))
         split<-c(1,gaps[which(gaps$NA_value>1),]$days.add,nrow(proc.1_2))
-        
+
         for(z in c(1:(length(split)-1))){
           proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax.r<-zoo::na.fill(proc.1_2[c(which(proc.1_2$days.add==split[z]):(which(proc.1_2$days.add==split[z+1])-1)),]$rmax.r,c("extend",NA))
           if(z==length(split)-1){
@@ -1005,7 +1005,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"ddt.max"]<-proc.2[which(is.na(proc.2$ddt.max)==FALSE),"rmax"]
       proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=TRUE)
       proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
-      
+
       #HW correction
       #i<-4
       swt<-B[i,3]
@@ -1017,12 +1017,12 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
         proc.2$k.pd<-((proc.2$ddt.max-((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))/((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))
         proc.2$k.pd[which(proc.2$k.pd<0)]<-0
       }
-      
+
       #still need to consider whether we include dampening
       a<-B[i,4]
       b<-B[i,5]
       proc.2$sfd<-a*proc.2$k.pd^b
-      
+
       #think about relevant output proxies
       d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
@@ -1031,7 +1031,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
       values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
-      
+
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
       durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
@@ -1046,7 +1046,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       )
     }
     doParallel::stopImplicitCluster()
-    
+
     #time series output
     number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
@@ -1056,24 +1056,24 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,stats::quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
     output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
     output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
-    
+
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
       output.k<-zoo::fortify.zoo(output.k)
       colnames(output.sfd)<-c("timestamp","mu","sd","ci.max","ci.min")
       colnames(output.k)<-c("timestamp","mu","sd","ci.max","ci.min")
     }
-    
+
     #o= output
     output<-output[,c(1:7)]
     output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
     output_cv<-sensitivity::tell(x,output[,3])
     output_length<-sensitivity::tell(x,output[,4])
-    
+
     output_sum.k<-sensitivity::tell(x,output[,5])
     output_cv.k<-sensitivity::tell(x,output[,6])
     output_length.k<-sensitivity::tell(x,output[,7])
-    
+
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
@@ -1090,7 +1090,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                              ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
                              ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
-    
+
     #figure output
     if(make.plot==T){
       graphics::layout(
@@ -1147,7 +1147,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
       graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
-      
+
       graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
@@ -1161,7 +1161,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
-      
+
       output.tot.k.gr<-output.tot.k[-which(output.tot.k$item%in%c("a","b")),]
       for(i in c(1:nrow(output.tot.k.gr))){
         #i<-1
@@ -1177,7 +1177,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                          pch=1,cex=1.5)
       }
     }
-    
+
     output.tot.k.gr<-output.tot.k.gr[-which(left(output.tot.k.gr$class,4)=="stat"),]
     output.tot.gr<-output.tot[-which(left(output.tot$class,4)=="stat"),]
     output.tot.k.gr$analysis<-rep("sensitivity",nrow(output.tot.k.gr))
@@ -1185,7 +1185,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.sen<-output.tot[which(left(output.tot$class,4)=="stat"),]
     output.sen$analysis<-rep("uncertainty",nrow(output.sen))
     output.data<-rbind(output.tot.k.gr,output.tot.gr,output.sen)
-    
+
     #uncertainty parameters
     param<-data.frame(method=method,start.input=as.character(zoo::index(input)[1]),end.input=as.character(zoo::index(input)[length(input)]),
                       zero.start=zero.start,zero.end=zero.end,range.start=range.start,range.end=range.end,
@@ -1193,7 +1193,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                       max.days_max=max.days_max,
                       min.sfd=min.sfd,min.k=min.k,n=n)
     if(is.numeric(sw.cor)==F)stop("Unused argument, sw.cor is not numeric.")
-    
+
     output.all<-list(
       output.data,
       output.sfd,
@@ -1203,14 +1203,14 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     names(output.all)<-c("output.data","output.sfd","output.k","param")
     return(output.all)
   }
-  
+
   #environmental dependent
   #ed----
   if(method=="ed"){
     #test
-    
-    
-    
+
+
+
     #e
     if(missing(vpd.input)){
       warning(paste0("No vpd.input data included."))
@@ -1223,40 +1223,40 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       #e
       if(is.numeric(vpd.input$value)==F)stop("Invalid vpd.input data, values within the data.frame are not numeric.")
       if(is.character(vpd.input$timestamp)==F)stop("Invalid vpd.input data, timestamp within the data.frame are not numeric.")
-      
+
       #p
       vpd.input<-zoo::zoo(vpd.input$value,order.by=base::as.POSIXct(vpd.input$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))
-      
+
       #e
       if(as.character(zoo::index(vpd.input)[1])=="(NA NA)"|is.na(zoo::index(vpd.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for vpd.input.")
     }
     if(zoo::is.zoo(vpd.input)==FALSE)stop("Invalid input data, vpd.input must be a zoo file (use is.trex).")
-    
+
     if(attributes(sr.input)$class=="data.frame"){
       #e
       if(is.numeric(sr.input$value)==F)stop("Invalid sr.input data, values within the data.frame are not numeric.")
       if(is.character(sr.input$timestamp)==F)stop("Invalid sr.input data, timestamp within the data.frame are not numeric.")
-      
+
       #p
       sr.input<-zoo::zoo(sr.input$value,order.by=base::as.POSIXct(sr.input$timestamp,format="%Y-%m-%d %H:%M:%S",tz="UTC"))
-      
+
       #e
       if(as.character(zoo::index(sr.input)[1])=="(NA NA)"|is.na(zoo::index(sr.input)[1])==T)stop("No timestamp present, time.format is likely incorrect for sr.input.")
     }
     if(zoo::is.zoo(sr.input)==FALSE)stop("Invalid input data, sr.input must be a zoo file (use is.trex).")
-    
+
     #p
     step.min<-as.numeric(min(difftime(zoo::index(input)[-1],zoo::index(input)[-length(input)],units=c("mins")),na.rm=TRUE))
     step.sr<-as.numeric(min(difftime(zoo::index(sr.input)[-1],zoo::index(sr.input)[-length(sr.input)],units=c("mins")),na.rm=TRUE))
     step.vpd<-as.numeric(min(difftime(zoo::index(vpd.input)[-1],zoo::index(vpd.input)[-length(vpd.input)],units=c("mins")),na.rm=TRUE))
-    
+
     #e
     if(step.min!=step.sr|step.min!=step.vpd)stop("time steps between input and vpd.input/sr.input differ, results will not be correctly stats::aggregated.")
     if(zoo::index(sr.input)[1]-zoo::index(input)[1]!=0)stop("Invalid sr.input, timestamp start does not match with input.")
     if(zoo::index(sr.input)[length(sr.input)]-zoo::index(input)[length(input)]!=0)stop("Invalid sr.input, timestamp end does not match with input.")
     if(zoo::index(vpd.input)[1]-zoo::index(input)[1]!=0)stop("Invalid vpd.input, timestamp start does not match with input.")
     if(zoo::index(vpd.input)[length(vpd.input)]-zoo::index(input)[length(input)]!=0)stop("Invalid vpd.input, timestamp end does not match with input.")
-    
+
     #d
     if(missing(ed.window_min)){ed.window_min<-60*2/15}
     if(missing(ed.window_max)){ed.window_max<-60*4/15}
@@ -1266,7 +1266,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     if(missing(criteria.sr_range)){criteria.sr_range<-30} #in percentage
     if(missing(criteria.cv_min)){criteria.cv_min<-0.5}
     if(missing(criteria.cv_max)){criteria.cv_max<-1}
-    
+
     #e
     if(is.numeric(ed.window_min)==F)stop("Unused argument, ed.window_min is not numeric.")
     if(is.numeric(ed.window_max)==F)stop("Unused argument, ed.window_max is not numeric.")
@@ -1288,18 +1288,18 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     if(criteria.cv_max<0)stop("Unused argument, criteria.cv_max < 0.")
     if(ed.window_min<0)stop("Unused argument, ed.window_min < 0.")
     if(ed.window_max<0)stop("Unused argument, ed.window_max < 0.")
-    
-    
+
+
     #adding environmental data
     env<-cbind(sr.input,vpd.input,input)
-    
+
     #convert input to a tibble
     minutes<-as.numeric(left(right(as.character(zoo::index(env)),8),2))*60+as.numeric(left(right(as.character(zoo::index(env)),5),2))
     days<-as.numeric(floor(difftime(zoo::index(env),as.Date(zoo::index(env)[1]),units="days"))+1)
-    
+
     #w= warnings
     if(max(days)>365)warning("Input length > 365 days which can significantly recude processing speed.")
-    
+
     #
     raw.env <- tibble::tibble(
       days = days,
@@ -1309,13 +1309,13 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       sr= as.numeric(as.character(env$sr)),
       vpd= as.numeric(as.character(env$vpd))
     )
-    
+
     if(nrow(raw.env)==0)stop("Invalid environmental input data, input.sr or input.vpd do not cover the temporal range of input.")
-    
+
     #p= processing
     criteria.sr_min<- criteria.sr_mean-(criteria.sr_mean*(criteria.sr_range/100))
     criteria.sr_max<- criteria.sr_mean+(criteria.sr_mean*(criteria.sr_range/100))
-    
+
     A <- lhs::randomLHS(n,9)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -1329,7 +1329,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,9] <- stats::qunif(A[,9], min =criteria.cv_min, max = criteria.cv_max)
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","ed.window","criteria.vpd","criteria.sr","criteria.cv")
     X1<-data.frame(B)
-    
+
     A <- lhs::randomLHS(n,9)
     B <- matrix(nrow = nrow(A), ncol = ncol(A))
     B[,1] <- ceiling(stats::qunif(A[,1], min =-(range.end-1)/2, max = range.end/2))
@@ -1343,7 +1343,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     B[,9] <- stats::qunif(A[,9], min =criteria.cv_min, max = criteria.cv_max)
     colnames(B)<-c("zero.end","zero.start","sw.cor","a","b","ed.window","criteria.vpd","criteria.sr","criteria.cv")
     X2<-data.frame(B)
-    
+
     x <- sensitivity::soboljansen(model = NULL , X1, X2, nboot = n)
     B<-x$X
     n<-nrow(B)
@@ -1354,7 +1354,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     pb <- utils::txtProgressBar(max = nrow(B), style = 3)
     progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress = progress)
-    
+
     output<-foreach(i=c(1:n),.combine="rbind",.packages=c("tibble","dplyr","zoo"),.options.snow = opts)%dopar%{
       utils::setTxtProgressBar(pb, i)
       ze<-zero.end+(B[i,1]*stats::median(diff(minutes)))
@@ -1363,7 +1363,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       zs<-zero.start+(B[i,2]*stats::median(diff(minutes)))
       if(zs<0){zs<-24*60-zs}
       if(zs>24*60){zs<-zs-24*60}
-      
+
       #dt max
       proc.1<-raw.input
       if(ze>zs){proc.1[which(proc.1$minutes>ze|minutes<zs),"dt.max"]<-NA}
@@ -1376,7 +1376,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
         days.add = stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,1],
         ddt.max=stats::aggregate(stats::na.omit(proc.1)$dt.max,by=list(stats::na.omit(proc.1)$days.agg),max,na.rm=TRUE)[,2]
       )
-      
+
       #adding environmental data
       raw.env$sr.roll   <-zoo::rollmean(raw.env$sr,B[i,"ed.window"],align=c("right"),na.rm=TRUE,fill=NA)
       raw.env$sr.roll   <-zoo::na.locf(raw.env$sr.roll,fromLast=T)
@@ -1387,21 +1387,21 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       raw.env$value_mean<-zoo::rollapply(raw.env$value, width = B[i,"ed.window"], FUN = base::mean, align = "right",na.rm=TRUE,fill=NA)
       raw.env$value_mean<-zoo::na.locf(raw.env$value_mean,fromLast=T)
       raw.env$cv.roll   <-raw.env$value_sd/raw.env$value_mean*100
-      
+
       proc.2<-dplyr::full_join(proc.1,add,by=c("days.agg"="days.add"))
       proc.2[which(proc.2$ddt.max!=proc.2$dt.max|is.na(proc.2$dt.max)==TRUE),"ddt.max"]<-NA
       proc.2[which(is.na(proc.2$ddt.max)==FALSE),"gap"]<-NA
-      
+
       #e
       if(max(proc.2$days)!=max(raw.env$days))stop("Invalid environmental input data, input.sr or input.vpd do not fully cover the temporal range of input.")
       if(proc.2$minutes[length(proc.2$minutes)]!=raw.env$minutes[length(raw.env$minutes)])stop("Invalid environmental input data, input.sr or input.vpd do not fully cover the temporal range of input.")
-      
+
       #select the dt.max values from the
       proc.2[,"ddt.max.raw"]<- proc.2[,"ddt.max"]
       proc.2[which(raw.env$sr.roll>B[i,"criteria.sr"]),"ddt.max"]<-NA  #remove values above the solar irradiance
       proc.2[which(raw.env$vpd.roll>B[i,"criteria.vpd"]),"ddt.max"]<-NA  #remove values above the solar irradiance
       proc.2[which(raw.env$cv.roll>B[i,"criteria.cv"]),"ddt.max"]<-NA  #remove values above the solar irradiance
-      
+
       #adding daily values
       ddtmax<-suppressWarnings(stats::aggregate((proc.2)$ddt.max,by=list((proc.2)$days.agg),max,na.rm=TRUE))[,2]
       ddtmax[which(ddtmax=="-Inf")]<-NA
@@ -1419,7 +1419,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       proc.2$gap<-stats::ave(proc.2$gap, rev(cumsum(rev(is.na(proc.2$gap)))), FUN=cumsum)*stats::median(diff(proc.1$minutes))
       proc.2$ddt.max<-zoo::na.locf(zoo::na.locf(proc.2$ddt.max,na.rm=F),fromLast=T)
       proc.2[which(is.na(proc.2$value)==TRUE|proc.2$gap>(60*(24+12))|proc.2$count!=stats::median(proc.2$count,na.rm=TRUE)),"ddt.max"]<-NA
-      
+
       #HW correction
       #i<-4
       swt<-B[i,3]
@@ -1431,12 +1431,12 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
         proc.2$k.pd<-((proc.2$ddt.max-((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))/((proc.2$value-(1-(swt/probe.length))*proc.2$ddt.max)/(swt/probe.length)))
         proc.2$k.pd[which(proc.2$k.pd<0)]<-0
       }
-      
+
       #still need to consider whether we include dampening
       a<-B[i,4] #48.25036#
       b<- B[i,5] #1.177099#
       proc.2$sfd<-a*proc.2$k.pd^b
-      
+
       #think about relevant output proxies
       d.sum.k<-suppressWarnings(stats::aggregate(proc.2$k.pd,by=list(proc.2$days),max,na.rm=TRUE))
       d.sum.k[which(d.sum.k[,2]=="-Inf"),2]<-NA
@@ -1445,7 +1445,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       durat.k<-stats::aggregate(durat.k$k.pd, by=list(durat.k$days), FUN=function(x) {length(stats::na.omit(x))})
       values.k<-stats::aggregate(proc.2$k.pd,by=list(proc.2$days),mean,na.rm=TRUE)*24
       values.k[values.k[,2]=="NaN",2]<-NA
-      
+
       durat<-proc.2
       durat[which(proc.2$sfd<=min.sfd),"sfd"]<-NA
       durat<-stats::aggregate(durat$sfd, by=list(durat$days), FUN=function(x) {length(stats::na.omit(x))})
@@ -1460,7 +1460,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       )
     }
     doParallel::stopImplicitCluster()
-    
+
     #time series output
     number<-stats::median(output[,8])
     output.sfd<-output[,c(9:(8+number))]
@@ -1470,24 +1470,24 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.k<-data.frame(mu=apply(output.k,2,mean,na.rm=T),sd=apply(output.k,2,sd,na.rm=T),ci.max=apply(output.k,2,quantile,probs=c(0.975),na.rm=T),ci.min=apply(output.k,2,stats::quantile,probs=c(0.025),na.rm=T))
     output.sfd<-zoo::zoo(output.sfd,order.by=zoo::index(input))
     output.k<-zoo::zoo(output.k,order.by=zoo::index(input))
-    
+
     if(df==T){
       output.sfd<-zoo::fortify.zoo(output.sfd)
       output.k<-zoo::fortify.zoo(output.k)
       colnames(output.sfd)<-c("timestamp","mu","sd","ci.max","ci.min")
       colnames(output.k)<-c("timestamp","mu","sd","ci.max","ci.min")
     }
-    
+
     #o= output
     output<-output[,c(1:7)]
     output_sum<-sensitivity::tell(x,as.numeric(output[,2]))
     output_cv<-sensitivity::tell(x,output[,3])
     output_length<-sensitivity::tell(x,output[,4])
-    
+
     output_sum.k<-sensitivity::tell(x,output[,5])
     output_cv.k<-sensitivity::tell(x,output[,6])
     output_length.k<-sensitivity::tell(x,output[,7])
-    
+
     output.tot<-data.frame(item=c(row.names(output_sum$T),"daily.sum",row.names(output_cv$T),"max.cv",row.names(output_length$T),"length.dur"),
                            class=c(rep("param.sum",length(row.names(output_sum$T))),"stat.sum",rep("param.cv",length(row.names(output_cv$T))),"stat.cv",rep("param.length",length(row.names(output_length$T))),"stat.length"),
                            factor="SFD",
@@ -1504,8 +1504,8 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                              ci.min=c(output_sum.k$T[,4],stats::quantile(output[,5],probs=0.025,na.rm=T),output_cv.k$T[,4],stats::quantile(output[,6],probs=0.025,na.rm=T),output_length.k$T[,4],stats::quantile(output[,7],probs=0.025,na.rm=T)),
                              ci.max=c(output_sum.k$T[,5],stats::quantile(output[,5],probs=0.975,na.rm=T),output_cv.k$T[,5],stats::quantile(output[,6],probs=0.975,na.rm=T),output_length.k$T[,5],stats::quantile(output[,7],probs=0.975,na.rm=T))
     )
-    
-    
+
+
     if(make.plot==T){
       graphics::layout(
         matrix(
@@ -1560,7 +1560,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=16,cex=1.5,col="darkblue")
       graphics::points(1,output.tot[which(output.tot$class=="stat.length"),"mean"],pch=1,cex=1.5)
       graphics::mtext(side=4,expression("Duration (h)"),padj=3,cex=0.8)
-      
+
       graphics::par(mar=c(0,4,0,0))
       lab<-colnames(B)
       lab<-lab[-which(lab%in%c("a","b"))]
@@ -1574,7 +1574,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
       pal<-data.frame(class=c("param.sum","param.cv","param.length"),col=c("darkorange","cyan","darkblue"))
       loc<-data.frame(item=lab,loc=c(1:length(lab)))
       off<-data.frame(class=c("param.sum","param.cv","param.length"),off=c(-0.2,0,0.2))
-      
+
       output.tot.k.gr<-output.tot.k[-which(output.tot.k$item%in%c("a","b")),]
       for(i in c(1:nrow(output.tot.k.gr))){
         #i<-1
@@ -1590,7 +1590,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                          pch=1,cex=1.5)
       }
     }
-    
+
     output.tot.k.gr<-output.tot.k.gr[-which(left(output.tot.k.gr$class,4)=="stat"),]
     output.tot.gr<-output.tot[-which(left(output.tot$class,4)=="stat"),]
     output.tot.k.gr$analysis<-rep("sensitivity",nrow(output.tot.k.gr))
@@ -1598,9 +1598,9 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
     output.sen<-output.tot[which(left(output.tot$class,4)=="stat"),]
     output.sen$analysis<-rep("uncertainty",nrow(output.sen))
     output.data<-rbind(output.tot.k.gr,output.tot.gr,output.sen)
-    
+
     #write.table(output.data,"D:/Documents/GU - POSTDOC/07_work_document/T1 - TREX/output.sen.pd.txt",col.names=T,row.names=F,sep="\t")
-    
+
     #uncertainty parameters
     param<-data.frame(method=method,start.input=as.character(zoo::index(input)[1]),end.input=as.character(zoo::index(input)[length(input)]),
                       zero.start=zero.start,zero.end=zero.end,range.start=range.start,range.end=range.end,
@@ -1611,7 +1611,7 @@ tdm_uncertain<-function(input, vpd.input, sr.input, method = "pd",
                       criteria.cv_max=,criteria.cv_max,
                       min.sfd=min.sfd,min.k=min.k,n=n)
     if(is.numeric(sw.cor)==F)stop("Unused argument, sw.cor is not numeric.")
-    
+
     output.all<-list(
       output.data,
       output.sfd,

@@ -1,0 +1,35 @@
+citHeader("To cite TREX in publications use:")
+
+bibentry(
+  bibtype    = "Article",
+  title    = "Assimilate, Process and Analyse Thermal Dissipation Sap Flow Data Using the {{TREX}} R Package}",
+  author   = c(
+            person(
+                c('Richard', 'L'),'Peters'),
+            person(
+                'Christoforos','Pappas'),
+            person(
+                c('Alexander', 'G'), 'Hurley'),
+            person(
+                'Rafael', 'Poyatos'),
+            person(
+                'Victor', 'Flo'),
+            person(
+                'Roman', 'Zweifel'),
+            person(
+                'Willem', 'Goossens'),
+            person(
+                'Kathy','Steppe')
+            ),
+  journal = "Methods in Ecology and Evolution",
+  year     = 2021,
+  volume   = 12,
+  number   = 2,
+  pages    = "342--350",
+  url      = "https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.13524",
+  doi = "10.1111/2041-210X.13524",
+  issn = "2041-210X",
+  textVersion = paste(
+"Peters, R. L., Pappas, C., Hurley, A. G., Poyatos, R., Flo, V., Zweifel, R., Goossens, W., & Steppe, K. (2021). Assimilate, process and analyse thermal dissipation sap flow data using the TREX r package. Methods in Ecology and Evolution, 12(2), 342–350. https://doi.org/10.1111/2041-210X.13524"
+  )
+)

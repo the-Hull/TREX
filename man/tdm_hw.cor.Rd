@@ -81,5 +81,5 @@ lines(input$k.dr)
 \references{
 Clearwater MJ, Meinzer FC, Andrade JL, Goldstein G, Holbrook NM. 1999.
 Potential errors in measurement of nonuniform sap flow using heat dissipation probes.
-Tree Physiology 19:681–687 \url{doi: 10.1093/treephys/19.10.681}
+Tree Physiology 19:681–687 \doi{10.1093/treephys/19.10.681}
 }

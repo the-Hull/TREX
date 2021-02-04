@@ -19,6 +19,8 @@
 #' @export
 #'
 #' @examples
+#'
+#' \dontrun{
 #' # fill two hour gaps
 #' raw   <- example.data(type = "doy")
 #' input <-
@@ -43,6 +45,7 @@
 #'   max.gap = 15,
 #'   decimals = 10,
 #'   df = FALSE)
+#'   }
 gap.fill <- function(input,
                      max.gap = 60,
                      decimals = 10,

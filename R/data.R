@@ -95,10 +95,10 @@
 #'
 #' @references Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
 #' A synthesis of bias and uncertainty in sap flow methods.
-#' Agricultural and Forest Meteorology 271:362-374. \url{doi: 10.1016/j.agrformet.2019.03.012}
+#' Agricultural and Forest Meteorology 271:362-374. \doi{10.1016/j.agrformet.2019.03.012}
 #'
 #' Granier A. 1985. Une nouvelle methode pour la measure du flux de seve brute dans le tronc des arbres.
-#' Annales des Sciences Forestieres 42:193–200. \url{doi: 10.1051/forest:19850204}
+#' Annales des Sciences Forestieres 42:193–200. \doi{10.1051/forest:19850204}
 #'
 #' @name cal.data
 "cal.data"
@@ -127,7 +127,7 @@
 #' @references
 #' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 #' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-#' Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
+#' Plant, Cell & Environment 42:1674-1689 \doi{10.1111/pce.13500}
 #'
 #' WMO. 2008.Guide to meteorological instruments and methods of observation, appendix 4B, WMO‐No. 8 (CIMO Guide).
 #'  Geneva, Switzerland: World Meteorological Organization.
@@ -158,7 +158,7 @@
 #' @references
 #' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 #' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-#' Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
+#' Plant, Cell & Environment 42:1674-1689 \doi{10.1111/pce.13500}
 #'
 #'
 #' @name sr
@@ -189,7 +189,7 @@
 #' @references
 #' Peters RL, Speich M, Pappas C, Kahmen A, von Arx G, Graf Pannatier E, Steppe K, Treydte K, Stritih A, Fonti P. 2018.
 #' Contrasting stomatal sensitivity to temperature and soil drought in mature alpine conifers.
-#' Plant, Cell & Environment 42:1674-1689 \url{doi: 10.1111/pce.13500}
+#' Plant, Cell & Environment 42:1674-1689 \doi{10.1111/pce.13500}
 
 #'
 #' @name preci

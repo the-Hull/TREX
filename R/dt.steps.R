@@ -48,6 +48,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' input <- is.trex(example.data(type="doy"),
 #'            tz="GMT",time.format="%H:%M", solar.time=TRUE,
 #'            long.deg=7.7459,ref.add=FALSE)
@@ -55,7 +56,7 @@
 #'                    time.int=60,max.gap=120,decimals=6,df=FALSE)
 #' plot(in.ts)
 #' head(in.ts)
-#'
+#' }
 dt.steps <-
   function(input,
            start,

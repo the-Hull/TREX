@@ -132,9 +132,9 @@ output.data$out.param
 Peters RL, Fonti P, Frank DC, Poyatos R, Pappas C, Kahmen A, Carraro V, Prendin AL, Schneider L, Baltzer JL,
  Baron-Gafford GA, Dietrich L, Heinrich I, Minor RL, Sonnentag O, Matheny AM, Wightman MG, Steppe K. 2018.
  Quantification of uncertainties in conifer sap flow measured with the thermal dissipation method.
- New Phytologist 219:1283-1299 <doi: 10.1111/nph.15241>
+ New Phytologist 219:1283-1299 \doi{10.1111/nph.15241}
 
  Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
  A synthesis of bias and uncertainty in sap flow methods.
- Agricultural and Forest Meteorology 271:362-374 \url{doi: 10.1016/j.agrformet.2019.03.012}
+ Agricultural and Forest Meteorology 271:362-374 \doi{10.1016/j.agrformet.2019.03.012}
 }

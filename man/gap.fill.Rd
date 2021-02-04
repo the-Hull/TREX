@@ -27,6 +27,8 @@ This function provides the option to define the minimum window under which gaps 
 be filled, using linear interpolation.
 }
 \examples{
+
+\dontrun{
 # fill two hour gaps
 raw   <- example.data(type = "doy")
 input <-
@@ -51,4 +53,5 @@ fill_15 <- gap.fill(
   max.gap = 15,
   decimals = 10,
   df = FALSE)
+  }
 }

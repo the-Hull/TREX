@@ -234,5 +234,5 @@ Sobol' I. 1993. Sensitivity analysis for nonlinear mathematical models.
 
  Pappas C, Fatichi S, Leuzinger S, Wolf A, Burlando P. 2013.
  Sensitivity analysis of a process-based ecosystem model: Pinpointing parameterization and structural issues.
-  Journal of Geophysical Research 118:505-528 \url{doi: 10.1002/jgrg.20035}
+  Journal of Geophysical Research 118:505-528 \doi{10.1002/jgrg.20035}
 }

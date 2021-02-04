@@ -67,9 +67,9 @@ Currently included studies are given below; individual labels (quoted) can be ap
 \references{
 Flo V, Martinez-Vilalta J, Steppe K, Schuldt B, Poyatos, R. 2019.
 A synthesis of bias and uncertainty in sap flow methods.
-Agricultural and Forest Meteorology 271:362-374. \url{doi: 10.1016/j.agrformet.2019.03.012}
+Agricultural and Forest Meteorology 271:362-374. \doi{10.1016/j.agrformet.2019.03.012}
 
 Granier A. 1985. Une nouvelle methode pour la measure du flux de seve brute dans le tronc des arbres.
-Annales des Sciences Forestieres 42:193–200. \url{doi: 10.1051/forest:19850204}
+Annales des Sciences Forestieres 42:193–200. \doi{10.1051/forest:19850204}
 }
 \keyword{datasets}

@@ -59,6 +59,7 @@ Before this process, the entire time series is converted to a one-minute time
 step by applying a linear interpolation (excluding gap \eqn{periods > \code{max.gap}}).
 }
 \examples{
+\dontrun{
 input <- is.trex(example.data(type="doy"),
            tz="GMT",time.format="\%H:\%M", solar.time=TRUE,
            long.deg=7.7459,ref.add=FALSE)
@@ -66,5 +67,5 @@ in.ts <- dt.steps(input=input,start='2012-06-28 00:00',end='2012-07-28 00:00',
                    time.int=60,max.gap=120,decimals=6,df=FALSE)
 plot(in.ts)
 head(in.ts)
-
+}
 }

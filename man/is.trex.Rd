@@ -60,10 +60,11 @@ To prevent errors occurring in subsequent \code{TREX} functions, it is advised t
  for checking the data structure and preparing it for further analyses. For the specific time zone see
  \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones} or for formatting see \code{\link{OlsonNames}()}.
  The format of the timestamp has to be provided according to \url{https://www.stat.berkeley.edu/~s133/dates.html}.
- For the method behind the solar time conversion, see the solar package (\url{https://cran.r-project.org/web/packages/solaR/}).
+ For the method behind the solar time conversion, see the solar package (\url{https://CRAN.R-project.org/package=solaR}).
  The longitude has to be provided in positive decimal degrees for study sites East from the Greenwich meridian and negative for sites to the West.
 }
 \examples{
+\dontrun{
 #validating and structuring example data
 raw   <- example.data(type="doy")
 input <- is.trex(raw,tz="GMT",time.format="\%H:\%M",
@@ -73,4 +74,5 @@ head(raw)
 str(input)
 head(input)
 plot(input)
+}
 }
