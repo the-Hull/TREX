@@ -10,19 +10,25 @@
 `TREX` allows to assimilate, process and analyse sap flow data obtained with the thermal dissipation method (TDM). 
 The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties and generating uniform data output and visualisation.
 The package is designed to deal with large quantities of data and apply commonly used data-processing methods. 
-The functions have been validated on data collected from different tree species across the northern hemisphere [(Peters et al. 2018 <doi: 10.1111/nph.15241>)](https://doi.org/10.1111/nph.15241).   
+The functions have been validated on data collected from different tree species across the northern hemisphere [(Peters et al. 2018 <doi: 10.1111/nph.15241>)](https://doi.org/10.1111/nph.15241), and
+an accompanying manuscript has been published in *Methods in Ecology and Evolution* as [(Peters et al. 2020 <doi: 10.1111/2041-210X.13524>)](https://doi.org/10.1111/2041-210X.13524)
 
 ---
 
 ## 1. Installation
 
-A development version of `TREX` can be installed and used via
+The latest version of `TREX` can be installed and used via
 
 ```r
 remotes::install_github("the-Hull/TREX")
 
 library(TREX)
 
+```
+If you want to use `CRAN`, we have a stable release version used for the *MEE* manuscript available named `TREXr`:
+
+```r
+install.packages("TREXr")
 ```
 
 ## 2. Basic use and workflow
@@ -127,4 +133,22 @@ output<- out.data(input=sfd_data,
 
 - **ESA 2020**: `TREX` was introduced and demonstrated in detail in a workshop during the Ecological Society of America's 2020 AGM.
 The workshop description can be found [here](https://deep-tools.netlify.app/talk/esa-2020-rpeters-cpappas/), and all materials on the [dedicated page](https://deep-tools.netlify.app/docs-workshops/esa-workshop2020/02_trex/).
+
+## 4. Citing this work
+
+Please cite `TREX` when you apply it in your own work as:
+
+>  Peters, RL, Pappas, C, Hurley, AG, et al. Assimilate, process and analyse thermal dissipation sap flow data using the TREX r package. Methods Ecol Evol. 2021; 12: 342– 350. https://doi.org/10.1111/2041-210X.13524 
+
+A reference is available in `R` using:
+
+```r
+
+citation("TREX")
+
+#or
+
+citation("TREXr")
+```
+
 
