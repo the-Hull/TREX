@@ -62,4 +62,5 @@ allometry.models <- list(Saparea_cm2 = fits_AS,
 
 
 usethis::use_data(allometry.models)
+# usethis::use_data(allometry.models, allometry.data, internal = TRUE, overwrite = TRUE)
 

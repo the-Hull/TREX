@@ -249,7 +249,6 @@
 #' }
 #'
 #'
-#'
 #' @name allometry.data
 "allometry.data"
 
@@ -309,7 +308,6 @@
 #'   \item{fit}{nls or lm model fit (\code{list column})}
 #'   \item{model_parameters}{Convenient summary of models as produced by \code{broom::tidy()} (\code{list column})}
 #' }
-#'
 #'
 #'
 #' @name allometry.models
