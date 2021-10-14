@@ -42,7 +42,8 @@ predict_allometry <- function(input_dbh_cm,
 
     if(!is.null(species) & any(species %nin% unique(allometry.data$Species))) {
 
-        stop(sprintf("Please choose a species from %s"), unique(allometry.data$Species))
+        stop(sprintf("Please choose a species from %s",
+             paste(unique(allometry.data$Species), collapse = ", ")))
 
     }
 
