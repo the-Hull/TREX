@@ -57,7 +57,7 @@ predict_allometry <- function(input_dbh_cm,
         lapply(parameter,
                           function(parm){
 
-                              # make named list for every species - setNames(species_predictions, species_names)
+                              # make named list for every species - setNames(spec_preds, species_names)
                               spec_preds <- setNames(
                               # species looping
                                   lapply(species,
