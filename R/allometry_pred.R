@@ -2,7 +2,8 @@
 #'
 #' @param input_dbh_cm numeric, single value or vector of DBH measurements in cm
 #' @param parameter character, one or multiple of \code{"Bark_cm"}, \code{"Sap_cm"}, \code{"Saparea_cm2"}
-#' @param species character, one of the species given in \code{\link{allometry.data}}
+#' @param species character, one or multiple of the species given in \code{\link{allometry.data}}.
+#' Defaults to \code{NULL}, selecting all species.
 #' @param ... additional arguments passed to \code{predict()}
 #'
 #' @return A data.frame containing predictions for each provided parameter and species
