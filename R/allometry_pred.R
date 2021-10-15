@@ -2,7 +2,8 @@
 #'
 #' @param input_dbh_cm numeric, single value or vector of DBH measurements in cm
 #' @param parameter character, one or multiple of \code{"Bark_cm"}, \code{"Sap_cm"}, \code{"Saparea_cm2"}
-#' @param species character, one of the species given in \link{\code{allometry.data}}
+#' @param species character, one or multiple of the species given in \code{\link{allometry.data}}.
+#' Defaults to \code{NULL}, selecting all species.
 #' @param ... additional arguments passed to \code{predict()}
 #'
 #' @return A data.frame containing predictions for each provided parameter and species
@@ -22,69 +23,64 @@ predict_allometry <- function(input_dbh_cm,
 
     `%nin%` <-  Negate(`%in%`)
 
+    denv <- new.env()
+    utils::data("allometry.data", envir = denv)
+    utils::data("allometry.models", envir = denv)
 
+        allometry.data <- denv$allometry.data
+    allometry.models <- denv$allometry.models
 
-    if(any(parameter %nin% names(TREX::allometry.models))){
+    rm(denv)
+
+    if(any(parameter %nin% names(allometry.models))){
         stop("Please choose from the existing outputs: Bark_cm, Sap_cm, Saparea_cm2.")
     }
 
     if(!is.numeric(input_dbh_cm) |
-       input_dbh_cm <= 0){
+       any(input_dbh_cm <= 0)){
         stop("Please provide a positive dbh in cm.")
     }
 
-    if(!is.null(species) & any(species %nin% unique(TREX::allometry.data$Species))) {
+    if(!is.null(species) & any(species %nin% unique(allometry.data$Species))) {
 
-        stop(sprintf("Please choose a species from %s"), unique(TREX::allometry.data$Species))
+        stop(sprintf("Please choose a species from \n %s",
+             paste(sort(unique(allometry.data$Species)), collapse = ",\n ")))
 
     }
 
     if(is.null(species)){
-        species <- unique(TREX::allometry.data$Species)
+        species <- unique(allometry.data$Species)
     }
 
-
-
+    # make named list for every parameter - setNames(parameter_predictions, parameter_names)
     predictions <- setNames(
 
         # parameter looping
         lapply(parameter,
                           function(parm){
 
-                              # species looping
+                              # make named list for every species - setNames(spec_preds, species_names)
                               spec_preds <- setNames(
+                              # species looping
                                   lapply(species,
                                          function(spec){
 
-
-                                             preds <- predict(TREX::allometry.models[[parm]][['fit']][allometry.models[[parm]][['Species']] %in% spec][[1]],
+                                             preds <- predict(allometry.models[[parm]][['fit']][allometry.models[[parm]][['Species']] %in% spec][[1]],
                                                      newdat = data.frame(DBH_cm = input_dbh_cm),
                                                      ...)
-
                                              preds <- data.frame(value = preds)
 
                                          }),
-
-
                               species)
-
                               spec_preds <- dplyr::bind_rows(spec_preds, .id = "species")
-
-
-
-
-
                           }),
         parameter)
 
     predictions <- dplyr::bind_rows(predictions, .id = "parameter")
     rownames(predictions) <- NULL
 
-
     return(predictions)
-
 }
 
 
-predict_allometry(input_dbh_cm = 10)
 
