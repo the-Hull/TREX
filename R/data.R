@@ -194,3 +194,121 @@
 #'
 #' @name preci
 "preci"
+
+
+
+
+
+
+
+
+#' Sapwood area and depth, and bark allometric measurements
+#'
+#'
+#'
+#' @description Returns raw allometric data obtained for 14 spepcies from several North-American sites.
+#'  These data are used to develop allometric equations for the parameters sapwood area and depth, as well as bark thickness.
+#'  A detailed description on collection method and sites is provided in Pappas \emph{et al.} (2021; in prep.).
+#'  The parameters were measured along an increment core extracted at breast height (DBH, 1.3 \eqn{m}) with a Haglof borer.
+#'  Bark thickness (\code{Bark_cm}) was measured directly, while sapwood depth (\code{Sap_cm}) was estimated through discoloration and translucence.
+#'  Sapwood area (\code{Saparea_cm2} was then calculated using:
+#'  \deqn{Saparea_cm = \pi (DBH/2 - Bark_cm)^2  - \pi (DBH/2 - Bark_cm - Sap_cm)}
+#'
+#' @usage allometry.data
+#'
+#' @details Currently included species are:
+#'
+#' \itemize{
+#'      \item {Abies balsamea}
+#'      \item {Acer rubrum}
+#'      \item {Acer saccharum}
+#'      \item {Betula alleghaniensis}
+#'      \item {Betula papyrifera}
+#'      \item {Fagus grandifolia}
+#'      \item {Fraxinus nigra}
+#'      \item {Picea glauca}
+#'      \item {Picea mariana}
+#'      \item {Picea rubens}
+#'      \item {Pinus banksiana}
+#'      \item {Populus tremuloides}
+#'      \item {Quercus rubra}
+#'      \item {Thuja occidentalis}
+#'
+#' }
+#'
+#' @format Provides a data.frame with 651  rows and 8 columns.
+#' \describe{
+#'   \item{Plot}{Measurement plot (\code{character})}
+#'   \item{treeID}{Unique tree ID (\code{character})}
+#'   \item{Species}{Assessed species (\code{character})}
+#'   \item{DBH_cm}{Diameter at breast height (1.3 \eqn{m}) in \eqn{cm} (\code{numeric})}
+#'   \item{Bark_cm}{Bark thickness in \eqn{cm} (\code{numeric})}
+#'   \item{Sap_cm}{Depth of sapwood in \eqn{cm} (\code{numeric})}
+#'   \item{Saparea_cm2}{Sapwood area in \eqn{cm^2} (\code{numeric})}
+#'   \item{Site}{Measurement site \code{character})}
+#' }
+#'
+#'
+#' @name allometry.data
+"allometry.data"
+
+
+
+
+
+
+
+
+
+
+#' Sapwood area and depth, and bark allometric models
+#'
+#'
+#'
+#' @description Returns allometric models for 14 spepcies from several North-American sites.
+#'  The models relate independent (i.e. outcomes) parameters sapwood area and depth, as well as bark thickness
+#'  to diameter at breast height (DBH, 1.3 \eqn{m}).
+#'  A detailed description on model development and assessment is provided in Pappas \emph{et al.} (2021; in prep.).
+#'  The data used for these models is found in \code{\link{allometry.data}}.
+#'
+#' @usage allometry.models
+#'
+#' @details OLS models (y ~ x) are used for relationships between DBH (dependent) and sapwood / bark thickness;
+#' A non-linear LS model (y ~ a * x ^ b ) is used for the relationship between DBH (dependent) and sapwood area.
+#'
+#' \itemize{
+#'      \item {Abies balsamea}
+#'      \item {Acer rubrum}
+#'      \item {Acer saccharum}
+#'      \item {Betula alleghaniensis}
+#'      \item {Betula papyrifera}
+#'      \item {Fagus grandifolia}
+#'      \item {Fraxinus nigra}
+#'      \item {Picea glauca}
+#'      \item {Picea mariana}
+#'      \item {Picea rubens}
+#'      \item {Pinus banksiana}
+#'      \item {Populus tremuloides}
+#'      \item {Quercus rubra}
+#'      \item {Thuja occidentalis}
+#'
+#' }
+#'
+#' @format Provides a list (one item for each allometric parameter)
+#' with model data.frames/tibbles nested by species.
+#' Relevant parameters can be extracted either by unnesting (\code{tidyr::unnest()}), or by
+#' selecting a single nested item, e.g., \code{allometric.models$Saparea_cm2$fit[[1]]}.
+#'
+#' Each data.frame/tibble has four columns
+#'
+#' \describe{
+#'   \item{Species}{Assessed species (\code{character})}
+#'   \item{data}{data used to fit model;
+#'   single-species subset of \code{\link{allometry.data}} (\code{list column})}
+#'   \item{fit}{nls or lm model fit (\code{list column})}
+#'   \item{model_parameters}{Convenient summary of models as produced by \code{broom::tidy()} (\code{list column})}
+#' }
+#'
+#'
+#' @name allometry.models
+"allometry.models"
