@@ -74,7 +74,7 @@ Imports:
     parallel,
     magrittr,
     tools
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     shiny,
     plotly,

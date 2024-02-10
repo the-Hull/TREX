@@ -16,7 +16,8 @@ predict_allometry(
 
 \item{parameter}{character, one or multiple of \code{"Bark_cm"}, \code{"Sap_cm"}, \code{"Saparea_cm2"}}
 
-\item{species}{character, one of the species given in \code{\link{allometry.data}}}
+\item{species}{character, one or multiple of the species given in \code{\link{allometry.data}}.
+Defaults to \code{NULL}, selecting all species.}
 
 \item{...}{additional arguments passed to \code{predict()}}
 }
