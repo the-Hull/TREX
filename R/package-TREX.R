@@ -1,5 +1,6 @@
 #' TREX: TRree sap flow EXtractor.
 #'
+#' @keywords internal
 #' @description
 #'
 #' Performs data assimilation, processing and analyses on sap flow data obtained with the thermal dissipation method (TDM).

@@ -7,6 +7,7 @@
 
 # TREX 1.0.1
 
+* added allometry functionalities
 -
 
 # TREX 1.0.0

@@ -25,7 +25,7 @@ reference:
       - agg.data
       - out.data
   - title: "Data sets"
-    desc: "Functions and objects containing test (ancillary) and calibration data"
+    desc: "Functions and objects containing test (ancillary), calibration data and allometric models"
     contents:
       - sr
       - vpd
@@ -33,3 +33,9 @@ reference:
       - tdm.data
       - cal.data
       - example.data
+  - title: "Allometric data sets and models"
+    desc: "Functions and objects calibration data and allometric models"
+    contents:
+      - allometry.data
+      - allometry.models
+      - predict_allometry
