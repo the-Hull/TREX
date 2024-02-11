@@ -34,7 +34,7 @@ reference:
       - cal.data
       - example.data
   - title: "Allometric data sets and models"
-    desc: "Functions and objects calibration data and allometric models"
+    desc: "Calibration data and models for 14 North-American species"
     contents:
       - allometry.data
       - allometry.models

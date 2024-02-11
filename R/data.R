@@ -265,7 +265,7 @@
 #'
 #'
 #'
-#' @description Returns allometric models for 14 spepcies from several North-American sites.
+#' @description Returns allometric models for 14 species from several North-American sites.
 #'  The models relate independent (i.e. outcomes) parameters sapwood area and depth, as well as bark thickness
 #'  to diameter at breast height (DBH, 1.3 \eqn{m}).
 #'  A detailed description on model development and assessment is provided in Pappas \emph{et al.} (2021; in prep.).
