@@ -7,6 +7,4 @@
 #' generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply commonly
 #' used data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere
 #' (Peters et al. 2018 <doi: 10.1111/nph.15241>).
-#' @docType package
-#' @name TREX
-NULL
+"_PACKAGE"
