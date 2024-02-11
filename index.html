@@ -25,6 +25,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,25 +39,22 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">TREX</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/the-Hull/TREX/">
+  <a href="https://github.com/the-Hull/TREX/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -72,57 +71,55 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="trex" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#trex" class="anchor"></a>TREX <img src="reference/figures/trex_logo.png" align="right" width="150">
+<div class="section level1">
+<div class="page-header"><h1 id="trex-">TREX <img src="reference/figures/trex_logo.png" align="right" width="150"><a class="anchor" aria-label="anchor" href="#trex-"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p><code>TREX</code> allows to assimilate, process and analyse sap flow data obtained with the thermal dissipation method (TDM). The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties and generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply commonly used data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere <a href="https://doi.org/10.1111/nph.15241">(Peters et al. 2018 &lt;doi: 10.1111/nph.15241&gt;)</a>, and an accompanying manuscript has been published in <em>Methods in Ecology and Evolution</em> as <a href="https://doi.org/10.1111/2041-210X.13524">(Peters et al. 2020 &lt;doi: 10.1111/2041-210X.13524&gt;)</a></p>
+<p><code>TREX</code> allows to assimilate, process and analyse sap flow data obtained with the thermal dissipation method (TDM). The package includes functions for gap filling time-series data, detecting outliers, calculating data-processing uncertainties and generating uniform data output and visualisation. The package is designed to deal with large quantities of data and apply commonly used data-processing methods. The functions have been validated on data collected from different tree species across the northern hemisphere <a href="https://doi.org/10.1111/nph.15241" class="external-link">(Peters et al. 2018 &lt;doi: 10.1111/nph.15241&gt;)</a>, and an accompanying manuscript has been published in <em>Methods in Ecology and Evolution</em> as <a href="https://doi.org/10.1111/2041-210X.13524" class="external-link">(Peters et al. 2020 &lt;doi: 10.1111/2041-210X.13524&gt;)</a></p>
 <hr>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>1. Installation</h2>
+<div class="section level2">
+<h2 id="id_1-installation">1. Installation<a class="anchor" aria-label="anchor" href="#id_1-installation"></a>
+</h2>
 <p>The latest version of <code>TREX</code> can be installed and used via</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"the-Hull/TREX"</span><span class="op">)</span>
-
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://the-hull.github.io/TREX/">TREX</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"the-Hull/TREX"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://the-hull.github.io/TREX/" class="external-link">TREX</a></span><span class="op">)</span></span></code></pre></div>
 <p>If you want to use <code>CRAN</code>, we have a stable release version used for the <em>MEE</em> manuscript available named <code>TREXr</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"TREXr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"TREXr"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="basic-use-and-workflow" class="section level2">
-<h2 class="hasAnchor">
-<a href="#basic-use-and-workflow" class="anchor"></a>2. Basic use and workflow</h2>
-<div id="load-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#load-data" class="anchor"></a>Load data</h3>
+<div class="section level2">
+<h2 id="id_2-basic-use-and-workflow">2. Basic use and workflow<a class="anchor" aria-label="anchor" href="#id_2-basic-use-and-workflow"></a>
+</h2>
+<div class="section level3">
+<h3 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># load raw data</span>
-<span class="va">raw</span>   <span class="op">&lt;-</span> <span class="fu"><a href="reference/is.trex.html">is.trex</a></span><span class="op">(</span><span class="fu"><a href="reference/example.data.html">example.data</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"doy"</span><span class="op">)</span>,
-                 tz<span class="op">=</span><span class="st">"GMT"</span>,
-                 time.format<span class="op">=</span><span class="st">"%H:%M"</span>,
-                 solar.time<span class="op">=</span><span class="cn">TRUE</span>,
-                 long.deg<span class="op">=</span><span class="fl">7.7459</span>,
-                 ref.add<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
-                 
-<span class="co"># adjust time steps</span>
-<span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dt.steps.html">dt.steps</a></span><span class="op">(</span>input<span class="op">=</span><span class="va">raw</span>, 
-                start<span class="op">=</span><span class="st">"2013-05-01 00:00"</span>,
-                end<span class="op">=</span><span class="st">"2013-11-01 00:00"</span>,
-                time.int<span class="op">=</span><span class="fl">15</span>,
-                max.gap<span class="op">=</span><span class="fl">60</span>,
-                decimals<span class="op">=</span><span class="fl">10</span>,
-                df<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
-                
-<span class="co"># remove obvious outliers</span>
-<span class="va">input</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">input</span><span class="op">&lt;</span><span class="fl">0.2</span><span class="op">)</span><span class="op">]</span><span class="op">&lt;-</span> <span class="cn">NA</span>
-</code></pre></div>
+<code class="sourceCode R"><span><span class="co"># load raw data</span></span>
+<span><span class="va">raw</span>   <span class="op">&lt;-</span> <span class="fu"><a href="reference/is.trex.html">is.trex</a></span><span class="op">(</span><span class="fu"><a href="reference/example.data.html">example.data</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"doy"</span><span class="op">)</span>,</span>
+<span>                 tz<span class="op">=</span><span class="st">"GMT"</span>,</span>
+<span>                 time.format<span class="op">=</span><span class="st">"%H:%M"</span>,</span>
+<span>                 solar.time<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                 long.deg<span class="op">=</span><span class="fl">7.7459</span>,</span>
+<span>                 ref.add<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span>                 </span>
+<span><span class="co"># adjust time steps</span></span>
+<span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dt.steps.html">dt.steps</a></span><span class="op">(</span>input<span class="op">=</span><span class="va">raw</span>, </span>
+<span>                start<span class="op">=</span><span class="st">"2013-05-01 00:00"</span>,</span>
+<span>                end<span class="op">=</span><span class="st">"2013-11-01 00:00"</span>,</span>
+<span>                time.int<span class="op">=</span><span class="fl">15</span>,</span>
+<span>                max.gap<span class="op">=</span><span class="fl">60</span>,</span>
+<span>                decimals<span class="op">=</span><span class="fl">10</span>,</span>
+<span>                df<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span>                </span>
+<span><span class="co"># remove obvious outliers</span></span>
+<span><span class="va">input</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">input</span><span class="op">&lt;</span><span class="fl">0.2</span><span class="op">)</span><span class="op">]</span><span class="op">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
 </div>
-<div id="calculate-maximum-t-values" class="section level3">
-<h3 class="hasAnchor">
-<a href="#calculate-maximum-t-values" class="anchor"></a>Calculate maximum ΔT-Values</h3>
+<div class="section level3">
+<h3 id="calculate-maximum-δt-values">Calculate maximum ΔT-Values<a class="anchor" aria-label="anchor" href="#calculate-maximum-%CE%B4t-values"></a>
+</h3>
 <p>Three methods can be applied to calculate ΔT (or ΔV for voltage differences between TDM probes):</p>
 <ul>
 <li>
@@ -133,146 +130,150 @@
 <code>dr</code>: double-regression</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tdm_dt.max.html">tdm_dt.max</a></span><span class="op">(</span><span class="va">input</span>,
-                    methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"pd"</span>, <span class="st">"mw"</span>, <span class="st">"dr"</span><span class="op">)</span>,
-                    det.pd <span class="op">=</span> <span class="cn">TRUE</span>,
-                    interpolate <span class="op">=</span> <span class="cn">FALSE</span>,
-                    max.days <span class="op">=</span> <span class="fl">10</span>,
-                    df <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-                    
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">input</span>, ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">Delta</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/grDevices/plotmath.html">italic</a></span><span class="op">(</span><span class="st">"V"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">max.pd</span>, col <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">max.mw</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">max.dr</span>, col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tdm_dt.max.html">tdm_dt.max</a></span><span class="op">(</span><span class="va">input</span>,</span>
+<span>                    methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pd"</span>, <span class="st">"mw"</span>, <span class="st">"dr"</span><span class="op">)</span>,</span>
+<span>                    det.pd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                    interpolate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                    max.days <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>                    df <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>                    </span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">input</span>, ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">Delta</span><span class="op">*</span><span class="fu">italic</span><span class="op">(</span><span class="st">"V"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">max.pd</span>, col <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">max.mw</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">max.dr</span>, col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/dtmax.png"></p>
 </div>
-<div id="calculate-sap-flux-density" class="section level3">
-<h3 class="hasAnchor">
-<a href="#calculate-sap-flux-density" class="anchor"></a>Calculate Sap Flux Density</h3>
+<div class="section level3">
+<h3 id="calculate-sap-flux-density">Calculate Sap Flux Density<a class="anchor" aria-label="anchor" href="#calculate-sap-flux-density"></a>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">output.data</span><span class="op">&lt;-</span> <span class="fu"><a href="reference/tdm_cal.sfd.html">tdm_cal.sfd</a></span><span class="op">(</span><span class="va">input</span>,make.plot<span class="op">=</span><span class="cn">TRUE</span>,df<span class="op">=</span><span class="cn">FALSE</span>,wood<span class="op">=</span><span class="st">"Coniferous"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">sfd</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># see estimated uncertainty</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">q025</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span>, lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">q975</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span>, lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">sfd</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span><span class="op">)</span>
-
-<span class="va">sfd_data</span> <span class="op">&lt;-</span> <span class="va">output.data</span><span class="op">$</span><span class="va">sfd.dr</span><span class="op">$</span><span class="va">sfd</span>
-</code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">output.data</span><span class="op">&lt;-</span> <span class="fu"><a href="reference/tdm_cal.sfd.html">tdm_cal.sfd</a></span><span class="op">(</span><span class="va">input</span>,make.plot<span class="op">=</span><span class="cn">TRUE</span>,df<span class="op">=</span><span class="cn">FALSE</span>,wood<span class="op">=</span><span class="st">"Coniferous"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">sfd</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># see estimated uncertainty</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">q025</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span>, lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">q975</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span>, lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">output.data</span><span class="op">$</span><span class="va">sfd.pd</span><span class="op">$</span><span class="va">sfd</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sfd_data</span> <span class="op">&lt;-</span> <span class="va">output.data</span><span class="op">$</span><span class="va">sfd.dr</span><span class="op">$</span><span class="va">sfd</span></span></code></pre></div>
 <p><img src="reference/figures/sfd.png"></p>
 </div>
-<div id="generate-outputs" class="section level3">
-<h3 class="hasAnchor">
-<a href="#generate-outputs" class="anchor"></a>Generate Outputs</h3>
+<div class="section level3">
+<h3 id="generate-outputs">Generate Outputs<a class="anchor" aria-label="anchor" href="#generate-outputs"></a>
+</h3>
 <p>Here we generate outputs based on environmental filters and calculate crown conductance (G<sub>c</sub>) values.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">output</span><span class="op">&lt;-</span> <span class="fu"><a href="reference/out.data.html">out.data</a></span><span class="op">(</span>input<span class="op">=</span><span class="va">sfd_data</span>,
-                  vpd.input<span class="op">=</span><span class="va">vpd</span>, 
-                  sr.input<span class="op">=</span><span class="va">sr</span>,
-                  prec.input<span class="op">=</span><span class="va">preci</span>,
-                  low.sr <span class="op">=</span> <span class="fl">150</span>,
-                  peak.sr<span class="op">=</span><span class="fl">300</span>, 
-                  vpd.cutoff<span class="op">=</span> <span class="fl">0.5</span>, 
-                  prec.lim<span class="op">=</span><span class="fl">1</span>,
-                  method<span class="op">=</span><span class="st">"env.filt"</span>, 
-                  max.quant<span class="op">=</span><span class="fl">0.99</span>, 
-                  make.plot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">output</span><span class="op">&lt;-</span> <span class="fu"><a href="reference/out.data.html">out.data</a></span><span class="op">(</span>input<span class="op">=</span><span class="va">sfd_data</span>,</span>
+<span>                  vpd.input<span class="op">=</span><span class="va">vpd</span>, </span>
+<span>                  sr.input<span class="op">=</span><span class="va">sr</span>,</span>
+<span>                  prec.input<span class="op">=</span><span class="va">preci</span>,</span>
+<span>                  low.sr <span class="op">=</span> <span class="fl">150</span>,</span>
+<span>                  peak.sr<span class="op">=</span><span class="fl">300</span>, </span>
+<span>                  vpd.cutoff<span class="op">=</span> <span class="fl">0.5</span>, </span>
+<span>                  prec.lim<span class="op">=</span><span class="fl">1</span>,</span>
+<span>                  method<span class="op">=</span><span class="st">"env.filt"</span>, </span>
+<span>                  max.quant<span class="op">=</span><span class="fl">0.99</span>, </span>
+<span>                  make.plot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/output.png"></p>
 </div>
 </div>
-<div id="more-on-trex" class="section level2">
-<h2 class="hasAnchor">
-<a href="#more-on-trex" class="anchor"></a>3. More on <code>TREX</code>
+<div class="section level2">
+<h2 id="id_3-more-on-trex">3. More on <code>TREX</code>
+<a class="anchor" aria-label="anchor" href="#id_3-more-on-trex"></a>
 </h2>
-<div id="workshops-using-trex" class="section level3">
-<h3 class="hasAnchor">
-<a href="#workshops-using-trex" class="anchor"></a>Workshops using <code>TREX</code>
+<div class="section level3">
+<h3 id="workshops-using-trex">Workshops using <code>TREX</code>
+<a class="anchor" aria-label="anchor" href="#workshops-using-trex"></a>
 </h3>
 <ul>
 <li>
-<strong>ESA 2020</strong>: <code>TREX</code> was introduced and demonstrated in detail in a workshop during the Ecological Society of America’s 2020 AGM. The workshop description can be found <a href="https://deep-tools.netlify.app/talk/esa-2020-rpeters-cpappas/">here</a>, and all materials on the <a href="https://deep-tools.netlify.app/docs-workshops/esa-workshop2020/02_trex/">dedicated page</a>.</li>
+<strong>ESA 2020</strong>: <code>TREX</code> was introduced and demonstrated in detail in a workshop during the Ecological Society of America’s 2020 AGM. The workshop description can be found <a href="https://deep-tools.netlify.app/talk/esa-2020-rpeters-cpappas/" class="external-link">here</a>, and all materials on the <a href="https://deep-tools.netlify.app/docs-workshops/esa-workshop2020/02_trex/" class="external-link">dedicated page</a>.</li>
 </ul>
 </div>
 </div>
-<div id="citing-this-work" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citing-this-work" class="anchor"></a>4. Citing this work</h2>
+<div class="section level2">
+<h2 id="id_4-citing-this-work">4. Citing this work<a class="anchor" aria-label="anchor" href="#id_4-citing-this-work"></a>
+</h2>
 <p>Please cite <code>TREX</code> when you apply it in your own work as:</p>
 <blockquote>
-<p>Peters, RL, Pappas, C, Hurley, AG, et al. Assimilate, process and analyse thermal dissipation sap flow data using the TREX r package. Methods Ecol Evol. 2021; 12: 342– 350. <a href="https://doi.org/10.1111/2041-210X.13524" class="uri">https://doi.org/10.1111/2041-210X.13524</a></p>
+<p>Peters, RL, Pappas, C, Hurley, AG, et al. Assimilate, process and analyse thermal dissipation sap flow data using the TREX r package. Methods Ecol Evol. 2021; 12: 342– 350. <a href="https://doi.org/10.1111/2041-210X.13524" class="external-link uri">https://doi.org/10.1111/2041-210X.13524</a></p>
 </blockquote>
 <p>A reference is available in <code>R</code> using:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"TREX"</span><span class="op">)</span>
-
-<span class="co">#or</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"TREXr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"TREX"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#or</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"TREXr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/the-Hull/TREX/">https://​github.com/​the-Hull/​TREX/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/the-Hull/TREX/issues">https://​github.com/​the-Hull/​TREX/​issues</a>
-</li>
+<li><a href="https://github.com/the-Hull/TREX/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/the-Hull/TREX/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing TREX</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Richard Peters <br><small class="roles"> Maintainer, author, copyright holder </small> <a href="https://orcid.org/0000-0002-7441-1297" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Christoforos Pappas <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0001-5721-557X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Alexander Hurley <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0002-9641-2805" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Kathy Steppe <br><small class="roles"> Thesis advisor, etcher, funder </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing TREX</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
-<li><a href="https://travis-ci.org/the-Hull/TREX"><img src="https://travis-ci.org/the-Hull/TREX.svg?branch=master" alt="Travis build status"></a></li>
+<li>Richard Peters <br><small class="roles"> Maintainer, author, copyright holder </small> <a href="https://orcid.org/0000-0002-7441-1297" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Christoforos Pappas <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0001-5721-557X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Alexander Hurley <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0002-9641-2805" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Kathy Steppe <br><small class="roles"> Thesis advisor, etcher, funder </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
+<li><a href="https://travis-ci.org/the-Hull/TREX" class="external-link"><img src="https://travis-ci.org/the-Hull/TREX.svg?branch=master" alt="Travis build status"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Richard Peters, Christoforos Pappas, Alexander Hurley, Kathy Steppe.</p>
+  <p></p>
+<p>Developed by Richard Peters, Christoforos Pappas, Alexander Hurley, Kathy Steppe.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -280,6 +281,8 @@
 
   
 
+
+  
 
   </body>
 </html>
