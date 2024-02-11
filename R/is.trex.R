@@ -280,13 +280,9 @@ is.trex <-
 
     #p
     if (length(unique(timestamp)) == length(unique(left(timestamp,16)))) {
-      #  output.data <-
-      #  zoo::zoo(data$value, order.by = base::as.POSIXct(format(chron::as.chron(timestamp), "%Y-%m-%d %H:%M"),tz="UTC"))
       output.data <-
         zoo::zoo(data$value, order.by = base::as.POSIXct(paste0(left(timestamp,16),":00"),tz="UTC"))
      } else{
-       #output.data <-
-       #  zoo::zoo(data$value, order.by = base::as.POSIXct(format(as.character(timestamp), "%Y-%m-%d %H:%M"),tz="UTC"))
        agg <-
         stats::aggregate(output.data, by = base::as.POSIXct(paste0(left(timestamp,16),":00"),tz="UTC"), mean)
       output.data <- zoo::zoo(agg, order.by = base::as.POSIXct(zoo::index(agg),tz="UTC"))

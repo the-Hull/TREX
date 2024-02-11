@@ -248,7 +248,7 @@ tdm_damp <- function(input,
         ),
         control = list(maxiter = 500)
       ), silent = TRUE)
-      if (class(report) != "try-error") {
+      if (!inherits(report, "try-error")) {
         model_nls <-
           stats::nls(
             k.doy ~ ((a + b * run) / (1 + c * run + d * (run ^ 2))),
@@ -274,7 +274,7 @@ tdm_damp <- function(input,
               ),
               control = list(maxiter = 500)
             ), silent = TRUE)
-          if (class(report) == "try-error") {
+          if (inherits(report, "try-error")) {
             next
           } else{
             model_nls <-
@@ -653,7 +653,7 @@ tdm_damp <- function(input,
       ),
       control = list(maxiter = 500)
     ), silent = TRUE)
-    if (class(report) != "try-error") {
+    if (!inherits(report, "try-error")) {
       model_nls <-
         stats::nls(
           k.doy ~ ((a + b * run) / (1 + c * run + d * (run ^ 2))),
@@ -679,7 +679,7 @@ tdm_damp <- function(input,
             ),
             control = list(maxiter = 500)
           ), silent = TRUE)
-        if (class(report) == "try-error") {
+        if (inherits(report, "try-error")) {
           next
         } else{
           model_nls <-
