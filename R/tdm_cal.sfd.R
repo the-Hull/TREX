@@ -364,11 +364,11 @@ tdm_cal.sfd <-
           model.sd <- NA
 
           for (r in c(1:nrow(output.model))) {
-            model.quant.0.025[r] <-
-              as.numeric(stats::quantile(output.model[r, -1], probs = c(0.025))[1])
-            model.quant.0.975[r] <-
-              as.numeric(stats::quantile(output.model[r, -1], probs = c(0.975))[1])
-            model.sd[r] <- as.numeric(as.numeric(stats::sd(output.model[r, -1])))
+              model.quant.0.025[r] <-
+                  as.numeric(stats::quantile(c(t(output.model[r, -1])), probs = c(0.025))[1])
+              model.quant.0.975[r] <-
+                  as.numeric(stats::quantile(c(t(output.model[r, -1])), probs = c(0.975))[1])
+              model.sd[r] <- as.numeric(as.numeric(stats::sd(c(t(output.model[r, -1])))))
           }
           quant.0.025 <- model.quant.0.025
           quant.0.975 <- model.quant.0.975

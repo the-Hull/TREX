@@ -483,7 +483,7 @@ tdm_dt.max <-
       proc.g <- stats::window(max.pd, start = st.g, end = st.e)
       if (interpolate == T) {
         fill.pd <-
-          zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g), na.rm = F), fromLast =
+          zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g, na.rm = FALSE), na.rm = F), fromLast =
                          T)
       } else{
         fill.pd <- zoo::na.locf(zoo::na.locf(proc.g, na.rm = F), fromLast = T)
@@ -610,11 +610,14 @@ tdm_dt.max <-
 
         if (interpolate == T) {
           fill.dr <-
-            zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g), na.rm = F), fromLast =
+            zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g, na.rm = FALSE), na.rm = F), fromLast =
                            T)
         } else{
           fill.dr <- zoo::na.locf(zoo::na.locf(proc.g, na.rm = F), fromLast = T)
         }
+
+        if(length(fill.dr)==0){next}
+
         stats::window(max.mw, start = st.g, end = st.e) <- fill.dr
       }
 
@@ -764,11 +767,14 @@ tdm_dt.max <-
 
         if (interpolate == T) {
           fill.dr <-
-            zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g), na.rm = F), fromLast =
+            zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g, na.rm = FALSE), na.rm = F), fromLast =
                            T)
         } else{
           fill.dr <- zoo::na.locf(zoo::na.locf(proc.g, na.rm = F), fromLast = T)
         }
+
+        if(length(fill.dr)==0){next}
+
         stats::window(max.dr, start = st.g, end = st.e) <- fill.dr
       }
 
@@ -1043,7 +1049,7 @@ tdm_dt.max <-
           proc.g <- stats::window(max.ed, start = st.g, end = st.e)
           if (interpolate == T) {
             fill.pd <-
-              zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g), na.rm = F), fromLast =
+              zoo::na.locf(zoo::na.locf(zoo::na.approx(proc.g, na.rm = FALSE), na.rm = F), fromLast =
                              T)
           } else{
             fill.pd <- zoo::na.locf(zoo::na.locf(proc.g, na.rm = F), fromLast = T)
