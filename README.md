@@ -2,8 +2,8 @@
 
 
 <!-- badges: start -->
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis build status](https://travis-ci.org/the-Hull/TREX.svg?branch=master)](https://travis-ci.org/the-Hull/TREX)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![R-CMD-check](https://github.com/the-Hull/TREX/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/the-Hull/TREX/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 
